@@ -1,0 +1,6 @@
+# Best not to distribute commercial games' executables ;)
+# Theoretically we could distribute the XNA dlls, but uhh, nah.
+*.dll
+*.pdb
+*.exe
+*.xml
