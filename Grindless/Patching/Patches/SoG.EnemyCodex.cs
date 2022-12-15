@@ -17,7 +17,7 @@ namespace Grindless.Patches
 
             if (entry != null)
             {
-                __result = entry.vanilla;
+                __result = entry.Vanilla;
             }
             else
             {
@@ -35,7 +35,7 @@ namespace Grindless.Patches
             {
                 var entry = EnemyEntry.Entries.Get(enType);
 
-                if (entry == null || entry.constructor == null)
+                if (entry == null || entry.Constructor == null)
                 {
                     // No replacement exists. Let's continue to the vanilla code to get the instance!
                     return true;
@@ -59,7 +59,7 @@ namespace Grindless.Patches
 
             if (entry != null)
             {
-                if (entry.defaultAnimation == null)
+                if (entry.DefaultAnimation == null)
                 {
                     if (entry.IsVanilla)
                     {
@@ -70,7 +70,7 @@ namespace Grindless.Patches
                     return false;  // Animation hasn't been set...
                 }
 
-                __result = entry.defaultAnimation.Invoke(Content);
+                __result = entry.DefaultAnimation.Invoke(Content);
                 return false;
             }
 
@@ -86,7 +86,7 @@ namespace Grindless.Patches
 
             if (entry != null)
             {
-                if (entry.displayIconPath == null)
+                if (entry.DisplayIconPath == null)
                 {
                     if (entry.IsVanilla)
                     {
@@ -97,7 +97,7 @@ namespace Grindless.Patches
                     return false;  // Texture not set...
                 }
 
-                AssetUtils.TryLoadTexture(entry.displayIconPath, Content, out __result);
+                AssetUtils.TryLoadTexture(entry.DisplayIconPath, Content, out __result);
                 return false;
             }
 
@@ -113,7 +113,7 @@ namespace Grindless.Patches
 
             if (entry != null)
             {
-                if (entry.displayBackgroundPath == null)
+                if (entry.DisplayBackgroundPath == null)
                 {
                     if (entry.IsVanilla)
                     {
@@ -124,7 +124,7 @@ namespace Grindless.Patches
                     return false;  // Texture not set...
                 }
 
-                AssetUtils.TryLoadTexture(entry.displayBackgroundPath, Content, out __result);
+                AssetUtils.TryLoadTexture(entry.DisplayBackgroundPath, Content, out __result);
                 return false;
             }
 

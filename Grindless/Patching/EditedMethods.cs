@@ -9,13 +9,13 @@ using SoG;
 namespace Grindless
 {
     [HarmonyPatch]
-    internal static class EditedMethods
+    public static class EditedMethods
     {
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(EnemyCodex), nameof(EnemyCodex.GetEnemyInstance_CacuteForward))]
         public static Enemy GetModdedEnemyInstance(EnemyCodex.EnemyTypes enType, Level.WorldRegion enOverrideContent)
         {
-            IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
             {
                 List<CodeInstruction> codeList = instructions.ToList();
 
@@ -42,7 +42,7 @@ namespace Grindless
         [HarmonyPatch(typeof(Game1), nameof(Game1._Enemy_MakeElite))]
         public static Enemy _Enemy_MakeElite(Game1 __instance, EnemyCodex.EnemyTypes enType, Level.WorldRegion enOverrideContent)
         {
-            IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
             {
                 List<CodeInstruction> codeList = instructions.ToList();
 
@@ -106,7 +106,7 @@ namespace Grindless
         [HarmonyPatch(typeof(Game1), nameof(Game1._RogueLike_ActivatePin))]
         public static void ApplyPinEffect(Game1 __instance, PlayerView xView, PinCodex.PinType enEffect, bool bSend)
         {
-            IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
             {
                 List<CodeInstruction> codeList = instructions.ToList();
 
@@ -134,7 +134,7 @@ namespace Grindless
         [HarmonyPatch(typeof(Game1), nameof(Game1._RogueLike_ActivatePin))]
         public static void SendPinActivation(Game1 __instance, PlayerView xView, PinCodex.PinType enEffect, bool bSend)
         {
-            IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
             {
                 List<CodeInstruction> codeList = instructions.ToList();
 
@@ -159,13 +159,11 @@ namespace Grindless
             throw new InvalidOperationException("Stub method.");
         }
 
-
-
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(Game1), nameof(Game1._RogueLike_DeactivatePin))]
         public static void RemovePinEffect(Game1 __instance, PlayerView xView, PinCodex.PinType enEffect, bool bSend)
         {
-            IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
             {
                 List<CodeInstruction> codeList = instructions.ToList();
 
@@ -193,7 +191,7 @@ namespace Grindless
         [HarmonyPatch(typeof(Game1), nameof(Game1._RogueLike_DeactivatePin))]
         public static void SendPinDeactivation(Game1 __instance, PlayerView xView, PinCodex.PinType enEffect, bool bSend)
         {
-            IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
             {
                 List<CodeInstruction> codeList = instructions.ToList();
 

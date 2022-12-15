@@ -28,7 +28,7 @@ namespace Grindless
         /// <summary>
         /// Gets the version of the mod.
         /// </summary>
-        public virtual Version Version => new Version(0, 0, 0, 0);
+        public virtual Version Version => new Version(0, 0);
 
         /// <summary>
         /// Gets whenever the mod should have object creation disabled. <para/>

@@ -15,34 +15,34 @@ namespace Grindless
     /// That is, no prefix / postfix / whatever patches are applied.
     /// </summary>
     [HarmonyPatch]
-    internal static class OriginalMethods
+    public static class OriginalMethods
     {
         #region Curse related
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(Game1), nameof(Game1._RogueLike_GetTreatCurseTexture))]
-        internal static Texture2D _RogueLike_GetTreatCurseTexture(Game1 __instance, RogueLikeMode.TreatsCurses enTreat)
+        public static Texture2D _RogueLike_GetTreatCurseTexture(Game1 __instance, RogueLikeMode.TreatsCurses enTreat)
         {
             throw new NotImplementedException("Stub method.");
         }
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(Game1), nameof(Game1._RogueLike_GetTreatCurseInfo))]
-        internal static void _RogueLike_GetTreatCurseInfo(Game1 __instance, RogueLikeMode.TreatsCurses enTreatCurse, out string sNameHandle, out string sDescriptionHandle, out float fScoreModifier)
+        public static void _RogueLike_GetTreatCurseInfo(Game1 __instance, RogueLikeMode.TreatsCurses enTreatCurse, out string sNameHandle, out string sDescriptionHandle, out float fScoreModifier)
         {
             throw new NotImplementedException("Stub method.");
         }
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(TreatCurseMenu), nameof(TreatCurseMenu.FillCurseList))]
-        internal static void FillCurseList(TreatCurseMenu __instance)
+        public static void FillCurseList(TreatCurseMenu __instance)
         {
             throw new NotImplementedException("Stub method.");
         }
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(TreatCurseMenu), nameof(TreatCurseMenu.FillTreatList))]
-        internal static void FillTreatList(TreatCurseMenu __instance)
+        public static void FillTreatList(TreatCurseMenu __instance)
         {
             throw new NotImplementedException("Stub method.");
         }
@@ -60,7 +60,7 @@ namespace Grindless
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(EnemyCodex), nameof(EnemyCodex.GetEnemyDescription))]
-        internal static EnemyDescription GetEnemyDescription(EnemyCodex.EnemyTypes enType)
+        public static EnemyDescription GetEnemyDescription(EnemyCodex.EnemyTypes enType)
         {
             throw new NotImplementedException("Stub method.");
         }
@@ -88,30 +88,30 @@ namespace Grindless
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(Game1), nameof(Game1._Enemy_AdjustForDifficulty))]
-        internal static void _Enemy_AdjustForDifficulty(Game1 __instance, Enemy xEn)
+        public static void _Enemy_AdjustForDifficulty(Game1 __instance, Enemy xEn)
         {
             throw new NotImplementedException("Stub method.");
         }
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(Game1), nameof(Game1._Enemy_MakeElite))]
-        internal static bool _Enemy_MakeElite(Game1 __instance, Enemy xEn, bool bAttachEffect)
+        public static bool _Enemy_MakeElite(Game1 __instance, Enemy xEn, bool bAttachEffect)
         {
             throw new NotImplementedException("Stub method.");
         }
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(EnemyCodex), nameof(EnemyCodex.GetEnemyInstance_CacuteForward))]
-        internal static Enemy GetEnemyInstance_CacuteForward(EnemyCodex.EnemyTypes enType, Level.WorldRegion enOverrideContent)
+        public static Enemy GetEnemyInstance_CacuteForward(EnemyCodex.EnemyTypes enType, Level.WorldRegion enOverrideContent)
         {
             throw new NotImplementedException("Stub method.");
         }
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(EnemyCodex), nameof(EnemyCodex.GetEnemyInstance))]
-        internal static Enemy GetEnemyInstance(EnemyCodex.EnemyTypes enType, Level.WorldRegion enOverrideContent)
+        public static Enemy GetEnemyInstance(EnemyCodex.EnemyTypes enType, Level.WorldRegion enOverrideContent)
         {
-            IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
             {
                 var original = AccessTools.Method(typeof(EnemyCodex), nameof(EnemyCodex.GetEnemyInstance_CacuteForward));
                 var replacement = AccessTools.Method(typeof(OriginalMethods), nameof(OriginalMethods.GetEnemyInstance_CacuteForward));
@@ -129,16 +129,16 @@ namespace Grindless
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(ItemCodex), nameof(ItemCodex.GetItemDescription_PostSpecial))]
-        internal static ItemDescription GetItemDescription_PostSpecial(ItemCodex.ItemTypes enType)
+        public static ItemDescription GetItemDescription_PostSpecial(ItemCodex.ItemTypes enType)
         {
             throw new NotImplementedException("Stub method.");
         }
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(ItemCodex), nameof(ItemCodex.GetItemDescription))]
-        internal static ItemDescription GetItemDescription(ItemCodex.ItemTypes enType)
+        public static ItemDescription GetItemDescription(ItemCodex.ItemTypes enType)
         {
-            IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+            static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
             {
                 var original = AccessTools.Method(typeof(ItemCodex), nameof(ItemCodex.GetItemDescription_PostSpecial));
                 var replacement = AccessTools.Method(typeof(OriginalMethods), nameof(OriginalMethods.GetItemDescription_PostSpecial));
@@ -152,49 +152,49 @@ namespace Grindless
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(EquipmentCodex), nameof(EquipmentCodex.GetAccessoryInfo))]
-        internal static EquipmentInfo GetAccessoryInfo(ItemCodex.ItemTypes enType)
+        public static EquipmentInfo GetAccessoryInfo(ItemCodex.ItemTypes enType)
         {
             throw new NotImplementedException("Stub method.");
         }
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(EquipmentCodex), nameof(EquipmentCodex.GetArmorInfo))]
-        internal static EquipmentInfo GetArmorInfo(ItemCodex.ItemTypes enType)
+        public static EquipmentInfo GetArmorInfo(ItemCodex.ItemTypes enType)
         {
             throw new NotImplementedException("Stub method.");
         }
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(EquipmentCodex), nameof(EquipmentCodex.GetShieldInfo))]
-        internal static EquipmentInfo GetShieldInfo(ItemCodex.ItemTypes enType)
+        public static EquipmentInfo GetShieldInfo(ItemCodex.ItemTypes enType)
         {
             throw new NotImplementedException("Stub method.");
         }
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(EquipmentCodex), nameof(EquipmentCodex.GetShoesInfo))]
-        internal static EquipmentInfo GetShoesInfo(ItemCodex.ItemTypes enType)
+        public static EquipmentInfo GetShoesInfo(ItemCodex.ItemTypes enType)
         {
             throw new NotImplementedException("Stub method.");
         }
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(FacegearCodex), nameof(FacegearCodex.GetHatInfo))]
-        internal static FacegearInfo GetFacegearInfo(ItemCodex.ItemTypes enType)
+        public static FacegearInfo GetFacegearInfo(ItemCodex.ItemTypes enType)
         {
             throw new NotImplementedException("Stub method.");
         }
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(HatCodex), nameof(HatCodex.GetHatInfo))]
-        internal static HatInfo GetHatInfo(ItemCodex.ItemTypes enType)
+        public static HatInfo GetHatInfo(ItemCodex.ItemTypes enType)
         {
             throw new NotImplementedException("Stub method.");
         }
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(WeaponCodex), nameof(WeaponCodex.GetWeaponInfo))]
-        internal static WeaponInfo GetWeaponInfo(ItemCodex.ItemTypes enType)
+        public static WeaponInfo GetWeaponInfo(ItemCodex.ItemTypes enType)
         {
             throw new NotImplementedException("Stub method.");
         }
@@ -205,7 +205,7 @@ namespace Grindless
 
         [HarmonyReversePatch]
         [HarmonyPatch(typeof(LevelBlueprint), nameof(LevelBlueprint.GetBlueprint))]
-        internal static LevelBlueprint GetBlueprint(Level.ZoneEnum enZoneToGet)
+        public static LevelBlueprint GetBlueprint(Level.ZoneEnum enZoneToGet)
         {
             throw new NotImplementedException("Stub method.");
         }

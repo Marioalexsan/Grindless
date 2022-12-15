@@ -8,17 +8,17 @@ namespace Grindless
     /// <summary>
     /// Computes the start and end of the TreatCurse menu items
     /// </summary>
-    internal class TCMenuWorker
+    internal static class TCMenuWorker
     {
-        private ShopMenu Shop => Globals.Game.xShopMenu;
+        private static ShopMenu Shop => Globals.Game.xShopMenu;
 
-        private int _topRow = 0;
+        private static int _topRow = 0;
 
-        public int TCListStart { get; private set; } = 0;
+        public static int TCListStart { get; private set; } = 0;
 
-        public int TCListEnd { get; private set; } = 0;
+        public static int TCListEnd { get; private set; } = 0;
 
-        public void Update()
+        public static void Update()
         {
             int currentRow = Shop.iShopPosition / 5;
 
@@ -32,7 +32,7 @@ namespace Grindless
             TCListEnd = Math.Min(Shop.xTreatCurseMenu.lenTreatCursesAvailable.Count, TCListStart + 10);
         }
 
-        public void DrawScroller(SpriteBatch spriteBatch, float scale, float alpha)
+        public static void DrawScroller(SpriteBatch spriteBatch, float scale, float alpha)
         {
             int totalRows = (Shop.xTreatCurseMenu.lenTreatCursesAvailable.Count - 1) / 5 + 1;
             if (totalRows <= 2)

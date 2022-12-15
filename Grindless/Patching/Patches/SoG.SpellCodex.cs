@@ -5,14 +5,14 @@ using SoG;
 namespace Grindless.Patches
 {
     [HarmonyPatch(typeof(SpellCodex))]
-    internal static class SoG_SpellCodex
+    static class SoG_SpellCodex
     {
         /// <summary>
         /// Gets the spell instance of an entry.
         /// </summary>
         [HarmonyPrefix]
         [HarmonyPatch(nameof(SpellCodex.GetSpellInstance), typeof(SpellCodex.SpellTypes), typeof(int), typeof(Level.WorldRegion))]
-        internal static bool GetSpellInstance_Prefix(ref ISpellInstance __result, SpellCodex.SpellTypes enType, int iPowerLevel, Level.WorldRegion enOverrideRegion)
+        static bool GetSpellInstance_Prefix(ref ISpellInstance __result, SpellCodex.SpellTypes enType, int iPowerLevel, Level.WorldRegion enOverrideRegion)
         {
             var entry = SpellEntry.Entries.Get(enType);
 
@@ -43,41 +43,9 @@ namespace Grindless.Patches
             return false;
         }
 
-        /*
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(SpellCodex.IsEPBlocking))]
-        internal static void IsEPBlocking_Postfix(SpellCodex.SpellTypes enType, ref bool __result)
-        {
-            if (!enType.IsFromMod())
-                return;
-
-            __result = false;
-        }
-
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(SpellCodex.IsHidden))]
-        internal static void IsHidden_Postfix(SpellCodex.SpellTypes enType, ref bool __result)
-        {
-            if (!enType.IsFromMod())
-                return;
-
-            __result = false;
-        }
-
-        [HarmonyPostfix]
-        [HarmonyPatch(nameof(SpellCodex.IsTalent))]
-        internal static void IsTalent_Postfix(SpellCodex.SpellTypes enType, ref bool __result)
-        {
-            if (!enType.IsFromMod())
-                return;
-
-            __result = false;
-        }
-        */
-
         [HarmonyPrefix]
         [HarmonyPatch(nameof(SpellCodex.IsMagicSkill))]
-        internal static bool IsMagicSkill_Prefix(SpellCodex.SpellTypes enType, ref bool __result)
+        static bool IsMagicSkill_Prefix(SpellCodex.SpellTypes enType, ref bool __result)
         {
             var entry = SpellEntry.Entries.Get(enType);
 
@@ -89,7 +57,7 @@ namespace Grindless.Patches
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(SpellCodex.IsMeleeSkill))]
-        internal static bool IsMeleeSkill_Prefix(SpellCodex.SpellTypes enType, ref bool __result)
+        static bool IsMeleeSkill_Prefix(SpellCodex.SpellTypes enType, ref bool __result)
         {
             var entry = SpellEntry.Entries.Get(enType);
 
@@ -101,7 +69,7 @@ namespace Grindless.Patches
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(SpellCodex.IsUtilitySkill))]
-        internal static bool IsUtilitySkill_Prefix(SpellCodex.SpellTypes enType, ref bool __result)
+        static bool IsUtilitySkill_Prefix(SpellCodex.SpellTypes enType, ref bool __result)
         {
             var entry = SpellEntry.Entries.Get(enType);
 

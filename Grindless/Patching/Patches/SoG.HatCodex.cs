@@ -5,11 +5,11 @@ using SoG;
 namespace Grindless.Patches
 {
     [HarmonyPatch(typeof(HatCodex))]
-    internal static class SoG_HatCodex
+    static class SoG_HatCodex
     {
         [HarmonyPrefix]
         [HarmonyPatch(nameof(HatCodex.GetHatInfo))]
-        internal static bool GetHatInfo_Prefix(ref HatInfo __result, ItemCodex.ItemTypes enType)
+        static bool GetHatInfo_Prefix(ref HatInfo __result, ItemCodex.ItemTypes enType)
         {
             var entry = ItemEntry.Entries.Get(enType);;
 

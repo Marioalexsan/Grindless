@@ -14,37 +14,6 @@ namespace Grindless
     internal static class PatchHelper
     {
         /// <summary>
-        /// Initializes all mod content. Checks arcade save for compatibility. 
-        /// </summary>
-        public static void DoModContentLoad()
-        {
-            GrindlessResources.ReloadResources();
-            ModManager.Reload();
-
-            MainMenuWorker.UpdateStorySaveCompatibility();
-            MainMenuWorker.UpdateArcadeSaveCompatibility();
-        }
-
-        /// <summary>
-        /// Updates version so that we can tell that the game uses Grindless.
-        /// </summary>
-        public static void UpdateVersionNumber()
-        {
-            Program.Logger.LogDebug("Updating Version Number...");
-
-            Globals.GrindeaVersion = Globals.Game.sVersionNumberOnly;
-
-            Globals.SetVersionTypeAsModded(true);
-
-            var versionDisplayField = typeof(Game1).GetField("sVersion", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            versionDisplayField.SetValue(Globals.Game, Globals.GrindeaVersion + " with Grindless " + Globals.GrindlessVersion);
-
-            Program.Logger.LogInformation("Game Long Version: {Version}", Globals.GameVersionFull);
-            Program.Logger.LogInformation("Game Vanilla Version: {Version}", Globals.GrindeaVersion);
-        }
-
-        /// <summary>
         /// Executes additional code after a level's blueprint has been processed.
         /// </summary>
         public static void InLevelLoadDoStuff(Level.ZoneEnum type, bool staticOnly)
@@ -104,7 +73,7 @@ namespace Grindless
 
             enemy.xRenderComponent.xOwnerObject = enemy;
 
-            entry.constructor?.Invoke(enemy);
+            entry.Constructor?.Invoke(enemy);
 
             return enemy;
         }
@@ -121,9 +90,9 @@ namespace Grindless
 
             Debug.Assert(entry != null && entry.IsModded);
 
-            if (entry.eliteScaler != null)
+            if (entry.EliteScaler != null)
             {
-                entry.eliteScaler.Invoke(enemy);
+                entry.EliteScaler.Invoke(enemy);
                 return true;
             }
             else
@@ -291,10 +260,6 @@ namespace Grindless
 
 
         public static SpriteBatch SpriteBatch => Globals.SpriteBatch;
-
-        public static TCMenuWorker TCMenuWorker { get; } = new TCMenuWorker();
-
-        public static MainMenuWorker MainMenuWorker { get; } = new MainMenuWorker();
 
         #region Delicate Versioning and Mod List Comparison callbacks
 

@@ -7,11 +7,11 @@ using Microsoft.Extensions.Logging;
 namespace Grindless.Patches
 {
     [HarmonyPatch(typeof(LevelBlueprint))]
-    internal static class SoG_LevelBlueprint
+    static class SoG_LevelBlueprint
     {
         [HarmonyPrefix]
         [HarmonyPatch(nameof(LevelBlueprint.GetBlueprint))]
-        internal static bool GetBlueprint_Prefix(ref LevelBlueprint __result, Level.ZoneEnum enZoneToGet)
+        static bool GetBlueprint_Prefix(ref LevelBlueprint __result, Level.ZoneEnum enZoneToGet)
         {
             var entry = LevelEntry.Entries.Get(enZoneToGet);
 
@@ -70,6 +70,5 @@ namespace Grindless.Patches
             __result = blueprint;
             return false;
         }
-
     }
 }

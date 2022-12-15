@@ -1,25 +1,19 @@
 ﻿using HarmonyLib;
+using System.Linq;
+using static SoG.HitEffectMap;
 using PerkInfo = SoG.RogueLikeMode.PerkInfo;
 
 namespace Grindless.Patches
 {
     [HarmonyPatch(typeof(PerkInfo))]
-    internal static class SoG_RogueLikeMode_PerkInfo
+    static class SoG_RogueLikeMode_PerkInfo
     {
         [HarmonyPrefix]
         [HarmonyPatch(nameof(PerkInfo.Init))]
-        internal static bool InitPrefix()
+        static bool InitPrefix()
         {
             PerkInfo.lxAllPerks.Clear();
-
-            foreach (var entry in PerkEntry.Entries)
-            {
-                if (entry.UnlockCondition == null || entry.UnlockCondition.Invoke())
-                {
-                    PerkInfo.lxAllPerks.Add(new PerkInfo(entry.GameID, entry.EssenceCost, entry.TextEntry));
-                }
-            }
-
+            PerkInfo.lxAllPerks.AddRange(PerkEntry.Entries.Where(x => x.UnlockCondition?.Invoke() ?? true).Select(x => new PerkInfo(x.GameID, x.EssenceCost, x.TextEntry)));
             return false;
         }
     }

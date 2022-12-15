@@ -11,7 +11,7 @@ namespace Grindless
     /// Handles callbacks for Main Menu patches.
     /// This includes save mod compatibility information, and the mod menu.
     /// </summary>
-    internal class MainMenuWorker
+    internal static class MainMenuWorker
     {
         private class ModMenu
         {
@@ -29,15 +29,15 @@ namespace Grindless
 
         public static readonly GlobalData.MainMenu.MenuLevel ReservedModMenuID = (GlobalData.MainMenu.MenuLevel)300;
 
-        private Dictionary<int, SaveCompatibility> _storySaves = new Dictionary<int, SaveCompatibility>();
+        private static Dictionary<int, SaveCompatibility> _storySaves = new Dictionary<int, SaveCompatibility>();
 
-        private SaveCompatibility _arcadeSave;
+        private static SaveCompatibility _arcadeSave;
 
-        private ModMenu _modMenu = new ModMenu();
+        private static ModMenu _modMenu = new ModMenu();
 
-        private int _previousTopMenuSelection;
+        private static int _previousTopMenuSelection;
 
-        public void UpdateStorySaveCompatibility()
+        public static void UpdateStorySaveCompatibility()
         {
             for (int index = 0; index < Globals.Game.xGlobalData.lxCharacterSaves.Count; index++)
             {
@@ -60,7 +60,7 @@ namespace Grindless
             }
         }
 
-        public void UpdateArcadeSaveCompatibility()
+        public static void UpdateArcadeSaveCompatibility()
         {
             if (RogueLikeMode.LockedOutDueToHigherVersionSaveFile)
             {
@@ -81,7 +81,7 @@ namespace Grindless
             }
         }
 
-        public void CheckStorySaveCompatibility()
+        public static void CheckStorySaveCompatibility()
         {
             var menuData = Globals.Game.xGlobalData.xMainMenuData;
 
@@ -101,7 +101,7 @@ namespace Grindless
             }
         }
 
-        public void CheckArcadeSaveCompatiblity()
+        public static void CheckArcadeSaveCompatiblity()
         {
             if (Globals.Game.xGlobalData.xMainMenuData.iTopMenuSelection != 1)
                 return;
@@ -116,7 +116,7 @@ namespace Grindless
             }
         }
 
-        public void RenderMessage(string message, int x, int y)
+        public static void RenderMessage(string message, int x, int y)
         {
             float alpha = Globals.Game.xGlobalData.xMainMenuData.fCurrentMenuAlpha;
 
@@ -128,7 +128,7 @@ namespace Grindless
         }
 
 
-        public void PostTopMenuInterface()
+        public static void PostTopMenuInterface()
         {
             var menuData = Globals.Game.xGlobalData.xMainMenuData;
             var inputData = Globals.Game.xInput_Menu;
@@ -155,7 +155,7 @@ namespace Grindless
             }
         }
 
-        public void RenderReloadModsButton()
+        public static void RenderReloadModsButton()
         {
             var menuData = Globals.Game.xGlobalData.xMainMenuData;
 
@@ -171,7 +171,7 @@ namespace Grindless
             Globals.Game._RenderMaster_RenderTextWithOutline(font, text, new Vector2(160, 268) - center, Vector2.Zero, 1f, colorToUse, Color.Black);
         }
 
-        public void RenderModMenuButton()
+        public static void RenderModMenuButton()
         {
             var menuData = Globals.Game.xGlobalData.xMainMenuData;
             var spriteBatch = Globals.SpriteBatch;
@@ -192,7 +192,7 @@ namespace Grindless
             //Globals.Game._RenderMaster_RenderTextWithOutline(font, "(Unimplemented)", new Vector2(160, 268) - center, Vector2.Zero, 1f, colorToUse, Color.Black);
         }
 
-        public void MenuUpdate()
+        public static void MenuUpdate()
         {
             if (Globals.Game.xGlobalData.xMainMenuData.enTargetMenuLevel != GlobalData.MainMenu.MenuLevel.Null)
             {
@@ -205,7 +205,7 @@ namespace Grindless
             }
         }
 
-        private void ModMenuInterface()
+        private static void ModMenuInterface()
         {
             var input = Globals.Game.xInput_Menu;
 
@@ -247,7 +247,7 @@ namespace Grindless
             }
         }
 
-        public void ModMenuRender()
+        public static void ModMenuRender()
         {
             float alpha = Globals.Game.xGlobalData.xMainMenuData.fCurrentMenuAlpha;
             Color selected = Color.White;

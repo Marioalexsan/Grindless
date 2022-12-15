@@ -58,7 +58,7 @@ namespace Grindless
                 var desc = OriginalMethods.GetEnemyDescription(EnemyCodex.EnemyTypes.TimeTemple_GiantWorm);
 
                 // Recolored worm borrows its enemy description!
-                entry.vanilla = new EnemyDescription(gameID, desc.sNameLibraryHandle, desc.iLevel, desc.iMaxHealth)
+                entry.Vanilla = new EnemyDescription(gameID, desc.sNameLibraryHandle, desc.iLevel, desc.iMaxHealth)
                 {
                     sOnHitSound = desc.sOnHitSound,
                     sOnDeathSound = desc.sOnDeathSound,
@@ -73,23 +73,23 @@ namespace Grindless
                     v2ApproximateSize = desc.v2ApproximateSize,
                 };
 
-                entry.createJournalEntry = false;
+                entry.CreateJournalEntry = false;
             }
             else
             {
-                entry.vanilla = OriginalMethods.GetEnemyDescription(gameID);
-                entry.createJournalEntry = EnemyCodex.lxSortedDescriptions.Contains(entry.vanilla);
+                entry.Vanilla = OriginalMethods.GetEnemyDescription(gameID);
+                entry.CreateJournalEntry = EnemyCodex.lxSortedDescriptions.Contains(entry.Vanilla);
             }
 
-            entry.defaultAnimation = null;
-            entry.displayBackgroundPath = null;
-            entry.displayIconPath = null;
+            entry.DefaultAnimation = null;
+            entry.DisplayBackgroundPath = null;
+            entry.DisplayIconPath = null;
 
-            entry.cardIllustrationPath = OriginalMethods.GetIllustrationPath(gameID);
+            entry.CardIllustrationPath = OriginalMethods.GetIllustrationPath(gameID);
 
-            entry.constructor = null;
-            entry.difficultyScaler = null;
-            entry.eliteScaler = null;
+            entry.Constructor = null;
+            entry.DifficultyScaler = null;
+            entry.EliteScaler = null;
 
             List<EnemyCodex.EnemyTypes> resetCardChance = new List<EnemyCodex.EnemyTypes>()
             {
@@ -105,7 +105,7 @@ namespace Grindless
             if (resetCardChance.Contains(entry.GameID))
             {
                 // These don't have cards, but a drop chance higher than 0 would generate a card entry
-                entry.vanilla.iCardDropChance = 0;
+                entry.Vanilla.iCardDropChance = 0;
             }
 
             return entry;

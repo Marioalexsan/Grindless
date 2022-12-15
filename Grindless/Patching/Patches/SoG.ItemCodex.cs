@@ -4,13 +4,13 @@ using SoG;
 namespace Grindless.Patches
 {
     [HarmonyPatch(typeof(ItemCodex))]
-    class SoG_ItemCodex
+    static class SoG_ItemCodex
     {
         [HarmonyPrefix]
         [HarmonyPatch(nameof(ItemCodex.GetItemDescription))]
-        internal static bool GetItemDescription_Prefix(ref ItemDescription __result, ItemCodex.ItemTypes enType)
+        static bool GetItemDescription_Prefix(ref ItemDescription __result, ItemCodex.ItemTypes enType)
         {
-            var entry = ItemEntry.Entries.Get(enType);;
+            var entry = ItemEntry.Entries.Get(enType);
 
             if (entry != null)
             {
@@ -38,9 +38,9 @@ namespace Grindless.Patches
 
         [HarmonyPostfix]
         [HarmonyPatch(nameof(ItemCodex.GetItemInstance))]
-        internal static void GetItemInstance_Postfix(ref Item __result, ItemCodex.ItemTypes enType)
+        static void GetItemInstance_Postfix(ref Item __result, ItemCodex.ItemTypes enType)
         {
-            var entry = ItemEntry.Entries.Get(enType);;
+            var entry = ItemEntry.Entries.Get(enType);
 
             __result.enType = entry.vanillaItem.enType;
             __result.sFullName = entry.vanillaItem.sFullName;

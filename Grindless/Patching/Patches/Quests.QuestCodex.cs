@@ -4,11 +4,11 @@ using Quests;
 namespace Grindless.Patches
 {
     [HarmonyPatch(typeof(QuestCodex))]
-    internal static class Quests_QuestCodex
+    static class Quests_QuestCodex
     {
         [HarmonyPrefix]
         [HarmonyPatch(nameof(QuestCodex.GetQuestDescription))]
-        public static bool GetQuestDescription_Prefix(ref QuestDescription __result, QuestCodex.QuestID p_enID)
+        static bool GetQuestDescription_Prefix(ref QuestDescription __result, QuestCodex.QuestID p_enID)
         {
             var entry = QuestEntry.Entries.Get(p_enID);
 
@@ -24,7 +24,7 @@ namespace Grindless.Patches
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(QuestCodex.GetQuestInstance))]
-        public static bool GetQuestInstance_Prefix(ref Quest __result, QuestCodex.QuestID p_enID)
+        static bool GetQuestInstance_Prefix(ref Quest __result, QuestCodex.QuestID p_enID)
         {
             var entry = QuestEntry.Entries.Get(p_enID);
 

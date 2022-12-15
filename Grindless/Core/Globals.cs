@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using HarmonyLib;
 using System;
 using SoG;
+using Microsoft.Extensions.Logging;
 
 namespace Grindless
 {
@@ -22,12 +23,14 @@ namespace Grindless
         /// <summary>
         /// Secrets of Grindea's game instance.
         /// </summary>
-        public static Game1 Game { get; internal set; }
+        public static Game1 Game { get; private set; }
+
+        public static string AppDataPath { get; private set; }
 
         /// <summary>
         /// The game's initial (vanilla) version.
         /// </summary>
-        public static string GrindeaVersion { get; internal set; }
+        public static string GrindeaVersion { get; private set; }
 
         /// <summary>
         /// The game's modded version, long form.
@@ -42,8 +45,25 @@ namespace Grindless
         internal static void InitializeGlobals()
         {
             Game = (Game1)typeof(Game1).Assembly.GetType("SoG.Program").GetField("game").GetValue(null);
-            Game.sAppData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/Grindless/";
+            AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/Grindless/";
+            Game.sAppData = AppDataPath;
             Game.xGameSessionData.xRogueLikeSession.bTemporaryHighScoreBlock = true;
+        }
+
+        internal static void UpdateVersionNumber()
+        {
+            Program.Logger.LogDebug("Updating Version Number...");
+
+            GrindeaVersion = Game.sVersionNumberOnly;
+
+            SetVersionTypeAsModded(true);
+
+            var versionDisplayField = typeof(Game1).GetField("sVersion", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            versionDisplayField.SetValue(Game, GrindeaVersion + " with Grindless " + GrindlessVersion);
+
+            Program.Logger.LogInformation("Game Long Version: {Version}", GameVersionFull);
+            Program.Logger.LogInformation("Game Vanilla Version: {Version}", GrindeaVersion);
         }
 
         /// <summary>

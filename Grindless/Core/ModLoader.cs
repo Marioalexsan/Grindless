@@ -24,7 +24,7 @@ namespace Grindless
 
         private static List<Mod> BuildLoadOrder(IEnumerable<Mod> mods)
         {
-            bool CheckDependency(Mod mod, ModDependencyAttribute dep)
+            static bool CheckDependency(Mod mod, ModDependencyAttribute dep)
             {
                 if (dep.NameID != mod.Name)
                 {

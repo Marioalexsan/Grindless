@@ -11,11 +11,11 @@ using SoG;
 namespace Grindless.Patches
 {
     [HarmonyPatch(typeof(MonsterSpawnInArenaTrials))]
-    internal class Bagmen_MonsterSpawnInArenaTrials
+    static class Bagmen_MonsterSpawnInArenaTrials
     {
         [HarmonyTranspiler]
         [HarmonyPatch("SpawnEnemy", typeof(EnemyCodex.EnemyTypes), typeof(Vector2), typeof(Vector2))]
-        public static IEnumerable<CodeInstruction> SpawnEnemy_Transpiler(IEnumerable<CodeInstruction> code, ILGenerator generator)
+        static IEnumerable<CodeInstruction> SpawnEnemy_Transpiler(IEnumerable<CodeInstruction> code, ILGenerator generator)
         {
             List<CodeInstruction> codeList = code.ToList();
 

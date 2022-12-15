@@ -5,13 +5,13 @@ using SoG;
 namespace Grindless.Patches
 {
     [HarmonyPatch(typeof(HudRenderComponent))]
-    internal static class SoG_HudRenderComponent
+    static class SoG_HudRenderComponent
     {
         [HarmonyPrefix]
         [HarmonyPatch(nameof(HudRenderComponent.GetBuffTexture))]
-        internal static bool GetBuffTexture_Prefix(ref Texture2D __result, BaseStats.StatusEffectSource en)
+        static bool GetBuffTexture_Prefix(ref Texture2D __result, BaseStats.StatusEffectSource en)
         {
-            var entry = StatusEffectEntry.Entries.Get(en); ;
+            var entry = StatusEffectEntry.Entries.Get(en);
 
             if (entry == null)
             {

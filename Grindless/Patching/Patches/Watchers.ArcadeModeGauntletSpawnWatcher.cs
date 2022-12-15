@@ -8,11 +8,11 @@ using CodeList = System.Collections.Generic.IEnumerable<HarmonyLib.CodeInstructi
 namespace Grindless.Patches
 {
     [HarmonyPatch(typeof(ArcadeModeGauntletSpawnWatcher))]
-    internal static class Watchers_ArcadeModeGauntletSpawnWatcher
+    static class Watchers_ArcadeModeGauntletSpawnWatcher
     {
         [HarmonyPatch(nameof(ArcadeModeGauntletSpawnWatcher.Update))]
         [HarmonyTranspiler]
-        internal static CodeList Update_Transpiler(CodeList code, ILGenerator gen)
+        static CodeList Update_Transpiler(CodeList code, ILGenerator gen)
         {
             List<CodeInstruction> codeList = code.ToList();
 

@@ -4,11 +4,11 @@ using SoG;
 namespace Grindless.Patches
 {
     [HarmonyPatch(typeof(PinCodex))]
-    internal static class SoG_PinCodex
+    static class SoG_PinCodex
     {
         [HarmonyPrefix]
         [HarmonyPatch(nameof(PinCodex.GetInfo))]
-        internal static bool GetInfo_Prefix(ref PinInfo __result, PinCodex.PinType enType)
+        static bool GetInfo_Prefix(ref PinInfo __result, PinCodex.PinType enType)
         {
             var entry = PinEntry.Entries.Get(enType);
 

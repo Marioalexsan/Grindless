@@ -7,7 +7,7 @@ using SoG;
 namespace Grindless.Patches
 {
     [HarmonyPatch(typeof(WeaponContentManager))]
-    internal static class WeaponAssets_WeaponContentManager
+    static class WeaponAssets_WeaponContentManager
     {
         /// <summary>
         /// Loads weapon assets for a mod entry.
@@ -15,7 +15,7 @@ namespace Grindless.Patches
         /// </summary>
         [HarmonyPrefix]
         [HarmonyPatch("LoadBatch", typeof(Dictionary<ushort, string>))] // Protected Method
-        internal static bool LoadBatch_Prefix(ref Dictionary<ushort, string> dis, WeaponContentManager __instance)
+        static bool LoadBatch_Prefix(ref Dictionary<ushort, string> dis, WeaponContentManager __instance)
         {
             var entry = ItemEntry.Entries.Get(__instance.enType);
 

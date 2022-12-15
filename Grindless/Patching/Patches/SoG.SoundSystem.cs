@@ -17,29 +17,23 @@ namespace Grindless.Patches
     /// Contains patches for SoundSystem class.
     /// </summary>
     [HarmonyPatch(typeof(SoundSystem))]
-    internal static class SoG_SoundSystem
+    static class SoG_SoundSystem
     {
         #region Reflected stuff
 
-        private static FieldInfo s_musicWaveBank = AccessTools.Field(typeof(SoundSystem), "musicWaveBank");
-
-        private static FieldInfo s_loadedMusicWaveBank = AccessTools.Field(typeof(SoundSystem), "loadedMusicWaveBank");
-
-        private static FieldInfo s_standbyWaveBanks = AccessTools.Field(typeof(SoundSystem), "dsxStandbyWaveBanks");
-
-        private static FieldInfo s_songRegionMap = AccessTools.Field(typeof(SoundSystem), "dssSongRegionMap");
-
-        private static FieldInfo s_universalMusic = AccessTools.Field(typeof(SoundSystem), "universalMusicWaveBank");
-
-        private static FieldInfo s_audioEngine = AccessTools.Field(typeof(SoundSystem), "audioEngine");
-
-        private static MethodInfo s_checkStandbyBanks = AccessTools.Method(typeof(SoundSystem), "CheckStandbyBanks");
+        static readonly FieldInfo s_musicWaveBank = AccessTools.Field(typeof(SoundSystem), "musicWaveBank");
+        static readonly FieldInfo s_loadedMusicWaveBank = AccessTools.Field(typeof(SoundSystem), "loadedMusicWaveBank");
+        static readonly FieldInfo s_standbyWaveBanks = AccessTools.Field(typeof(SoundSystem), "dsxStandbyWaveBanks");
+        static readonly FieldInfo s_songRegionMap = AccessTools.Field(typeof(SoundSystem), "dssSongRegionMap");
+        static readonly FieldInfo s_universalMusic = AccessTools.Field(typeof(SoundSystem), "universalMusicWaveBank");
+        static readonly FieldInfo s_audioEngine = AccessTools.Field(typeof(SoundSystem), "audioEngine");
+        static readonly MethodInfo s_checkStandbyBanks = AccessTools.Method(typeof(SoundSystem), "CheckStandbyBanks");
 
         #endregion
 
         [HarmonyTranspiler]
         [HarmonyPatch(nameof(SoundSystem.PlayInterfaceCue))]
-        internal static CodeList PlayInterfaceCue_Transpiler(CodeList code, ILGenerator gen)
+        static CodeList PlayInterfaceCue_Transpiler(CodeList code, ILGenerator gen)
         {
             var codeList = code.ToList();
 
@@ -76,7 +70,7 @@ namespace Grindless.Patches
 
         [HarmonyTranspiler]
         [HarmonyPatch(nameof(SoundSystem.PlayTrackableInterfaceCue))]
-        internal static CodeList PlayTrackableInterfaceCue_Transpiler(CodeList code, ILGenerator gen)
+        static CodeList PlayTrackableInterfaceCue_Transpiler(CodeList code, ILGenerator gen)
         {
             var codeList = code.ToList();
 
@@ -114,35 +108,35 @@ namespace Grindless.Patches
 
         [HarmonyTranspiler]
         [HarmonyPatch(nameof(SoundSystem.PlayCue), typeof(string), typeof(Vector2))]
-        internal static CodeList PlayCue_0_Transpiler(CodeList code, ILGenerator gen)
+        static CodeList PlayCue_0_Transpiler(CodeList code, ILGenerator gen)
         {
             return PlayTrackableInterfaceCue_Transpiler(code, gen);
         }
 
         [HarmonyTranspiler]
         [HarmonyPatch(nameof(SoundSystem.PlayCue), typeof(string), typeof(TransformComponent))]
-        internal static CodeList PlayCue_1_Transpiler(CodeList code, ILGenerator gen)
+        static CodeList PlayCue_1_Transpiler(CodeList code, ILGenerator gen)
         {
             return PlayTrackableInterfaceCue_Transpiler(code, gen);
         }
 
         [HarmonyTranspiler]
         [HarmonyPatch(nameof(SoundSystem.PlayCue), typeof(string), typeof(Vector2), typeof(float))]
-        internal static CodeList PlayCue_2_Transpiler(CodeList code, ILGenerator gen)
+        static CodeList PlayCue_2_Transpiler(CodeList code, ILGenerator gen)
         {
             return PlayTrackableInterfaceCue_Transpiler(code, gen);
         }
 
         [HarmonyTranspiler]
         [HarmonyPatch(nameof(SoundSystem.PlayCue), typeof(string), typeof(IEntity), typeof(bool), typeof(bool))]
-        internal static CodeList PlayCue_3_Transpiler(CodeList code, ILGenerator gen)
+        static CodeList PlayCue_3_Transpiler(CodeList code, ILGenerator gen)
         {
             return PlayTrackableInterfaceCue_Transpiler(code, gen);
         }
 
         [HarmonyTranspiler]
         [HarmonyPatch(nameof(SoundSystem.ReadySongInCue))]
-        internal static CodeList ReadySongInCue_Transpiler(CodeList code, ILGenerator gen)
+        static CodeList ReadySongInCue_Transpiler(CodeList code, ILGenerator gen)
         {
             var codeList = code.ToList();
 
@@ -179,7 +173,7 @@ namespace Grindless.Patches
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(SoundSystem.PlaySong))]
-        internal static void PlaySong_Prefix(ref string sSongName, bool bFadeIn)
+        static void PlaySong_Prefix(ref string sSongName, bool bFadeIn)
         {
             var redirects = AudioEntry.VanillaMusicRedirects;
             string audioIDToUse = sSongName;
@@ -192,14 +186,14 @@ namespace Grindless.Patches
 
         [HarmonyTranspiler]
         [HarmonyPatch(nameof(SoundSystem.PlaySong))]
-        internal static CodeList PlaySong_Transpiler(CodeList code, ILGenerator gen)
+        static CodeList PlaySong_Transpiler(CodeList code, ILGenerator gen)
         {
             return ReadySongInCue_Transpiler(code, gen);
         }
 
         [HarmonyTranspiler]
         [HarmonyPatch(nameof(SoundSystem.PlayMixCues))]
-        internal static CodeList PlayMixCues_Transpiler(CodeList code, ILGenerator gen)
+        static CodeList PlayMixCues_Transpiler(CodeList code, ILGenerator gen)
         {
             var codeList = code.ToList();
 
@@ -261,7 +255,7 @@ namespace Grindless.Patches
 
         [HarmonyPrefix]
         [HarmonyPatch(nameof(SoundSystem.ChangeSongRegionIfNecessary))]
-        internal static bool ChangeSongRegionIfNecessary_Prefix(ref SoundSystem __instance, string sSongName)
+        static bool ChangeSongRegionIfNecessary_Prefix(ref SoundSystem __instance, string sSongName)
         {
             SoundSystem system = __instance;
 
