@@ -23,6 +23,7 @@ cmd = [
     '/out:merged/' + target_assembly,
     '/zeropekind',
     '/union',
+    '/xmldocs',
     target_assembly,
     ' '.join(assemblies)
 ]

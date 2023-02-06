@@ -18,7 +18,7 @@ namespace Grindless
         /// <summary>
         /// The version of the mod tool.
         /// </summary>
-        public static Version GrindlessVersion => new Version(1, 0);
+        public static Version GrindlessVersion => new Version(1, 1);
 
         /// <summary>
         /// Secrets of Grindea's game instance.

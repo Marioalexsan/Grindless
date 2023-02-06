@@ -86,15 +86,15 @@ namespace Grindless
 
             // Clears all regions
             Globals.Game.xLevelMaster.denxRegionContent.Clear();
-
-            // Reloads original recipes
-            Crafting.CraftSystem.InitCraftSystem();
         }
 
         private static void PrepareSoGStatePostLoad()
         {
             // Reloads menu characters for new textures and item descriptions
             Globals.Game._Menu_CharacterSelect_Init();
+
+            // Reloads original recipes
+            Crafting.CraftSystem.InitCraftSystem();
         }
 
         private static void LoadMods(IEnumerable<Mod> mods)

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using System;
 using System.IO;
 
 namespace Grindless
@@ -21,22 +22,26 @@ namespace Grindless
 
             using (MemoryStream stream = new MemoryStream(Resources.Resources.NullTexGS))
             {
-                NullTexture = Texture2D.FromStream(Globals.Game.GraphicsDevice, stream);
+                NullTexture = Texture2D.FromStream(Globals.Game.GraphicsDevice, stream)
+                    ?? throw new InvalidOperationException("Failed to load a resource.");
             }
 
             using (MemoryStream stream = new MemoryStream(Resources.Resources.ModList))
             {
-                ModList = Texture2D.FromStream(Globals.Game.GraphicsDevice, stream);
+                ModList = Texture2D.FromStream(Globals.Game.GraphicsDevice, stream)
+                    ?? throw new InvalidOperationException("Failed to load a resource.");
             }
             
             using (MemoryStream stream = new MemoryStream(Resources.Resources.ModMenu))
             {
-                ModMenu = Texture2D.FromStream(Globals.Game.GraphicsDevice, stream);
+                ModMenu = Texture2D.FromStream(Globals.Game.GraphicsDevice, stream)
+                    ?? throw new InvalidOperationException("Failed to load a resource.");
             }
 
             using (MemoryStream stream = new MemoryStream(Resources.Resources.ReloadMods))
             {
-                ReloadMods = Texture2D.FromStream(Globals.Game.GraphicsDevice, stream);
+                ReloadMods = Texture2D.FromStream(Globals.Game.GraphicsDevice, stream)
+                    ?? throw new InvalidOperationException("Failed to load a resource.");
             }
         }
 

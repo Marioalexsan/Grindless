@@ -22,10 +22,7 @@ namespace Grindless.Patches
                 }
                 else
                 {
-                    if (__result.txDisplayImage == null)
-                    {
-                        __result.txDisplayImage = GrindlessResources.NullTexture;
-                    }
+                    __result.txDisplayImage ??= GrindlessResources.NullTexture;
                 }
             }
             else
