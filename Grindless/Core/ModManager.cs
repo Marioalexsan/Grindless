@@ -4,6 +4,7 @@ using System.Linq;
 using SoG;
 using Microsoft.Extensions.Logging;
 using Quests;
+using HarmonyLib;
 
 namespace Grindless
 {
@@ -15,6 +16,8 @@ namespace Grindless
         internal static Mod CurrentlyLoadingMod { get; private set; }
 
         internal static List<Mod> Mods { get; } = new List<Mod>();
+
+        private static Harmony _modPatcher = new Harmony("Grindless.ModPatches");
 
         public static void Reload()
         {
@@ -39,6 +42,12 @@ namespace Grindless
             foreach (Mod mod in Mods.AsEnumerable().Reverse())
                 mod.Unload();
 
+            Program.Logger.LogInformation("Unpatching mods...");
+
+            _modPatcher.UnpatchAll(_modPatcher.Id);
+
+            Program.Logger.LogInformation("Clearing mod entries...");
+
             AudioEntry.Entries.Reset();
             CommandEntry.Entries.Reset();
             CurseEntry.Entries.Reset();
@@ -61,6 +70,8 @@ namespace Grindless
 
         private static void ReloadSoGState()
         {
+            Program.Logger.LogInformation("Reloading game state...");
+
             // Unloads some mod textures for enemies. Textures are always requeried, so it's allowed
             InGameMenu.contTempAssetManager?.Unload();
 
@@ -86,10 +97,15 @@ namespace Grindless
 
             // Clears all regions
             Globals.Game.xLevelMaster.denxRegionContent.Clear();
+
+            // Reload spell variables
+            SpellVariable.Init();
         }
 
         private static void PrepareSoGStatePostLoad()
         {
+            Program.Logger.LogInformation("Reloading game state (post mod load)...");
+
             // Reloads menu characters for new textures and item descriptions
             Globals.Game._Menu_CharacterSelect_Init();
 
@@ -99,11 +115,24 @@ namespace Grindless
 
         private static void LoadMods(IEnumerable<Mod> mods)
         {
+            Program.Logger.LogInformation("Patching mods...");
+
+            foreach (var assembly in mods.Where(x => !x.IsBuiltin).Select(x => x.GetType().Assembly).Distinct())
+            {
+                Program.Logger.LogInformation("Patching assembly {}...", assembly.GetName());
+
+                _modPatcher.PatchAll(assembly);
+
+                Program.Logger.LogInformation("Patched {} methods in total!", _modPatcher.GetPatchedMethods().Count());
+            }
+
+            Program.Logger.LogInformation("Loading mods...");
+
             foreach (Mod mod in mods)
             {
                 CurrentlyLoadingMod = mod;
 
-                Program.Logger.LogInformation("Loading {mod}", mod.Name);
+                Program.Logger.LogInformation("Loading {mod}..", mod.Name);
 
                 mod.Load();
 

@@ -5,16 +5,29 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Grindless", "Grindless\Grindless.csproj", "{80C2F4F0-5D97-44DB-88E7-CF638333337B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grindless.Test", "Grindless.Test\Grindless.Test.csproj", "{FC832A7E-40E7-423D-AE44-E4C38417D9D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{80C2F4F0-5D97-44DB-88E7-CF638333337B}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{80C2F4F0-5D97-44DB-88E7-CF638333337B}.Debug|Any CPU.Build.0 = Debug|x86
 		{80C2F4F0-5D97-44DB-88E7-CF638333337B}.Debug|x86.ActiveCfg = Debug|x86
 		{80C2F4F0-5D97-44DB-88E7-CF638333337B}.Debug|x86.Build.0 = Debug|x86
+		{80C2F4F0-5D97-44DB-88E7-CF638333337B}.Release|Any CPU.ActiveCfg = Release|x86
+		{80C2F4F0-5D97-44DB-88E7-CF638333337B}.Release|Any CPU.Build.0 = Release|x86
 		{80C2F4F0-5D97-44DB-88E7-CF638333337B}.Release|x86.ActiveCfg = Release|x86
 		{80C2F4F0-5D97-44DB-88E7-CF638333337B}.Release|x86.Build.0 = Release|x86
+		{FC832A7E-40E7-423D-AE44-E4C38417D9D8}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{FC832A7E-40E7-423D-AE44-E4C38417D9D8}.Debug|x86.ActiveCfg = Debug|x86
+		{FC832A7E-40E7-423D-AE44-E4C38417D9D8}.Debug|x86.Build.0 = Debug|x86
+		{FC832A7E-40E7-423D-AE44-E4C38417D9D8}.Release|Any CPU.ActiveCfg = Release|x86
+		{FC832A7E-40E7-423D-AE44-E4C38417D9D8}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

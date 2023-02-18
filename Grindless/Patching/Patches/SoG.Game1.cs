@@ -90,9 +90,11 @@ namespace Grindless.Patches
         {
             ContentManager VanillaContent = RenderMaster.contPlayerStuff;
 
-            __result = new PlayerAnimationTextureSet() { bWeaponOnTop = bWeaponOnTop };
-
-            AssetUtils.TryLoadTexture($"Sprites/Heroes/{sAnimation}/{sDirection}", VanillaContent, out __result.txBase);
+            __result = new PlayerAnimationTextureSet
+            {
+                bWeaponOnTop = bWeaponOnTop,
+                txBase = VanillaContent.TryLoad<Texture2D>($"Sprites/Heroes/{sAnimation}/{sDirection}")
+            };
 
             if (bWithShield)
             {
@@ -110,15 +112,11 @@ namespace Grindless.Patches
                 }
                 else
                 {
-                    if (entry.useVanillaResourceFormat)
-                    {
-                        AssetUtils.TryLoadTexture($"Sprites/Heroes/{sAnimation}/Shields/{shield.sResourceName}/{sDirection}", VanillaContent, out __result.txShield);
-                    }
-                    else
-                    {
-                        // Mods use a different path format
-                        AssetUtils.TryLoadTexture($"{shield.sResourceName}/{sAnimation}/{sDirection}", VanillaContent, out __result.txShield);
-                    }
+                    var pathToUse = entry.useVanillaResourceFormat ?
+                        $"Sprites/Heroes/{sAnimation}/Shields/{shield.sResourceName}/{sDirection}" :
+                        $"{shield.sResourceName}/{sAnimation}/{sDirection}";
+
+                    __result.txShield = VanillaContent.TryLoad<Texture2D>(pathToUse);
                 }
             }
 
@@ -151,11 +149,10 @@ namespace Grindless.Patches
                 }
 
                 __result = GrindlessResources.NullTexture;
-                return false;
             }
             else
             {
-                AssetUtils.TryLoadTexture(entry.TexturePath, Globals.Game.Content, out __result);
+                __result = Globals.Game.Content.TryLoad<Texture2D>(entry.TexturePath);
             }
 
             return false;
@@ -222,7 +219,7 @@ namespace Grindless.Patches
                 }
                 else
                 {
-                    AssetUtils.TryLoadTexture(entry.TexturePath, Globals.Game.Content, out __result);
+                    __result = Globals.Game.Content.TryLoad<Texture2D>(entry.TexturePath);
                 }
             }
             else

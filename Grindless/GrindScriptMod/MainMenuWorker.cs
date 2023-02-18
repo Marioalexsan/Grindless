@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using SoG;
+using System.Linq;
 
 namespace Grindless
 {
@@ -257,7 +258,6 @@ namespace Grindless
 
             Globals.Game._Menu_RenderContentBox(spriteBatch, alpha, new Rectangle(235, 189, 173, 138));
 
-
             Texture2D reloadModsTex = GrindlessResources.ReloadMods;
             Vector2 reloadModsCenter = new Vector2(reloadModsTex.Width / 2, reloadModsTex.Height / 2);
             Color reloadModsColor = _modMenu.Selection == 0 ? selected : notSelected;
@@ -273,7 +273,7 @@ namespace Grindless
 
             string message = "Mods loaded:\n";
 
-            foreach (Mod mod in ModManager.Mods)
+            foreach (Mod mod in ModManager.Mods.Where(x => x.Name != VanillaMod.ModName))
             {
                 message += mod.Name + " v." + (mod.Version?.ToString() ?? "Unknown") + "\n";
             }

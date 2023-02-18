@@ -32,7 +32,7 @@ namespace Grindless.Patches
                 {
                     if (path != null)
                     {
-                        AssetUtils.TryLoadTexture(Path.Combine(path, directions[index]), Globals.Game.Content, out __result.atxTextures[index]);
+                        __result.atxTextures[index] = Globals.Game.Content.TryLoad<Texture2D>(Path.Combine(path, directions[index]));
                     }
                     else if (__result.atxTextures[index] == null)
                     {

@@ -249,24 +249,22 @@ namespace Grindless
                 }
             }
 
-            string root = Path.Combine(Globals.Game.Content.RootDirectory, Mod.AssetPath);
+            string root = Path.Combine(Globals.Game.Content.RootDirectory, Mod.AssetPath, "Sound");
+            string name = Mod.Name;
 
             // Non-unique sound / wave banks will cause audio conflicts
             // This is why the file paths are set in stone
-            AssetUtils.TryLoadWaveBank(Path.Combine(root, "Sound", Mod.Name + "Effects.xwb"), audioEngine, out effectsWB);
-            AssetUtils.TryLoadSoundBank(Path.Combine(root, "Sound", Mod.Name + "Effects.xsb"), audioEngine, out effectsSB);
-            AssetUtils.TryLoadSoundBank(Path.Combine(root, "Sound", Mod.Name + "Music.xsb"), audioEngine, out musicSB);
-            AssetUtils.TryLoadWaveBank(Path.Combine(root, "Sound", Mod.Name + ".xwb"), audioEngine, out universalWB);
+            effectsWB = audioEngine.TryLoadWaveBank(Path.Combine(root, $"{name}Effects.xwb"));
+            effectsSB = audioEngine.TryLoadSoundBank(Path.Combine(root, $"{name}Effects.xsb"));
+            musicSB = audioEngine.TryLoadSoundBank(Path.Combine(root, $"{name}Music.xsb"));
+            universalWB = audioEngine.TryLoadWaveBank(Path.Combine(root, $"{name}.xwb"));
         }
 
         protected override void Cleanup()
         {
             effectsSB?.Dispose();
-
             effectsWB?.Dispose();
-
             musicSB?.Dispose();
-
             universalWB?.Dispose();
         }
     }

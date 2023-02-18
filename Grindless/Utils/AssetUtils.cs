@@ -3,10 +3,12 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SoG;
+using Steamworks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using static SoG.LordOfTextures;
 
 namespace Grindless
 {
@@ -52,35 +54,43 @@ namespace Grindless
             }
         }
 
-        /// <summary>
-        /// Tries to load a texture from the given path and ContentManager.
-        /// Returns true if the operation succeeded, false otherwise.
-        /// If the operation failed, result is set to RenderMaster.txNullTexture.
-        /// </summary>
-        public static bool TryLoadTexture(string path, ContentManager manager, out Texture2D result)
+        public static T TryLoad<T>(this ContentManager manager, string path)
+            where T : class
+        {
+            manager.TryLoad<T>(path, out T asset);
+            return asset;
+        }
+
+        public static bool TryLoad<T>(this ContentManager manager, string path, out T asset)
+            where T : class
         {
             try
             {
-                result = manager.Load<Texture2D>(path);
+                asset = manager.Load<T>(path);
                 return true;
             }
             catch
             {
-                result = RenderMaster.txNullTex;
+                if (typeof(T) == typeof(Texture2D))
+                    asset = GrindlessResources.NullTexture as T;
+
+                else asset = null;
+                
                 return false;
             }
         }
 
-        /// <summary>
-        /// Tries to load a WaveBank using the provided path and AudioEngine.
-        /// Returns true if the operation succeeded, false otherwise.
-        /// If the operation failed, result is set to null.
-        /// </summary>
-        public static bool TryLoadWaveBank(string assetPath, AudioEngine engine, out WaveBank result)
+        public static WaveBank TryLoadWaveBank(this AudioEngine engine, string path)
+        {
+            engine.TryLoadWaveBank(path, out WaveBank asset);
+            return asset;
+        }
+
+        public static bool TryLoadWaveBank(this AudioEngine engine, string path, out WaveBank result)
         {
             try
             {
-                result = new WaveBank(engine, assetPath);
+                result = new WaveBank(engine, path);
                 return true;
             }
             catch
@@ -90,15 +100,17 @@ namespace Grindless
             }
         }
 
-        /// <summary>
-        /// Tries to load a SoundBank using the provided path and AudioEngine, and returns it if successful.
-        /// If an exception is thrown during load, null is returned, and a warning message is logged.
-        /// </summary>
-        public static bool TryLoadSoundBank(string assetPath, AudioEngine engine, out SoundBank result)
+        public static SoundBank TryLoadSoundBank(this AudioEngine engine, string path)
+        {
+            engine.TryLoadSoundBank(path, out SoundBank asset);
+            return asset;
+        }
+
+        public static bool TryLoadSoundBank(this AudioEngine engine, string path, out SoundBank result)
         {
             try
             {
-                result = new SoundBank(engine, assetPath);
+                result = new SoundBank(engine, path);
                 return true;
             }
             catch
@@ -113,7 +125,7 @@ namespace Grindless
         /// Experimental internal method that unloads all modded assets from a manager.
         /// Modded assets are assets for which <see cref="ModUtils.IsModContentPath(string)"/> returns true.
         /// </summary>
-        internal static void UnloadModContentPathAssets(ContentManager manager)
+        internal static void UnloadModContentPathAssets(this ContentManager manager)
         {
             GetContentManagerFields(manager, out List<IDisposable> disposableAssets, out Dictionary<string, object> loadedAssets);
 

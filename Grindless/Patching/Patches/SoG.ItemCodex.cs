@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using Microsoft.Xna.Framework.Graphics;
 using SoG;
 
 namespace Grindless.Patches
@@ -18,7 +19,7 @@ namespace Grindless.Patches
 
                 if (entry.iconPath != null)
                 {
-                    AssetUtils.TryLoadTexture(entry.iconPath, Globals.Game.Content, out __result.txDisplayImage);
+                    __result.txDisplayImage = Globals.Game.Content.TryLoad<Texture2D>(entry.iconPath);
                 }
                 else
                 {
@@ -43,28 +44,24 @@ namespace Grindless.Patches
             __result.sFullName = entry.vanillaItem.sFullName;
             __result.bGiveToServer = entry.vanillaItem.lenCategory.Contains(ItemCodex.ItemCategories.GrantToServer);
 
+            var manager = Globals.Game.xLevelMaster.contRegionContent;
+
             if (entry.iconPath != null)
             {
-                AssetUtils.TryLoadTexture(entry.iconPath, Globals.Game.xLevelMaster.contRegionContent, out __result.xRenderComponent.txTexture);
+                __result.xRenderComponent.txTexture = manager.TryLoad<Texture2D>(entry.iconPath);
             }
             else
             {
-                if (__result.xRenderComponent.txTexture == null)
-                {
-                    __result.xRenderComponent.txTexture = entry.vanillaItem.txDisplayImage;
-                }
+                __result.xRenderComponent.txTexture ??= entry.vanillaItem.txDisplayImage;
             }
 
             if (entry.shadowPath != null)
             {
-                AssetUtils.TryLoadTexture(entry.shadowPath, Globals.Game.xLevelMaster.contRegionContent, out __result.xRenderComponent.txShadowTexture);
+                __result.xRenderComponent.txShadowTexture = manager.TryLoad<Texture2D>(entry.shadowPath);
             }
             else
             {
-                if (__result.xRenderComponent.txShadowTexture == null)
-                {
-                    AssetUtils.TryLoadTexture("Items/DropAppearance/hartass02", Globals.Game.xLevelMaster.contRegionContent, out __result.xRenderComponent.txShadowTexture);
-                }
+                __result.xRenderComponent.txShadowTexture ??= manager.TryLoad<Texture2D>("Items/DropAppearance/hartass02");
             }
         }
     }

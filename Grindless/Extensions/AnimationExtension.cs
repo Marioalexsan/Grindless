@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using System;
 using SoG;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Grindless
 {
@@ -71,7 +72,7 @@ namespace Grindless
         /// </summary>
         public static Animation LoadTexture(this Animation anim, ContentManager manager, string path)
         {
-            AssetUtils.TryLoadTexture(path, manager, out anim.txTexture);
+            anim.txTexture = manager.TryLoad<Texture2D>(path);
             return anim;
         }
 
@@ -80,7 +81,7 @@ namespace Grindless
         /// </summary>
         public static Animation LoadTwilightTexture(this Animation anim, ContentManager manager, string path)
         {
-            AssetUtils.TryLoadTexture(path, manager, out anim.txTwilightTexture);
+            anim.txTwilightTexture = manager.TryLoad<Texture2D>(path);
             return anim;
         }
 

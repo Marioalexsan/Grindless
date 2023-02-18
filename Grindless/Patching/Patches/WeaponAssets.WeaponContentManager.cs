@@ -47,8 +47,7 @@ namespace Grindless.Patches
                     }
                 }
 
-                AssetUtils.TryLoadTexture(texPath, __instance.contWeaponContent, out Texture2D tex);
-                __instance.ditxWeaponTextures.Add(kvp.Key, tex);
+                __instance.ditxWeaponTextures.Add(kvp.Key, __instance.contWeaponContent.TryLoad<Texture2D>(texPath));
             }
 
             return false;

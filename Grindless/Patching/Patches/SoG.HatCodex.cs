@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using System.IO;
 using SoG;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Grindless.Patches
 {
@@ -31,7 +32,7 @@ namespace Grindless.Patches
                     {
                         if (path != null)
                         {
-                            AssetUtils.TryLoadTexture(Path.Combine(path, directions[index]), Globals.Game.Content, out __result.xDefaultSet.atxTextures[index]);
+                            __result.xDefaultSet.atxTextures[index] = Globals.Game.Content.TryLoad<Texture2D>(Path.Combine(path, directions[index]));
                         }
                         else
                         {
@@ -52,8 +53,7 @@ namespace Grindless.Patches
                         {
                             if (path != null && kvp.Value != null)
                             {
-                                string altPath = Path.Combine(path, kvp.Value);
-                                AssetUtils.TryLoadTexture(Path.Combine(altPath, directions[index]), Globals.Game.Content, out altSet.atxTextures[index]);
+                                altSet.atxTextures[index] = Globals.Game.Content.TryLoad<Texture2D>(Path.Combine(path, kvp.Value, directions[index]));
                             }
                             else
                             {

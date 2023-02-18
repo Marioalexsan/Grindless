@@ -31,7 +31,7 @@ namespace Grindless.Patches
                 return false;
             }
 
-            AssetUtils.TryLoadTexture(entry.TexturePath, Globals.Game.Content, out __result);
+            __result = Globals.Game.Content.TryLoad<Texture2D>(entry.TexturePath);
             return false;
         }
     }

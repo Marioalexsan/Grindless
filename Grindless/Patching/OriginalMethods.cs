@@ -65,50 +65,50 @@ namespace Grindless
             throw new NotImplementedException("Stub method.");
         }
 
-        [HarmonyReversePatch]
-        [HarmonyPatch(typeof(EnemyCodex), nameof(EnemyCodex.GetEnemyDefaultAnimation))]
+        //[HarmonyReversePatch]
+        //[HarmonyPatch(typeof(EnemyCodex), nameof(EnemyCodex.GetEnemyDefaultAnimation))]
         public static Animation GetEnemyDefaultAnimation(EnemyCodex.EnemyTypes enType, ContentManager Content)
         {
             throw new NotImplementedException("Stub method.");
         }
 
-        [HarmonyReversePatch]
-        [HarmonyPatch(typeof(EnemyCodex), nameof(EnemyCodex.GetEnemyDisplayIcon))]
+        //[HarmonyReversePatch]
+        //[HarmonyPatch(typeof(EnemyCodex), nameof(EnemyCodex.GetEnemyDisplayIcon))]
         public static Texture2D GetEnemyDisplayIcon(EnemyCodex.EnemyTypes enType, ContentManager Content, bool bBigIfPossible)
         {
             throw new NotImplementedException("Stub method.");
         }
 
-        [HarmonyReversePatch]
-        [HarmonyPatch(typeof(EnemyCodex), nameof(EnemyCodex.GetEnemyLocationPicture))]
+        //[HarmonyReversePatch]
+        //[HarmonyPatch(typeof(EnemyCodex), nameof(EnemyCodex.GetEnemyLocationPicture))]
         public static Texture2D GetEnemyLocationPicture(EnemyCodex.EnemyTypes enType, ContentManager Content)
         {
             throw new NotImplementedException("Stub method.");
         }
 
-        [HarmonyReversePatch]
-        [HarmonyPatch(typeof(Game1), nameof(Game1._Enemy_AdjustForDifficulty))]
+        //[HarmonyReversePatch]
+        //[HarmonyPatch(typeof(Game1), nameof(Game1._Enemy_AdjustForDifficulty))]
         public static void _Enemy_AdjustForDifficulty(Game1 __instance, Enemy xEn)
         {
             throw new NotImplementedException("Stub method.");
         }
 
-        [HarmonyReversePatch]
-        [HarmonyPatch(typeof(Game1), nameof(Game1._Enemy_MakeElite))]
+        //[HarmonyReversePatch]
+        //[HarmonyPatch(typeof(Game1), nameof(Game1._Enemy_MakeElite))]
         public static bool _Enemy_MakeElite(Game1 __instance, Enemy xEn, bool bAttachEffect)
         {
             throw new NotImplementedException("Stub method.");
         }
 
-        [HarmonyReversePatch]
-        [HarmonyPatch(typeof(EnemyCodex), nameof(EnemyCodex.GetEnemyInstance_CacuteForward))]
+        //[HarmonyReversePatch]
+        //[HarmonyPatch(typeof(EnemyCodex), nameof(EnemyCodex.GetEnemyInstance_CacuteForward))]
         public static Enemy GetEnemyInstance_CacuteForward(EnemyCodex.EnemyTypes enType, Level.WorldRegion enOverrideContent)
         {
             throw new NotImplementedException("Stub method.");
         }
 
-        [HarmonyReversePatch]
-        [HarmonyPatch(typeof(EnemyCodex), nameof(EnemyCodex.GetEnemyInstance))]
+        //[HarmonyReversePatch]
+        //[HarmonyPatch(typeof(EnemyCodex), nameof(EnemyCodex.GetEnemyInstance))]
         public static Enemy GetEnemyInstance(EnemyCodex.EnemyTypes enType, Level.WorldRegion enOverrideContent)
         {
             static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -221,8 +221,8 @@ namespace Grindless
 
         #region Perks
 
-        [HarmonyReversePatch]
-        [HarmonyPatch(typeof(Game1), nameof(Game1._RogueLike_GetPerkTexture))]
+        //[HarmonyReversePatch]
+        //[HarmonyPatch(typeof(Game1), nameof(Game1._RogueLike_GetPerkTexture))]
         public static Texture2D _RogueLike_GetPerkTexture(Game1 __instance, RogueLikeMode.Perks enPerk)
         {
             throw new NotImplementedException("Stub method.");
@@ -239,8 +239,8 @@ namespace Grindless
 
         #region Pins
 
-        [HarmonyReversePatch]
-        [HarmonyPatch(typeof(PinCodex), nameof(PinCodex.GetInfo))]
+        //[HarmonyReversePatch]
+        //[HarmonyPatch(typeof(PinCodex), nameof(PinCodex.GetInfo))]
         public static PinInfo GetPinInfo(RogueLikeMode.Perks enType)
         {
             throw new NotImplementedException("Stub method.");

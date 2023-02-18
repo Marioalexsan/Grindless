@@ -97,7 +97,7 @@ namespace Grindless.Patches
                     return false;  // Texture not set...
                 }
 
-                AssetUtils.TryLoadTexture(entry.DisplayIconPath, Content, out __result);
+                __result = Content.TryLoad<Texture2D>(entry.DisplayIconPath);
                 return false;
             }
 
@@ -124,7 +124,7 @@ namespace Grindless.Patches
                     return false;  // Texture not set...
                 }
 
-                AssetUtils.TryLoadTexture(entry.DisplayBackgroundPath, Content, out __result);
+                __result = Content.TryLoad<Texture2D>(entry.DisplayBackgroundPath);
                 return false;
             }
 
