@@ -86,6 +86,10 @@ namespace Grindless
             return _entries.Values.FirstOrDefault(x => x.Mod == mod && x.ModID == modID);
         }
 
+        public EntryType GetRequired(IDType gameID) => Get(gameID) ?? throw new InvalidOperationException($"Couldn't retrieve entry {gameID}");
+
+        public EntryType GetRequired(Mod mod, string modID) => Get(mod, modID) ?? throw new InvalidOperationException($"Couldn't retrieve entry {mod.Name}:{modID}");
+
         public void Reset()
         {
             CleanupEntries(null);

@@ -2,6 +2,7 @@
 using Quests;
 using SoG;
 using Microsoft.Extensions.Logging;
+using Grindless.HarmonyPatches;
 
 namespace Grindless
 {
