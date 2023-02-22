@@ -28,7 +28,7 @@ namespace Grindless
         /// If the asset is found, it is disposed of, and removed from the ContentManager.
         /// </summary>
         /// <returns>True if asset was found and unloaded, false otherwise.</returns>
-        public static bool UnloadAsset(ContentManager manager, string path)
+        public static bool Unload(this ContentManager manager, string path)
         {
             GetContentManagerFields(manager, out List<IDisposable> disposableAssets, out Dictionary<string, object> loadedAssets);
 
@@ -54,8 +54,16 @@ namespace Grindless
             }
         }
 
+        public static bool UnloadIfModded(this ContentManager manager, string path)
+        {
+            if (ModUtils.IsModContentPath(path))
+                return manager.Unload(path);
+
+            return false;
+        }
+
         public static T TryLoad<T>(this ContentManager manager, string path)
-            where T : class
+        where T : class
         {
             manager.TryLoad<T>(path, out T asset);
             return asset;

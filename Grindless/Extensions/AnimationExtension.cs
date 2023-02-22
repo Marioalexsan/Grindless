@@ -16,7 +16,7 @@ namespace Grindless
             if (anim == null)
                 throw new NullReferenceException("Animation is null");
 
-            Animation clone = new Animation(0, 0, RenderMaster.txNullTex, default)
+            Animation clone = new(0, 0, RenderMaster.txNullTex, default)
             {
                 iID = anim.iID,
                 iTicksPerFrame = anim.iTicksPerFrame,

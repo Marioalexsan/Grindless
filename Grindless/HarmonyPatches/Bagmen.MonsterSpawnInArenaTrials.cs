@@ -21,7 +21,7 @@ namespace Grindless.HarmonyPatches
         {
             List<CodeInstruction> codeList = code.ToList();
 
-            List<CodeInstruction> inserted = new List<CodeInstruction>()
+            List<CodeInstruction> inserted = new()
             {
                 new CodeInstruction(OpCodes.Ldloc_0),
                 new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(Enemy), nameof(Enemy.enType))),

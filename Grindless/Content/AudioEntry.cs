@@ -52,9 +52,9 @@ namespace Grindless
 
         internal static Dictionary<string, string> VanillaMusicRedirects { get; } = new Dictionary<string, string>();
 
-        internal HashSet<string> effectCueNames = new HashSet<string>();
+        internal HashSet<string> effectCueNames = new();
 
-        internal Dictionary<string, HashSet<string>> musicCueNames = new Dictionary<string, HashSet<string>>();
+        internal Dictionary<string, HashSet<string>> musicCueNames = new();
 
         internal SoundBank effectsSB; // "<Mod>Effects.xsb"
 
@@ -64,11 +64,11 @@ namespace Grindless
 
         internal WaveBank universalWB; // "<Mod>.xwb", never unloaded
 
-        internal List<string> indexedEffectCues = new List<string>();
+        internal List<string> indexedEffectCues = new();
 
-        internal List<string> indexedMusicCues = new List<string>();
+        internal List<string> indexedMusicCues = new();
 
-        internal List<string> indexedMusicBanks = new List<string>();
+        internal List<string> indexedMusicBanks = new();
 
         /// <summary>
         /// Adds effect cues for this mod. <para/>

@@ -22,7 +22,7 @@ namespace Grindless
 
         public override bool DisableObjectCreation => true;
 
-        public override Version Version => new Version("0.0.0.0");
+        public override Version Version => new("0.0.0.0");
 
         public override string Name => ModName;
 

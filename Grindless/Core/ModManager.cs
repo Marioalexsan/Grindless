@@ -17,7 +17,7 @@ namespace Grindless
 
         internal static List<Mod> Mods { get; } = new List<Mod>();
 
-        private static Harmony _modPatcher = new Harmony("Grindless.ModPatches");
+        private static Harmony _modPatcher = new("Grindless.ModPatches");
 
         public static void Reload()
         {
@@ -169,7 +169,7 @@ namespace Grindless
             where EntryType : Entry<IDType>
         {
             // Mind the extra parentesis for tuple types
-            Dictionary<Type, object> objects = new Dictionary<Type, object>()
+            Dictionary<Type, object> objects = new()
             {
                 [typeof((GrindlessID.AudioID, AudioEntry))] = AudioEntry.Entries,
                 [typeof((GrindlessID.NetworkID, CommandEntry))] = CommandEntry.Entries,

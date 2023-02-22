@@ -1,4 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Grindless.Core;
+using HarmonyLib;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace Grindless
 {
@@ -15,9 +21,30 @@ namespace Grindless
         internal static EntryManager<GrindlessID.CommandID, CommandEntry> Entries { get; }
             = new EntryManager<GrindlessID.CommandID, CommandEntry>(0);
 
-        public Dictionary<string, CommandParser> Commands = new Dictionary<string, CommandParser>();
+        public Dictionary<string, CommandParser> Commands = new();
 
         internal CommandEntry() { }
+
+        public void AutoAddModCommands()
+        {
+            var methods = AccessTools.GetDeclaredMethods(Mod.GetType())
+                .Select(x => (method: x, attrib: x.GetCustomAttribute<ModCommandAttribute>()))
+                .Where(x => x.attrib != null);
+
+            foreach (var (method, attrib) in methods)
+            {
+                try
+                {
+                    var command = (CommandParser)method.CreateDelegate(typeof(CommandParser), method.IsStatic ? null : Mod);
+
+                    Commands[attrib.Command] = command;
+                }
+                catch (Exception e)
+                {
+                    Program.Logger.LogWarning($"Couldn't add command {attrib.Command}: {e.Message}");
+                }
+            }
+        }
 
         protected override void Initialize()
         {

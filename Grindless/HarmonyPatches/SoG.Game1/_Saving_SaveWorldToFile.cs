@@ -49,7 +49,7 @@ namespace Grindless.HarmonyPatches
                 Directory.CreateDirectory(backupPath);
             }
 
-            using (FileStream file = new FileStream($"{wldFile}.temp", FileMode.Create, FileAccess.Write))
+            using (FileStream file = new($"{wldFile}.temp", FileMode.Create, FileAccess.Write))
             {
                 Program.Logger.LogInformation("Saving mod world {Slot}...", slot);
                 ModSaving.SaveModWorld(file);

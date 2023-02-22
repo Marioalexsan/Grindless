@@ -71,11 +71,7 @@ namespace Grindless
         {
             Globals.Game.EXT_RemoveMiscText("Menus", nameHandle);
             Globals.Game.EXT_RemoveMiscText("Menus", descriptionHandle);
-
-            if (ModUtils.IsModContentPath(TexturePath))
-            {
-                AssetUtils.UnloadAsset(Globals.Game.Content, TexturePath);
-            }
+            Globals.Game.Content.UnloadIfModded(TexturePath);
         }
     }
 }

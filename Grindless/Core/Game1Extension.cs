@@ -66,7 +66,7 @@ namespace Grindless
         /// </summary>
         public static MiscText EXT_AddMiscText(this Game1 game, string group, string entry, string text)
         {
-            MiscText miscText = new MiscText();
+            MiscText miscText = new();
 
             Dictionary<string, MiscTextCollection> colDict = game.xMiscTextGod_Default.dsxTextCollections;
 

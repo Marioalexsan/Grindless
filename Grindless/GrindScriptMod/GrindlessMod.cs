@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using Watchers;
 using SoG;
+using Grindless.Core;
 
 namespace Grindless
 {
@@ -49,37 +50,23 @@ namespace Grindless
             ModListText = manager.TryLoad<Texture2D>(Path.Combine(AssetPath, "ModList"));
             ReloadModsText = manager.TryLoad<Texture2D>(Path.Combine(AssetPath, "ReloadMods"));
 
-            var commandList = new Dictionary<string, CommandParser>
-            {
-                ["Mods"] = ModList,
-                ["Help"] = Help,
-                ["Colliders"] = RenderColliders,
-                ["Spawn"] = Spawn,
-                ["ToggleDebug"] = ToggleDebugMode
-            };
-
-            CommandEntry commands = CreateCommands();
-
-            foreach (var command in commandList)
-            {
-                commands.Commands[command.Key] = command.Value;
-            }
+            CreateCommands().AutoAddModCommands();
         }
 
         public override void Unload()
         {
             _colliderRC = null;
 
-            AssetUtils.UnloadAsset(Globals.Game.Content, Path.Combine(AssetPath, "NullTexGS"));
+            Globals.Game.Content.Unload(Path.Combine(AssetPath, "NullTexGS"));
             ErrorTexture = null;
 
-            AssetUtils.UnloadAsset(Globals.Game.Content, Path.Combine(AssetPath, "ModMenu"));
+            Globals.Game.Content.Unload(Path.Combine(AssetPath, "ModMenu"));
             ModMenuText = null;
 
-            AssetUtils.UnloadAsset(Globals.Game.Content, Path.Combine(AssetPath, "ModList"));
+            Globals.Game.Content.Unload(Path.Combine(AssetPath, "ModList"));
             ModListText = null;
 
-            AssetUtils.UnloadAsset(Globals.Game.Content, Path.Combine(AssetPath, "ReloadMods"));
+            Globals.Game.Content.Unload(Path.Combine(AssetPath, "ReloadMods"));
             ReloadModsText = null;
         }
 
@@ -89,26 +76,18 @@ namespace Grindless
 
         #region Commands
 
+        [ModCommand("Help")]
         private void Help(string[] args, int connection)
         {
-            List<string> commandList;
+            Mod mod = args.Length == 0 ? this : ModManager.Mods.FirstOrDefault(x => x.Name == args[0]);
 
-            if (args.Length == 0)
+            if (mod == null)
             {
-                commandList = GetCommands().Commands.Keys.ToList();
+                CAS.AddChatMessage($"[{Name}] Unknown mod!");
+                return;
             }
-            else
-            {
-                Mod mod = ModManager.Mods.FirstOrDefault(x => x.Name == args[0]);
 
-                if (mod == null)
-                {
-                    CAS.AddChatMessage($"[{Name}] Unknown mod!");
-                    return;
-                }
-
-                commandList = mod.GetCommands()?.Commands.Keys.ToList() ?? new List<string>();
-            }
+            List<string> commandList = mod.GetCommands()?.Commands.Keys.ToList() ?? new List<string>();
 
             if (commandList.Count == 0)
             {
@@ -136,6 +115,7 @@ namespace Grindless
                 CAS.AddChatMessage(line);
         }
 
+        [ModCommand("ModList")]
         private void ModList(string[] args, int connection)
         {
             CAS.AddChatMessage($"[{Name}] Mod Count: {ModManager.Mods.Count}");
@@ -159,6 +139,7 @@ namespace Grindless
                 CAS.AddChatMessage(line);
         }
 
+        [ModCommand("RenderColliders")]
         private void RenderColliders(string[] args, int connection)
         {
             if (args.Any(x => !(x == "-c" || x == "-l" || x == "-m")))
@@ -195,6 +176,7 @@ namespace Grindless
             }
         }
 
+        [ModCommand("Spawn")]
         private void Spawn(string[] args, int connection)
         {
             if (NetUtils.IsClient)
@@ -283,6 +265,7 @@ namespace Grindless
             }
         }
 
+        [ModCommand("ToggleDebug")]
         private void ToggleDebugMode(string[] args, int connection)
         {
             Globals.Game.bUseDebugInRelease = !Globals.Game.bUseDebugInRelease;

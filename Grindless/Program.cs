@@ -6,6 +6,9 @@ using System.Linq;
 using HarmonyLib;
 using System.Diagnostics;
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace Grindless
 {
@@ -22,6 +25,36 @@ namespace Grindless
                 consoleConfig.SingleLine = true;
             });
         });
+
+        private static IConfigurationBuilder _configBuilder;
+        private static string GetConfigPath() => Path.Combine(Globals.AppDataPath, "GrindlessConfig.json");
+
+        public static IConfiguration ReadConfig()
+        {
+            if (!File.Exists(GetConfigPath()))
+            {
+                const string BaseConfig = """
+                {
+                    "IgnoredMods": [
+                        
+                    ]
+                }
+                """;
+
+                File.WriteAllText(GetConfigPath(), BaseConfig);
+                Thread.Sleep(10);
+            }
+
+            try
+            {
+                return _configBuilder.Build();
+            }
+            catch
+            {
+                Logger.LogError("Failed to read configuration file! Please check if GrindlessConfig.json is valid.");
+                return null;
+            }
+        }
 
         public static ILogger Logger { get; } = LogFactory.CreateLogger("Grindless");
 
@@ -52,6 +85,7 @@ namespace Grindless
 
             Directory.CreateDirectory("Mods");
             Directory.CreateDirectory("Content/ModContent");
+            _configBuilder = new ConfigurationBuilder().AddJsonFile(GetConfigPath());
 
             Logger.LogInformation("Applying Patches...");
 
@@ -93,7 +127,7 @@ namespace Grindless
                 __state.Stop();
 
                 if (__state.Elapsed > TimeSpan.FromSeconds(0.25))
-                    Logger.LogWarning($"{original.Name} took a long time! ({__state.Elapsed.TotalSeconds:F2}s)");
+                    Logger.LogWarning($"Patch is taking a long time! ({__state.Elapsed.TotalSeconds:F2}s) ({original.Name})");
             }
         }
     }

@@ -18,7 +18,7 @@ namespace Grindless.HarmonyPatches
             if (entry.IsVanilla && entry.Builder == null)
                 return true;  // Go with vanilla method
 
-            LevelBlueprint blueprint = new LevelBlueprint();
+            LevelBlueprint blueprint = new();
 
             blueprint.CheckForConsistency();
 

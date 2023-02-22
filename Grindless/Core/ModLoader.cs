@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.IO;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace Grindless
 {
@@ -56,7 +57,7 @@ namespace Grindless
                 dependencyGraph[mod] = new List<Mod>();
             }
 
-            List<Mod> loadOrder = new List<Mod>();
+            List<Mod> loadOrder = new();
             List<Mod> readyMods = null;
 
             while ((readyMods = dependencies.Where(x => x.Value.Count == 0).Select(x => x.Key).ToList()).Count() > 0)
@@ -109,7 +110,7 @@ namespace Grindless
         private static List<string> GetLoadableMods()
         {
             // TODO: Rewrite ignored mods source
-            var ignoredMods = Enumerable.Empty<string>();
+            var ignoredMods = Program.ReadConfig()?.GetSection("IgnoredMods")?.Get<List<string>>() ?? Enumerable.Empty<string>();
 
             var modFolder = Path.Combine(Directory.GetCurrentDirectory(), "Mods");
 

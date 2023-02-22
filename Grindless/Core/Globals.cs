@@ -4,6 +4,7 @@ using HarmonyLib;
 using System;
 using SoG;
 using Microsoft.Extensions.Logging;
+using System.IO;
 
 namespace Grindless
 {
@@ -18,14 +19,14 @@ namespace Grindless
         /// <summary>
         /// The version of the mod tool.
         /// </summary>
-        public static Version GrindlessVersion => new Version(1, 2);
+        public static Version GrindlessVersion => new(1, 3);
 
         /// <summary>
         /// Secrets of Grindea's game instance.
         /// </summary>
         public static Game1 Game { get; private set; }
 
-        public static string AppDataPath { get; private set; }
+        public static string AppDataPath => Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/Grindless/";
 
         /// <summary>
         /// The game's initial (vanilla) version.
@@ -45,22 +46,17 @@ namespace Grindless
         internal static void InitializeGlobals()
         {
             Game = (Game1)typeof(Game1).Assembly.GetType("SoG.Program").GetField("game").GetValue(null);
-            AppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "/Grindless/";
             Game.sAppData = AppDataPath;
             Game.xGameSessionData.xRogueLikeSession.bTemporaryHighScoreBlock = true;
         }
 
         internal static void UpdateVersionNumber()
         {
-            Program.Logger.LogDebug("Updating Version Number...");
-
             GrindeaVersion = Game.sVersionNumberOnly;
 
             SetVersionTypeAsModded(true);
 
-            var versionDisplayField = typeof(Game1).GetField("sVersion", BindingFlags.NonPublic | BindingFlags.Instance);
-
-            versionDisplayField.SetValue(Game, GrindeaVersion + " with Grindless " + GrindlessVersion);
+            AccessTools.Field(typeof(Game1), "sVersion").SetValue(Game, GrindeaVersion + " with Grindless " + GrindlessVersion);
 
             Program.Logger.LogInformation("Game Long Version: {Version}", GameVersionFull);
             Program.Logger.LogInformation("Game Vanilla Version: {Version}", GrindeaVersion);
@@ -75,4 +71,5 @@ namespace Grindless
             Game.sVersionNumberOnly = GrindeaVersion + (modded ? "-modded" : "");
         }
     }
+
 }

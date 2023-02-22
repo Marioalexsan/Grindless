@@ -20,25 +20,25 @@ namespace Grindless
             ReloadMods?.Dispose();
             ReloadMods = null;
 
-            using (MemoryStream stream = new MemoryStream(Resources.Resources.NullTexGS))
+            using (MemoryStream stream = new(Resources.Resources.NullTexGS))
             {
                 NullTexture = Texture2D.FromStream(Globals.Game.GraphicsDevice, stream)
                     ?? throw new InvalidOperationException("Failed to load a resource.");
             }
 
-            using (MemoryStream stream = new MemoryStream(Resources.Resources.ModList))
+            using (MemoryStream stream = new(Resources.Resources.ModList))
             {
                 ModList = Texture2D.FromStream(Globals.Game.GraphicsDevice, stream)
                     ?? throw new InvalidOperationException("Failed to load a resource.");
             }
             
-            using (MemoryStream stream = new MemoryStream(Resources.Resources.ModMenu))
+            using (MemoryStream stream = new(Resources.Resources.ModMenu))
             {
                 ModMenu = Texture2D.FromStream(Globals.Game.GraphicsDevice, stream)
                     ?? throw new InvalidOperationException("Failed to load a resource.");
             }
 
-            using (MemoryStream stream = new MemoryStream(Resources.Resources.ReloadMods))
+            using (MemoryStream stream = new(Resources.Resources.ReloadMods))
             {
                 ReloadMods = Texture2D.FromStream(Globals.Game.GraphicsDevice, stream)
                     ?? throw new InvalidOperationException("Failed to load a resource.");

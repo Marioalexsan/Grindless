@@ -61,7 +61,7 @@ namespace Grindless.HarmonyPatches
                 }
             }
 
-            using (FileStream file = new FileStream($"{chrFile}.temp", FileMode.Create, FileAccess.Write))
+            using (FileStream file = new($"{chrFile}.temp", FileMode.Create, FileAccess.Write))
             {
                 Program.Logger.LogInformation("Saving mod character {Slot}...", slot);
                 ModSaving.SaveModCharacter(file);

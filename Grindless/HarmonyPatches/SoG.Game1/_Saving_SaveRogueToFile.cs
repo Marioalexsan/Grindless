@@ -32,7 +32,7 @@ namespace Grindless.HarmonyPatches
             bool other = CAS.IsDebugFlagSet("OtherArcadeMode");
             string savFile = Globals.Game.sAppData + $"arcademode{(other ? "_other" : "")}.sav{ext}";
 
-            using (FileStream file = new FileStream($"{savFile}.temp", FileMode.Create, FileAccess.Write))
+            using (FileStream file = new($"{savFile}.temp", FileMode.Create, FileAccess.Write))
             {
                 Program.Logger.LogInformation("Saving mod arcade...");
                 ModSaving.SaveModArcade(file);

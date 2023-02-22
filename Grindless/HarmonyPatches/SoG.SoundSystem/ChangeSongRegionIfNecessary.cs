@@ -16,23 +16,68 @@ namespace Grindless.HarmonyPatches
     [HarmonyPatch(typeof(SoundSystem), nameof(SoundSystem.ChangeSongRegionIfNecessary))]
     static class ChangeSongRegionIfNecessary
     {
-        internal static readonly FieldInfo s_musicWaveBank = AccessTools.Field(typeof(SoundSystem), "musicWaveBank");
-        internal static readonly FieldInfo s_loadedMusicWaveBank = AccessTools.Field(typeof(SoundSystem), "loadedMusicWaveBank");
-        internal static readonly FieldInfo s_standbyWaveBanks = AccessTools.Field(typeof(SoundSystem), "dsxStandbyWaveBanks");
-        internal static readonly FieldInfo s_songRegionMap = AccessTools.Field(typeof(SoundSystem), "dssSongRegionMap");
-        internal static readonly FieldInfo s_universalMusic = AccessTools.Field(typeof(SoundSystem), "universalMusicWaveBank");
-        internal static readonly FieldInfo s_audioEngine = AccessTools.Field(typeof(SoundSystem), "audioEngine");
-        internal static readonly MethodInfo s_checkStandbyBanks = AccessTools.Method(typeof(SoundSystem), "CheckStandbyBanks");
+        class SoundSystemWrapper
+        {
+            static readonly FieldInfo s_musicWaveBank = AccessTools.Field(typeof(SoundSystem), "musicWaveBank");
+            static readonly FieldInfo s_loadedMusicWaveBank = AccessTools.Field(typeof(SoundSystem), "loadedMusicWaveBank");
+            static readonly FieldInfo s_standbyWaveBanks = AccessTools.Field(typeof(SoundSystem), "dsxStandbyWaveBanks");
+            static readonly FieldInfo s_songRegionMap = AccessTools.Field(typeof(SoundSystem), "dssSongRegionMap");
+            static readonly FieldInfo s_universalMusic = AccessTools.Field(typeof(SoundSystem), "universalMusicWaveBank");
+            static readonly FieldInfo s_audioEngine = AccessTools.Field(typeof(SoundSystem), "audioEngine");
+            static readonly MethodInfo s_checkStandbyBanks = AccessTools.Method(typeof(SoundSystem), "CheckStandbyBanks");
+
+            public SoundSystem System { get; }
+
+            public SoundSystemWrapper(SoundSystem system)
+            {
+                System = system;
+            }
+
+            public WaveBank MusicWaveBank
+            {
+                get => s_musicWaveBank.GetValue(System) as WaveBank;
+                set => s_musicWaveBank.SetValue(System, value);
+            }
+
+            public WaveBank LoadedMusicWaveBank
+            {
+                get => s_loadedMusicWaveBank.GetValue(System) as WaveBank;
+                set => s_loadedMusicWaveBank.SetValue(System, value);
+            }
+
+            public Dictionary<string, WaveBank> StandbyWaveBanks
+            {
+                get => s_standbyWaveBanks.GetValue(System) as Dictionary<string, WaveBank>;
+                set => s_standbyWaveBanks.SetValue(System, value);
+            }
+
+            public Dictionary<string, string> SongRegionMap
+            {
+                get => s_songRegionMap.GetValue(System) as Dictionary<string, string>;
+                set => s_songRegionMap.SetValue(System, value);
+            }
+            
+            public WaveBank UniversalMusic
+            {
+                get => s_universalMusic.GetValue(System) as WaveBank;
+                set => s_universalMusic.SetValue(System, value);
+            }
+
+            public AudioEngine AudioEngine
+            {
+                get => s_audioEngine.GetValue(System) as AudioEngine;
+                set => s_audioEngine.SetValue(System, value);
+            }
+
+            public void CheckStandbyBanks(string nextBankName)
+            {
+                s_checkStandbyBanks.Invoke(System, new object[] { nextBankName });
+            }
+        }
 
         static bool Prefix(ref SoundSystem __instance, string sSongName)
         {
-            SoundSystem system = __instance;
-
-            var dsxStandbyWaveBanks = s_standbyWaveBanks.GetValue(system) as Dictionary<string, WaveBank>;
-            var dssSongRegionMap = s_songRegionMap.GetValue(system) as Dictionary<string, string>;
-
-            var universalMusic = s_universalMusic.GetValue(system) as WaveBank;
-            var audioEngine = s_audioEngine.GetValue(system) as AudioEngine;
+            SoundSystemWrapper wSystem = new(__instance);
 
             bool currentIsModded = ModUtils.SplitAudioID(sSongName, out int entryID, out bool isMusic, out int cueID);
 
@@ -48,9 +93,9 @@ namespace Grindless.HarmonyPatches
                 mod = entry.Mod;
             }
 
-            string nextBankName = currentIsModded ? entry.indexedMusicBanks[cueID] : dssSongRegionMap[sSongName];
+            string nextBankName = currentIsModded ? entry.indexedMusicBanks[cueID] : wSystem.SongRegionMap[sSongName];
 
-            WaveBank currentMusicBank = s_musicWaveBank.GetValue(system) as WaveBank;
+            WaveBank currentMusicBank = wSystem.MusicWaveBank;
 
             if (_Helper.IsUniversalMusicBank(nextBankName))
             {
@@ -61,51 +106,51 @@ namespace Grindless.HarmonyPatches
                 }
 
                 if (currentMusicBank != null && !_Helper.IsUniversalMusicBank(currentMusicBank))
-                    system.SetStandbyBank(system.sCurrentMusicWaveBank, currentMusicBank);
+                    wSystem.System.SetStandbyBank(wSystem.System.sCurrentMusicWaveBank, currentMusicBank);
 
-                s_musicWaveBank.SetValue(system, currentIsModded ? entry.universalWB : universalMusic);
+                wSystem.MusicWaveBank = currentIsModded ? entry.universalWB : wSystem.UniversalMusic;
             }
-            else if (system.sCurrentMusicWaveBank != nextBankName)
+            else if (wSystem.System.sCurrentMusicWaveBank != nextBankName)
             {
                 if (currentMusicBank != null && !_Helper.IsUniversalMusicBank(currentMusicBank) && !currentMusicBank.IsDisposed)
-                    system.SetStandbyBank(system.sCurrentMusicWaveBank, currentMusicBank);
+                    wSystem.System.SetStandbyBank(wSystem.System.sCurrentMusicWaveBank, currentMusicBank);
 
-                system.sCurrentMusicWaveBank = nextBankName;
+                wSystem.System.sCurrentMusicWaveBank = nextBankName;
 
-                if (dsxStandbyWaveBanks.ContainsKey(nextBankName))
+                if (wSystem.StandbyWaveBanks.ContainsKey(nextBankName))
                 {
-                    s_musicWaveBank.SetValue(system, dsxStandbyWaveBanks[nextBankName]);
-                    dsxStandbyWaveBanks.Remove(nextBankName);
+                    wSystem.MusicWaveBank = wSystem.StandbyWaveBanks[nextBankName];
+                    wSystem.StandbyWaveBanks.Remove(nextBankName);
                 }
                 else
                 {
                     string root = Path.Combine(Globals.Game.Content.RootDirectory, currentIsModded ? mod.AssetPath : "");
 
-                    s_loadedMusicWaveBank.SetValue(system, new WaveBank(audioEngine, Path.Combine(root, "Sound", $"{nextBankName}.xwb")));
-                    s_musicWaveBank.SetValue(system, null);
+                    wSystem.LoadedMusicWaveBank = new WaveBank(wSystem.AudioEngine, Path.Combine(root, "Sound", $"{nextBankName}.xwb"));
+                    wSystem.MusicWaveBank = null;
                 }
-                system.xMusicVolumeMods.iMusicCueRetries = 0;
-                system.xMusicVolumeMods.sSongInWait = sSongName;
+                wSystem.System.xMusicVolumeMods.iMusicCueRetries = 0;
+                wSystem.System.xMusicVolumeMods.sSongInWait = sSongName;
 
-                s_checkStandbyBanks.Invoke(system, new object[] { nextBankName });
+                wSystem.CheckStandbyBanks(nextBankName);
             }
             else if (_Helper.IsUniversalMusicBank(currentMusicBank))
             {
-                if (dsxStandbyWaveBanks.ContainsKey(system.sCurrentMusicWaveBank))
+                if (wSystem.StandbyWaveBanks.ContainsKey(wSystem.System.sCurrentMusicWaveBank))
                 {
-                    s_musicWaveBank.SetValue(system, dsxStandbyWaveBanks[system.sCurrentMusicWaveBank]);
-                    dsxStandbyWaveBanks.Remove(system.sCurrentMusicWaveBank);
+                    wSystem.MusicWaveBank = wSystem.StandbyWaveBanks[wSystem.System.sCurrentMusicWaveBank];
+                    wSystem.StandbyWaveBanks.Remove(wSystem.System.sCurrentMusicWaveBank);
                     return false;
                 }
 
                 string root = Path.Combine(Globals.Game.Content.RootDirectory, currentIsModded ? mod.AssetPath : "");
-                string bankToUse = currentIsModded ? nextBankName : system.sCurrentMusicWaveBank;
+                string bankToUse = currentIsModded ? nextBankName : wSystem.System.sCurrentMusicWaveBank;
 
-                s_loadedMusicWaveBank.SetValue(system, new WaveBank(audioEngine, Path.Combine(root, "Sound", bankToUse + ".xwb")));
-                s_musicWaveBank.SetValue(system, null);
+                wSystem.LoadedMusicWaveBank = new WaveBank(wSystem.AudioEngine, Path.Combine(root, "Sound", bankToUse + ".xwb"));
+                wSystem.MusicWaveBank = null;
 
-                system.xMusicVolumeMods.iMusicCueRetries = 0;
-                system.xMusicVolumeMods.sSongInWait = sSongName;
+                wSystem.System.xMusicVolumeMods.iMusicCueRetries = 0;
+                wSystem.System.xMusicVolumeMods.sSongInWait = sSongName;
             }
 
             return false; // Never returns control to original

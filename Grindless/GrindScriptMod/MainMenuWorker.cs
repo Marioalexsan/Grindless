@@ -30,11 +30,11 @@ namespace Grindless
 
         public static readonly GlobalData.MainMenu.MenuLevel ReservedModMenuID = (GlobalData.MainMenu.MenuLevel)300;
 
-        private static Dictionary<int, SaveCompatibility> _storySaves = new Dictionary<int, SaveCompatibility>();
+        private static Dictionary<int, SaveCompatibility> _storySaves = new();
 
         private static SaveCompatibility _arcadeSave;
 
-        private static ModMenu _modMenu = new ModMenu();
+        private static ModMenu _modMenu = new();
 
         private static int _previousTopMenuSelection;
 
@@ -53,7 +53,7 @@ namespace Grindless
 
                 if (File.Exists(path))
                 {
-                    using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+                    using (FileStream stream = new(path, FileMode.Open, FileAccess.Read))
                     {
                         _storySaves[index] = ModSaving.CheckCompatibility(stream);
                     }
@@ -75,7 +75,7 @@ namespace Grindless
 
             if (File.Exists(path))
             {
-                using (FileStream stream = new FileStream(path, FileMode.Open, FileAccess.Read))
+                using (FileStream stream = new(path, FileMode.Open, FileAccess.Read))
                 {
                     _arcadeSave = ModSaving.CheckCompatibility(stream);
                 }
@@ -182,7 +182,7 @@ namespace Grindless
             float alpha = menuData.fCurrentMenuAlpha;
 
             var texture = GrindlessResources.ModMenu;
-            Vector2 center = new Vector2(texture.Width / 2, texture.Height / 2);
+            Vector2 center = new(texture.Width / 2, texture.Height / 2);
 
             Color colorToUse = menuData.iTopMenuSelection == 4 ? selected : notSelected;
 
@@ -259,13 +259,13 @@ namespace Grindless
             Globals.Game._Menu_RenderContentBox(spriteBatch, alpha, new Rectangle(235, 189, 173, 138));
 
             Texture2D reloadModsTex = GrindlessResources.ReloadMods;
-            Vector2 reloadModsCenter = new Vector2(reloadModsTex.Width / 2, reloadModsTex.Height / 2);
+            Vector2 reloadModsCenter = new(reloadModsTex.Width / 2, reloadModsTex.Height / 2);
             Color reloadModsColor = _modMenu.Selection == 0 ? selected : notSelected;
 
             spriteBatch.Draw(reloadModsTex, new Vector2(320, 225), null, reloadModsColor, 0f, reloadModsCenter, 1f, SpriteEffects.None, 0f);
 
             Texture2D modListTex = GrindlessResources.ModList;
-            Vector2 modListCenter = new Vector2(modListTex.Width / 2, modListTex.Height / 2);
+            Vector2 modListCenter = new(modListTex.Width / 2, modListTex.Height / 2);
             Color modListColor = _modMenu.Selection == 1 ? selected : notSelected;
             modListColor *= 0.6f;
 

@@ -45,12 +45,12 @@ namespace Grindless
         /// </summary>
         internal static OutMessage WriteModData(Mod mod, ushort packetID, Action<BinaryWriter> data)
         {
-            MemoryStream stream = new MemoryStream();
+            MemoryStream stream = new();
 
             if (data == null)
                 throw new ArgumentNullException(nameof(data));
 
-            OutMessage msg = new OutMessage(stream);
+            OutMessage msg = new(stream);
             msg.Write(ModPacketType);
             msg.Write((long)mod.GetNetwork().GameID);
             msg.Write(packetID);

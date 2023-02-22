@@ -35,7 +35,7 @@ namespace Grindless.HarmonyPatches
 
             codeList[end].WithLabels(perkProcessedSkip);
 
-            List<CodeInstruction> inserted = new List<CodeInstruction>()
+            List<CodeInstruction> inserted = new()
             {
                 new CodeInstruction(OpCodes.Ldarg_S, 1).WithLabels(codeList[start].labels).WithBlocks(codeList[start].blocks),
                 new CodeInstruction(OpCodes.Ldloc_0),

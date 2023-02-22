@@ -58,7 +58,7 @@ namespace Grindless
         public Action<Quest> Constructor { get; set; }
 
         internal QuestEntry() {
-            SymbolicItemFlagReward noReward = new SymbolicItemFlagReward();
+            SymbolicItemFlagReward noReward = new();
             noReward.AddItem(ItemCodex.ItemTypes._Misc_BagLol, 1);
 
             Vanilla.xReward = noReward;
@@ -67,7 +67,7 @@ namespace Grindless
         internal QuestEntry(Mod mod, string modID, QuestCodex.QuestID gameID)
             : base(mod, modID, gameID)
         {
-            SymbolicItemFlagReward noReward = new SymbolicItemFlagReward();
+            SymbolicItemFlagReward noReward = new();
             noReward.AddItem(ItemCodex.ItemTypes._Misc_BagLol, 1);
 
             Vanilla.xReward = noReward;

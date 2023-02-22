@@ -12,7 +12,7 @@ namespace Grindless
     {
         public static CurseEntry ParseCurse(this VanillaMod vanillaMod, RogueLikeMode.TreatsCurses gameID)
         {
-            CurseEntry entry = new CurseEntry()
+            CurseEntry entry = new()
             {
                 Mod = vanillaMod,
                 GameID = gameID,
@@ -47,7 +47,7 @@ namespace Grindless
 
         public static EnemyEntry ParseEnemy(this VanillaMod vanillaMod, EnemyCodex.EnemyTypes gameID)
         {
-            EnemyEntry entry = new EnemyEntry()
+            EnemyEntry entry = new()
             {
                 Mod = vanillaMod,
                 GameID = gameID,
@@ -92,7 +92,7 @@ namespace Grindless
             entry.DifficultyScaler = null;
             entry.EliteScaler = null;
 
-            List<EnemyCodex.EnemyTypes> resetCardChance = new List<EnemyCodex.EnemyTypes>()
+            List<EnemyCodex.EnemyTypes> resetCardChance = new()
             {
                 EnemyCodex.EnemyTypes.Special_ElderBoar,
                 EnemyCodex.EnemyTypes.Pumpking,
@@ -114,7 +114,7 @@ namespace Grindless
 
         public static EquipmentEffectEntry ParseEquipmentEffect(this VanillaMod vanillaMod, EquipmentInfo.SpecialEffect gameID)
         {
-            EquipmentEffectEntry entry = new EquipmentEffectEntry()
+            EquipmentEffectEntry entry = new()
             {
                 Mod = vanillaMod,
                 GameID = gameID,
@@ -128,7 +128,7 @@ namespace Grindless
 
         public static ItemEntry ParseItem(this VanillaMod vanillaMod, ItemCodex.ItemTypes gameID)
         {
-            ItemEntry entry = new ItemEntry()
+            ItemEntry entry = new()
             {
                 Mod = vanillaMod,
                 GameID = gameID,
@@ -214,7 +214,7 @@ namespace Grindless
 
         public static LevelEntry ParseLevel(this VanillaMod vanillaMod, Level.ZoneEnum gameID)
         {
-            LevelEntry entry = new LevelEntry()
+            LevelEntry entry = new()
             {
                 Mod = vanillaMod,
                 GameID = gameID,
@@ -239,7 +239,7 @@ namespace Grindless
 
         public static PerkEntry ParsePerk(this VanillaMod vanillaMod, RogueLikeMode.Perks gameID)
         {
-            PerkEntry entry = new PerkEntry()
+            PerkEntry entry = new()
             {
                 Mod = vanillaMod,
                 GameID = gameID,
@@ -300,7 +300,7 @@ namespace Grindless
 
         public static PinEntry ParsePin(this VanillaMod vanillaMod, PinCodex.PinType gameID)
         {
-            PinEntry entry = new PinEntry()
+            PinEntry entry = new()
             {
                 Mod = vanillaMod,
                 GameID = gameID,
@@ -405,7 +405,7 @@ namespace Grindless
 
         public static QuestEntry ParseQuest(this VanillaMod vanillaMod, QuestCodex.QuestID gameID)
         {
-            QuestEntry entry = new QuestEntry()
+            QuestEntry entry = new()
             {
                 Mod = vanillaMod,
                 GameID = gameID,
@@ -425,7 +425,7 @@ namespace Grindless
 
         public static SpellEntry ParseSpell(this VanillaMod vanillaMod, SpellCodex.SpellTypes gameID)
         {
-            SpellEntry entry = new SpellEntry()
+            SpellEntry entry = new()
             {
                 Mod = vanillaMod,
                 GameID = gameID,
@@ -443,7 +443,7 @@ namespace Grindless
 
         public static StatusEffectEntry ParseStatusEffect(this VanillaMod vanillaMod, BaseStats.StatusEffectSource gameID)
         {
-            StatusEffectEntry entry = new StatusEffectEntry()
+            StatusEffectEntry entry = new()
             {
                 Mod = vanillaMod,
                 GameID = gameID,
@@ -457,7 +457,7 @@ namespace Grindless
 
         public static WorldRegionEntry ParseWorldRegion(this VanillaMod vanillaMod, Level.WorldRegion gameID)
         {
-            WorldRegionEntry entry = new WorldRegionEntry()
+            WorldRegionEntry entry = new()
             {
                 Mod = vanillaMod,
                 GameID = gameID,

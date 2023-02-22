@@ -26,7 +26,7 @@ namespace Grindless.HarmonyPatches
                 end = codeList.FindIndex(end + 1, x => x.opcode == OpCodes.Newobj);
             }
 
-            List<CodeInstruction> toInsert = new List<CodeInstruction>()
+            List<CodeInstruction> toInsert = new()
             {
                 new CodeInstruction(OpCodes.Ldloc_1),
                 new CodeInstruction(OpCodes.Call, SymbolExtensions.GetMethodInfo(() => InGetRandomPin(null))),

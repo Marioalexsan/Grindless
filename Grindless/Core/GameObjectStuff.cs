@@ -31,7 +31,7 @@ namespace Grindless
 	/// </summary>
 	public static class IDExtension
 	{
-		private static Dictionary<Type, object> s_vanillaIDs = new Dictionary<Type, object>();
+		private static Dictionary<Type, object> s_vanillaIDs = new();
 
 		static IDExtension()
         {

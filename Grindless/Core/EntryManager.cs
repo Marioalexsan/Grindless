@@ -17,7 +17,7 @@ namespace Grindless
         where IDType : struct, Enum
         where EntryType : Entry<IDType>
     {
-        private readonly Dictionary<IDType, EntryType> _entries = new Dictionary<IDType, EntryType>();
+        private readonly Dictionary<IDType, EntryType> _entries = new();
 
         private IDType _next;
 

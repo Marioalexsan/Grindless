@@ -5,6 +5,8 @@ using Microsoft.Xna.Framework;
 using Stat = SoG.EquipmentInfo.StatEnum;
 using System;
 using SoG;
+using System.Reflection;
+using System.Linq;
 
 namespace Grindless
 {
@@ -177,11 +179,11 @@ namespace Grindless
 
         internal string equipResourcePath = "";
 
-        internal Dictionary<Stat, int> stats = new Dictionary<Stat, int>();
+        internal Dictionary<Stat, int> stats = new();
 
         internal EquipmentType equipType = EquipmentType.None;
 
-        internal HashSet<EquipmentInfo.SpecialEffect> effects = new HashSet<EquipmentInfo.SpecialEffect>();
+        internal HashSet<EquipmentInfo.SpecialEffect> effects = new();
 
         internal bool[] facegearOverHair = new bool[] { true, true, true, true };
 
@@ -189,11 +191,11 @@ namespace Grindless
 
         internal Vector2[] facegearOffsets = new Vector2[] { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
 
-        internal HatInfo.VisualSet defaultSet = new HatInfo.VisualSet();
+        internal HatInfo.VisualSet defaultSet = new();
 
-        internal Dictionary<ItemCodex.ItemTypes, HatInfo.VisualSet> altSets = new Dictionary<ItemCodex.ItemTypes, HatInfo.VisualSet>();
+        internal Dictionary<ItemCodex.ItemTypes, HatInfo.VisualSet> altSets = new();
 
-        internal Dictionary<ItemCodex.ItemTypes, string> hatAltSetResourcePaths = new Dictionary<ItemCodex.ItemTypes, string>();
+        internal Dictionary<ItemCodex.ItemTypes, string> hatAltSetResourcePaths = new();
 
         internal bool hatDoubleSlot = false;
 
@@ -201,7 +203,7 @@ namespace Grindless
 
         internal bool magicWeapon = false;
 
-        internal ItemDescription vanillaItem = new ItemDescription();
+        internal ItemDescription vanillaItem = new();
 
         internal EquipmentInfo vanillaEquip;
 
@@ -790,7 +792,7 @@ namespace Grindless
 
                     break;
                 case EquipmentType.Weapon:
-                    WeaponInfo weaponData = new WeaponInfo(equipResourcePath, GameID, weaponType)
+                    WeaponInfo weaponData = new(equipResourcePath, GameID, weaponType)
                     {
                         enWeaponCategory = weaponType,
                         enAutoAttackSpell = WeaponInfo.AutoAttackSpell.None
@@ -823,7 +825,7 @@ namespace Grindless
 
             vanillaEquip = equipData;
 
-            HashSet<ItemCodex.ItemCategories> toSanitize = new HashSet<ItemCodex.ItemCategories>
+            HashSet<ItemCodex.ItemCategories> toSanitize = new()
             {
                 ItemCodex.ItemCategories.OneHandedWeapon,
                 ItemCodex.ItemCategories.TwoHandedWeapon,
@@ -873,10 +875,7 @@ namespace Grindless
 
             ContentManager manager = Globals.Game.Content;
 
-            if (ModUtils.IsModContentPath(iconPath))
-            {
-                AssetUtils.UnloadAsset(Globals.Game.Content, iconPath);
-            }
+            manager.UnloadIfModded(iconPath);
 
             string[] directions = new string[]
             {
@@ -889,34 +888,15 @@ namespace Grindless
 
                 if (basePath != null)
                 {
-                    int index = -1;
-                    while (++index < 4)
+                    foreach (var dir in directions)
+                        manager.UnloadIfModded(Path.Combine(basePath, dir));
+
+                    foreach (var key in hatData.denxAlternateVisualSets.Keys)
                     {
-                        string texPath = Path.Combine(basePath, directions[index]);
-
-                        if (ModUtils.IsModContentPath(texPath))
+                        if (hatAltSetResourcePaths[key] != null)
                         {
-                            AssetUtils.UnloadAsset(manager, texPath);
-                        }
-                    }
-
-                    foreach (var kvp in hatData.denxAlternateVisualSets)
-                    {
-                        if (hatAltSetResourcePaths[kvp.Key] != null)
-                        {
-                            string altPath = Path.Combine(basePath, hatAltSetResourcePaths[kvp.Key]);
-
-                            index = -1;
-
-                            while (++index < 4)
-                            {
-                                string texPath = Path.Combine(altPath, directions[index]);
-
-                                if (ModUtils.IsModContentPath(texPath))
-                                {
-                                    AssetUtils.UnloadAsset(manager, texPath);
-                                }
-                            }
+                            foreach (var dir in directions)
+                                manager.UnloadIfModded(Path.Combine(basePath, hatAltSetResourcePaths[key], dir));
                         }
                     }
                 }
@@ -927,11 +907,8 @@ namespace Grindless
 
                 if (path != null)
                 {
-                    int index = -1;
-                    while (++index < 4)
-                    {
-                        AssetUtils.UnloadAsset(manager, Path.Combine(path, directions[index]));
-                    }
+                    foreach (var dir in directions)
+                        manager.Unload(Path.Combine(path, dir));
                 }
             }
         }

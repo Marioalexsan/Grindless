@@ -89,7 +89,7 @@ namespace Grindless
             if (!File.Exists(relativePath))
                 return;
 
-            using (BinaryReader br = new BinaryReader(new FileStream(relativePath, FileMode.Open, FileAccess.Read)))
+            using (BinaryReader br = new(new FileStream(relativePath, FileMode.Open, FileAccess.Read)))
             {
                 int iLoadedIteration = br.ReadInt32();
                 int iCount = br.ReadInt32();

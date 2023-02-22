@@ -46,7 +46,7 @@ namespace Grindless.HarmonyPatches
         {
             var entry = EnemyEntry.Entries.GetRequired(gameID);
 
-            Enemy enemy = new Enemy() { enType = gameID };
+            Enemy enemy = new() { enType = gameID };
             enemy.xRenderComponent.xOwnerObject = enemy;
 
             entry.Constructor?.Invoke(enemy);
@@ -112,7 +112,7 @@ namespace Grindless.HarmonyPatches
 
                 int end = codeList.FindIndex(x => x.opcode == OpCodes.Callvirt && x.operand.Equals(target)) - 5;
 
-                List<CodeInstruction> inserted = new List<CodeInstruction>()
+                List<CodeInstruction> inserted = new()
                 {
                     new CodeInstruction(OpCodes.Ldarg_S, 1).WithLabels(codeList[start].labels).WithBlocks(codeList[start].blocks),
                     new CodeInstruction(OpCodes.Ldarg_S, 2),
