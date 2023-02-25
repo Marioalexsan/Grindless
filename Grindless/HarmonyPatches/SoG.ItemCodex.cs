@@ -22,8 +22,8 @@ namespace Grindless.HarmonyPatches
 
             __result = entry.vanillaItem;
 
-            if (entry.iconPath != null)
-                __result.txDisplayImage = Globals.Game.Content.TryLoad<Texture2D>(entry.iconPath);
+            if (entry.IconPath != null)
+                __result.txDisplayImage = Globals.Game.Content.TryLoad<Texture2D>(entry.IconPath);
 
             __result.txDisplayImage ??= GrindlessResources.NullTexture;
             return false;
@@ -44,13 +44,13 @@ namespace Grindless.HarmonyPatches
 
             var manager = Globals.Game.xLevelMaster.contRegionContent;
 
-            if (entry.iconPath != null)
-                __result.xRenderComponent.txTexture = manager.TryLoad<Texture2D>(entry.iconPath);
+            if (entry.IconPath != null)
+                __result.xRenderComponent.txTexture = manager.TryLoad<Texture2D>(entry.IconPath);
 
             __result.xRenderComponent.txTexture ??= entry.vanillaItem.txDisplayImage;
 
-            if (entry.shadowPath != null)
-                __result.xRenderComponent.txShadowTexture = manager.TryLoad<Texture2D>(entry.shadowPath);
+            if (entry.ShadowPath != null)
+                __result.xRenderComponent.txShadowTexture = manager.TryLoad<Texture2D>(entry.ShadowPath);
 
             __result.xRenderComponent.txShadowTexture ??= manager.TryLoad<Texture2D>("Items/DropAppearance/hartass02");
         }

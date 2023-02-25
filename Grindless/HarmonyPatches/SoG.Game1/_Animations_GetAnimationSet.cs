@@ -39,7 +39,7 @@ namespace Grindless.HarmonyPatches
                 }
                 else
                 {
-                    var pathToUse = entry.useVanillaResourceFormat ?
+                    var pathToUse = entry.UseVanillaResourceFormat ?
                         $"Sprites/Heroes/{sAnimation}/Shields/{shield.sResourceName}/{sDirection}" :
                         $"{shield.sResourceName}/{sAnimation}/{sDirection}";
 

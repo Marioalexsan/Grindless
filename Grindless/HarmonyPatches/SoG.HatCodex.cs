@@ -20,7 +20,7 @@ namespace Grindless.HarmonyPatches
             {
                 __result = info;
 
-                string path = entry.equipResourcePath;
+                string path = entry.EquipResourcePath;
 
                 string[] directions = new string[] { "Up", "Right", "Down", "Left" };
 

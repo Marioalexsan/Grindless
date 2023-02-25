@@ -7,6 +7,7 @@ using System;
 using SoG;
 using System.Reflection;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace Grindless
 {
@@ -30,46 +31,23 @@ namespace Grindless
         public class VisualSetConfig
         {
             internal ItemEntry entry;
-
             internal ItemCodex.ItemTypes comboItem;
-
             internal HatInfo.VisualSet visualSet;
 
             /// <summary>
             /// Gets an array of booleans that toggle hair overlap for each direction.
             /// </summary>
-            public bool[] HatUnderHair
-            {
-                get
-                {
-                    ErrorHelper.ThrowIfNotLoading(entry.Mod);
-                    return visualSet.abUnderHair;
-                }
-            }
+            public bool[] HatUnderHair => visualSet.abUnderHair;
 
             /// <summary>
             /// Gets an array of booleans that toggle player overlap for each direction.
             /// </summary>
-            public bool[] HatBehindPlayer
-            {
-                get
-                {
-                    ErrorHelper.ThrowIfNotLoading(entry.Mod);
-                    return visualSet.abBehindCharacter;
-                }
-            }
+            public bool[] HatBehindPlayer => visualSet.abBehindCharacter;
 
             /// <summary>
             /// Gets an array of four vectors that define the sprite displacement for each direction.
             /// </summary>
-            public Vector2[] HatOffsets
-            {
-                get
-                {
-                    ErrorHelper.ThrowIfNotLoading(entry.Mod);
-                    return visualSet.av2RenderOffsets;
-                }
-            }
+            public Vector2[] HatOffsets => visualSet.av2RenderOffsets;
 
             /// <summary>
             /// Gets an array of four booleans that toggle hat overlap for hair "sides", for each direction.
@@ -77,11 +55,7 @@ namespace Grindless
             public bool ObstructHairSides
             {
                 get => visualSet.bObstructsSides;
-                set
-                {
-                    ErrorHelper.ThrowIfNotLoading(entry.Mod);
-                    visualSet.bObstructsSides = value;
-                }
+                set => visualSet.bObstructsSides = value;
             }
 
             /// <summary>
@@ -90,11 +64,7 @@ namespace Grindless
             public bool ObstructHairTop
             {
                 get => visualSet.bObstructsSides;
-                set
-                {
-                    ErrorHelper.ThrowIfNotLoading(entry.Mod);
-                    visualSet.bObstructsSides = value;
-                }
+                set => visualSet.bObstructsSides = value;
             }
 
             /// <summary>
@@ -103,11 +73,7 @@ namespace Grindless
             public bool ObstructHairBottom
             {
                 get => visualSet.bObstructsBottom;
-                set
-                {
-                    ErrorHelper.ThrowIfNotLoading(entry.Mod);
-                    visualSet.bObstructsBottom = value;
-                }
+                set => visualSet.bObstructsBottom = value;
             }
 
             /// <summary>
@@ -117,11 +83,7 @@ namespace Grindless
             public string Resource
             {
                 get => entry.hatAltSetResourcePaths[comboItem];
-                set
-                {
-                    ErrorHelper.ThrowIfNotLoading(entry.Mod);
-                    entry.hatAltSetResourcePaths[comboItem] = value;
-                }
+                set => entry.hatAltSetResourcePaths[comboItem] = value;
             }
 
             /// <summary>
@@ -129,11 +91,10 @@ namespace Grindless
             /// </summary>
             public void SetHatUnderHair(bool up, bool right, bool down, bool left)
             {
-                var array = HatUnderHair;
-                array[0] = up;
-                array[1] = right;
-                array[2] = down;
-                array[3] = left;
+                HatUnderHair[0] = up;
+                HatUnderHair[1] = right;
+                HatUnderHair[2] = down;
+                HatUnderHair[3] = left;
             }
 
             /// <summary>
@@ -141,11 +102,10 @@ namespace Grindless
             /// </summary>
             public void SetHatBehindPlayer(bool up, bool right, bool down, bool left)
             {
-                var array = HatBehindPlayer;
-                array[0] = up;
-                array[1] = right;
-                array[2] = down;
-                array[3] = left;
+                HatBehindPlayer[0] = up;
+                HatBehindPlayer[1] = right;
+                HatBehindPlayer[2] = down;
+                HatBehindPlayer[3] = left;
             }
 
             /// <summary>
@@ -153,11 +113,10 @@ namespace Grindless
             /// </summary>
             public void SetHatOffsets(Vector2 up, Vector2 right, Vector2 down, Vector2 left)
             {
-                var array = HatOffsets;
-                array[0] = up;
-                array[1] = right;
-                array[2] = down;
-                array[3] = left;
+                HatOffsets[0] = up;
+                HatOffsets[1] = right;
+                HatOffsets[2] = down;
+                HatOffsets[3] = left;
             }
 
             /// <summary>
@@ -171,25 +130,9 @@ namespace Grindless
             }
         }
 
-        #region Internal Data
-
-        internal string iconPath = "";
-
-        internal string shadowPath = "";
-
-        internal string equipResourcePath = "";
-
         internal Dictionary<Stat, int> stats = new();
 
-        internal EquipmentType equipType = EquipmentType.None;
-
         internal HashSet<EquipmentInfo.SpecialEffect> effects = new();
-
-        internal bool[] facegearOverHair = new bool[] { true, true, true, true };
-
-        internal bool[] facegearOverHat = new bool[] { true, true, true, true };
-
-        internal Vector2[] facegearOffsets = new Vector2[] { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
 
         internal HatInfo.VisualSet defaultSet = new();
 
@@ -197,20 +140,9 @@ namespace Grindless
 
         internal Dictionary<ItemCodex.ItemTypes, string> hatAltSetResourcePaths = new();
 
-        internal bool hatDoubleSlot = false;
-
-        internal WeaponInfo.WeaponCategory weaponType = WeaponInfo.WeaponCategory.OneHanded;
-
-        internal bool magicWeapon = false;
-
         internal ItemDescription vanillaItem = new();
 
         internal EquipmentInfo vanillaEquip;
-
-        // This is pretty important for vanilla items!
-        internal bool useVanillaResourceFormat = false;
-
-        #endregion
 
         #region Public Interface
 
@@ -220,11 +152,7 @@ namespace Grindless
         public string Name
         {
             get => vanillaItem.sFullName;
-            set
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                vanillaItem.sFullName = value;
-            }
+            set => vanillaItem.sFullName = value;
         }
 
         /// <summary>
@@ -233,52 +161,24 @@ namespace Grindless
         public string Description
         {
             get => vanillaItem.sDescription;
-            set
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                vanillaItem.sDescription = value;
-            }
+            set => vanillaItem.sDescription = value;
         }
 
         /// <summary> 
         /// Gets or sets the path to the item's icon. The texture path is relative to "Content/".
         /// </summary>
-        public string IconPath
-        {
-            get => iconPath;
-            set
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                iconPath = value;
-            }
-        }
+        public string IconPath { get; set; } = "";
 
         /// <summary> 
         /// Gets or sets the path to the item's shadow texture. The texture path is relative to "Content/".
         /// </summary>
-        public string ShadowPath
-        {
-            get => shadowPath;
-            set
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                shadowPath = value;
-            }
-        }
+        public string ShadowPath { get; set; } = "";
 
         /// <summary> 
         /// Gets or sets whenever to use the SoG resource format for loading.
         /// By default, this value is set to false, and custom paths are used.
         /// </summary>
-        public bool UseVanillaResourceFormat
-        {
-            get => useVanillaResourceFormat;
-            set
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                useVanillaResourceFormat = value;
-            }
-        }
+        public bool UseVanillaResourceFormat { get; set; } = false;
 
         /// <summary>
         /// Gets or sets the gold value of the item.
@@ -287,11 +187,7 @@ namespace Grindless
         public int Value
         {
             get => vanillaItem.iValue;
-            set
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                vanillaItem.iValue = value;
-            }
+            set => vanillaItem.iValue = value;
         }
 
         /// <summary>
@@ -301,11 +197,7 @@ namespace Grindless
         public int BloodValue
         {
             get => vanillaItem.iOverrideBloodValue;
-            set
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                vanillaItem.iOverrideBloodValue = value;
-            }
+            set => vanillaItem.iOverrideBloodValue = value;
         }
 
         /// <summary>
@@ -315,11 +207,7 @@ namespace Grindless
         public float ArcadeValueModifier
         {
             get => vanillaItem.fArcadeModeCostModifier;
-            set
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                vanillaItem.fArcadeModeCostModifier = value;
-            }
+            set => vanillaItem.fArcadeModeCostModifier = value;
         }
 
         /// <summary>
@@ -329,11 +217,7 @@ namespace Grindless
         public ushort SortingValue
         {
             get => vanillaItem.iInternalLevel;
-            set
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                vanillaItem.iInternalLevel = value;
-            }
+            set => vanillaItem.iInternalLevel = value;
         }
 
         /// <summary> 
@@ -343,11 +227,7 @@ namespace Grindless
         public byte Fancyness
         {
             get => vanillaItem.byFancyness;
-            set
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                vanillaItem.byFancyness = (byte)MathHelper.Clamp(value, 1, 3);
-            }
+            set => vanillaItem.byFancyness = (byte)MathHelper.Clamp(value, 1, 3);
         }
 
         /// <summary>
@@ -359,7 +239,6 @@ namespace Grindless
         /// <param name="category"> The category to add. </param>
         public void AddCategory(ItemCodex.ItemCategories category)
         {
-            ErrorHelper.ThrowIfNotLoading(Mod);
             vanillaItem.lenCategory.Add(category);
         }
 
@@ -369,7 +248,6 @@ namespace Grindless
         /// <param name="category"> The category to remove. </param>
         public void RemoveCategory(ItemCodex.ItemCategories category)
         {
-            ErrorHelper.ThrowIfNotLoading(Mod);
             vanillaItem.lenCategory.Add(category);
         }
 
@@ -377,173 +255,18 @@ namespace Grindless
         /// Gets or sets the equipment's resource path. The resource path is relative to "Content/".
         /// For equipment, textures are loaded using specific file names, all relative to this resource path.
         /// </summary>
-        public string EquipResourcePath
-        {
-            get => equipResourcePath;
-            set
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                equipResourcePath = value;
-            }
-        }
+        public string EquipResourcePath { get; set; } = "";
 
         /// <summary>
-        /// Gets or sets the MaxHP provided by the equipment.
-        /// </summary>
-        public int HP 
-        { 
-            get
-            {
-                stats.TryGetValue(Stat.HP, out int value);
-                return value;
-            } 
-            set => ErrorHelper.AssertLoading(Mod, () => stats[Stat.HP] = value); 
-        }
-
-        /// <summary>
-        /// Gets or sets the MaxEP provided by the equipment.
-        /// </summary>
-        public int EP
-        {
-            get
-            {
-                stats.TryGetValue(Stat.EP, out int value);
-                return value;
-            }
-            set => ErrorHelper.AssertLoading(Mod, () => stats[Stat.EP] = value);
-        }
-
-        /// <summary>
-        /// Gets or sets the ATK provided by the equipment.
-        /// </summary>
-        public int ATK
-        {
-            get
-            {
-                stats.TryGetValue(Stat.ATK, out int value);
-                return value;
-            }
-            set => ErrorHelper.AssertLoading(Mod, () => stats[Stat.ATK] = value);
-        }
-
-        /// <summary>
-        /// Gets or sets the MATK provided by the equipment.
-        /// </summary>
-        public int MATK
-        {
-            get
-            {
-                stats.TryGetValue(Stat.MATK, out int value);
-                return value;
-            }
-            set => ErrorHelper.AssertLoading(Mod, () => stats[Stat.MATK] = value);
-        }
-
-        /// <summary>
-        /// Gets or sets the DEF provided by the equipment.
-        /// </summary>
-        public int DEF
-        {
-            get
-            {
-                stats.TryGetValue(Stat.DEF, out int value);
-                return value;
-            }
-            set => ErrorHelper.AssertLoading(Mod, () => stats[Stat.DEF] = value);
-        }
-
-        /// <summary>
-        /// Gets or sets the ASPD provided by the equipment.
-        /// </summary>
-        public int ASPD
-        {
-            get
-            {
-                stats.TryGetValue(Stat.ASPD, out int value);
-                return value;
-            }
-            set => ErrorHelper.AssertLoading(Mod, () => stats[Stat.ASPD] = value);
-        }
-
-        /// <summary>
-        /// Gets or sets the CSPD provided by the equipment.
-        /// </summary>
-        public int CSPD
-        {
-            get
-            {
-                stats.TryGetValue(Stat.CSPD, out int value);
-                return value;
-            }
-            set => ErrorHelper.AssertLoading(Mod, () => stats[Stat.CSPD] = value);
-        }
-
-        /// <summary>
-        /// Gets or sets the Crit provided by the equipment.
-        /// </summary>
-        public int Crit
-        {
-            get
-            {
-                stats.TryGetValue(Stat.Crit, out int value);
-                return value;
-            }
-            set => ErrorHelper.AssertLoading(Mod, () => stats[Stat.Crit] = value);
-        }
-
-        /// <summary>
-        /// Gets or sets the CritDMG provided by the equipment.
-        /// </summary>
-        public int CritDMG
-        {
-            get
-            {
-                stats.TryGetValue(Stat.CritDMG, out int value);
-                return value;
-            }
-            set => ErrorHelper.AssertLoading(Mod, () => stats[Stat.CritDMG] = value);
-        }
-
-        /// <summary>
-        /// Gets or sets the ShldHP provided by the equipment. <para/>
-        /// This works even if it's not on a shield!
-        /// </summary>
-        public int ShldHP
-        {
-            get
-            {
-                stats.TryGetValue(Stat.ShldHP, out int value);
-                return value;
-            }
-            set => ErrorHelper.AssertLoading(Mod, () => stats[Stat.ShldHP] = value);
-        }
-
-        /// <summary>
-        /// Gets or sets the EP Regen provided by the equipment.
-        /// </summary>
-        public int EPRegen
-        {
-            get
-            {
-                stats.TryGetValue(Stat.EPRegen, out int value);
-                return value;
-            }
-            set => ErrorHelper.AssertLoading(Mod, () => stats[Stat.EPRegen] = value);
-        }
-
-        /// <summary>
-        /// Gets or sets the Shield Regen provided by the equipment. <para/>
-        /// This stat isn't visible in the equipment display, however it still works,
+        /// Gets or sets an equipment stat.
+        /// <para/> ShldHP stat works even on non-shield items.
+        /// <para/> ShldRegen stat isn't visible in the equipment display, however it still works,
         /// and will boost up the shield's health regen amount.
         /// </summary>
-        public int ShldRegen
+        public int this[Stat stat]
         {
-            get
-            {
-                stats.TryGetValue(Stat.ShldRegen, out int value);
-                return value;
-            }
-            set => ErrorHelper.AssertLoading(Mod, () => stats[Stat.ShldRegen] = value);
+            get => stats.TryGetValue(stat, out int value) ? value : 0;
+            set => stats[Stat.HP] = value;
         }
 
         /// <summary>
@@ -551,15 +274,7 @@ namespace Grindless
         /// Setting this to values other than <see cref="EquipmentType.None"/>
         /// will make this item into an equipment of that type.
         /// </summary>
-        public EquipmentType EquipType
-        {
-            get => equipType;
-            set
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                equipType = value;
-            }
-        }
+        public EquipmentType EquipType { get; set; } = EquipmentType.None;
 
         /// <summary>
         /// Adds a special effect to this equipment.
@@ -569,7 +284,6 @@ namespace Grindless
         /// <param name="effect"> The effect to add. This can also be a modded effect. </param>
         public void AddSpecialEffect(EquipmentInfo.SpecialEffect effect)
         {
-            ErrorHelper.ThrowIfNotLoading(Mod);
             effects.Add(effect);
         }
 
@@ -579,68 +293,34 @@ namespace Grindless
         /// <param name="effect"> The effect to add. This can also be a modded effect. </param>
         public void RemoveSpecialEffect(EquipmentInfo.SpecialEffect effect)
         {
-            ErrorHelper.ThrowIfNotLoading(Mod);
             effects.Remove(effect);
         }
 
         /// <summary>
         /// Gets an array of four booleans that toggle facegear overlap for hair, for each direction.
         /// </summary>
-        public bool[] FacegearOverHair
-        {
-            get
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                return facegearOverHair;
-            }
-        }
+        public bool[] FacegearOverHair { get; } = new bool[] { true, true, true, true };
 
         /// <summary>
         /// Gets an array of four booleans that toggle facegear overlap for hat, for each direction.
         /// </summary>
-        public bool[] FacegearOverHat
-        {
-            get
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                return facegearOverHat;
-            }
-        }
+        public bool[] FacegearOverHat { get; } = new bool[] { true, true, true, true };
 
         /// <summary>
         /// Gets an array of four sprite render offsets for facegear, for each direction.
         /// </summary>
-        public Vector2[] FacegearOffsets
-        {
-            get
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                return facegearOffsets;
-            }
-        }
-
-        private VisualSetConfig _defaultSetConfig;
+        public Vector2[] FacegearOffsets { get; } = new Vector2[] { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
 
         /// <summary>
         /// Gets the default visual set of a hat. This set is used for most hair types.
         /// </summary>
-        public VisualSetConfig DefaultSet
+        public VisualSetConfig DefaultSet => _defaultSetConfig ??= new VisualSetConfig()
         {
-            get
-            {
-                if (_defaultSetConfig == null)
-                {
-                    _defaultSetConfig = new VisualSetConfig()
-                    {
-                        entry = this,
-                        comboItem = ItemCodex.ItemTypes.Null,
-                        visualSet = defaultSet
-                    };
-                }
-
-                return _defaultSetConfig;
-            }
-        }
+            entry = this,
+            comboItem = ItemCodex.ItemTypes.Null,
+            visualSet = defaultSet
+        };
+        private VisualSetConfig _defaultSetConfig;
 
         /// <summary>
         /// Creates a configuration for an alternate visual set. <para/>
@@ -667,28 +347,12 @@ namespace Grindless
         /// <summary>
         /// Gets or sets whenever hats occupy one slot (hat) or two (hat + facegear => mask).
         /// </summary>
-        public bool HatDoubleSlot
-        {
-            get => hatDoubleSlot;
-            set
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                hatDoubleSlot = value;
-            }
-        }
+        public bool HatDoubleSlot { get; set; } = false;
 
         /// <summary>
         /// Gets or sets the equipment's weapon type.
         /// </summary>
-        public WeaponInfo.WeaponCategory WeaponType
-        {
-            get => weaponType;
-            set
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                weaponType = value;
-            }
-        }
+        public WeaponInfo.WeaponCategory WeaponType { get; set; } = WeaponInfo.WeaponCategory.OneHanded;
 
         /// <summary>
         /// Gets or sets whenever the weapon is magical or not. <para/>
@@ -696,15 +360,7 @@ namespace Grindless
         /// For magic weapons, the damage is equal to 40% (ATK + MATK).
         /// Additionally, magic weapons can fire a projectile that deals 40% MATK as damage.
         /// </summary>
-        public bool MagicWeapon
-        {
-            get => magicWeapon;
-            set
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                magicWeapon = value;
-            }
-        }
+        public bool MagicWeapon { get; set; } = false;
 
         // Methods specific to FacegearInfo
 
@@ -713,11 +369,10 @@ namespace Grindless
         /// </summary>
         public void SetFacegearOverHair(bool up, bool right, bool down, bool left)
         {
-            var array = FacegearOverHair;
-            array[0] = up;
-            array[1] = right;
-            array[2] = down;
-            array[3] = left;
+            FacegearOverHair[0] = up;
+            FacegearOverHair[1] = right;
+            FacegearOverHair[2] = down;
+            FacegearOverHair[3] = left;
         }
 
         /// <summary>
@@ -725,11 +380,10 @@ namespace Grindless
         /// </summary>
         public void SetFacegearOverHat(bool up, bool right, bool down, bool left)
         {
-            var array = FacegearOverHat;
-            array[0] = up;
-            array[1] = right;
-            array[2] = down;
-            array[3] = left;
+            FacegearOverHat[0] = up;
+            FacegearOverHat[1] = right;
+            FacegearOverHat[2] = down;
+            FacegearOverHat[3] = left;
         }
 
         /// <summary>
@@ -737,11 +391,10 @@ namespace Grindless
         /// </summary>
         public void SetFacegearOffsets(Vector2 up, Vector2 right, Vector2 down, Vector2 left)
         {
-            var array = FacegearOffsets;
-            array[0] = up;
-            array[1] = right;
-            array[2] = down;
-            array[3] = left;
+            FacegearOffsets[0] = up;
+            FacegearOffsets[1] = right;
+            FacegearOffsets[2] = down;
+            FacegearOffsets[3] = left;
         }
 
         #endregion
@@ -758,7 +411,7 @@ namespace Grindless
         protected override void Initialize()
         {
             vanillaItem.enType = GameID;
-            
+
             if (vanillaEquip != null)
             {
                 vanillaEquip.enItemType = GameID;
@@ -769,7 +422,7 @@ namespace Grindless
             vanillaItem.sDescriptionLibraryHandle = $"Item_{(int)GameID}_Description";
             vanillaItem.sCategory = "";
 
-            EquipmentType typeToUse = Enum.IsDefined(typeof(EquipmentType), equipType) ? equipType : EquipmentType.None;
+            EquipmentType typeToUse = Enum.IsDefined(typeof(EquipmentType), EquipType) ? EquipType : EquipmentType.None;
 
             EquipmentInfo equipData = null;
             switch (typeToUse)
@@ -779,45 +432,45 @@ namespace Grindless
                 case EquipmentType.Facegear:
                     FacegearInfo faceData = (equipData = new FacegearInfo(GameID)) as FacegearInfo;
 
-                    Array.Copy(facegearOverHair, faceData.abOverHair, 4);
-                    Array.Copy(facegearOverHat, faceData.abOverHat, 4);
-                    Array.Copy(facegearOffsets, faceData.av2RenderOffsets, 4);
+                    Array.Copy(FacegearOverHair, faceData.abOverHair, 4);
+                    Array.Copy(FacegearOverHat, faceData.abOverHat, 4);
+                    Array.Copy(FacegearOffsets, faceData.av2RenderOffsets, 4);
 
                     break;
                 case EquipmentType.Hat:
-                    HatInfo hatData = (equipData = new HatInfo(GameID) { bDoubleSlot = hatDoubleSlot }) as HatInfo;
+                    HatInfo hatData = (equipData = new HatInfo(GameID) { bDoubleSlot = HatDoubleSlot }) as HatInfo;
 
                     hatData.xDefaultSet = defaultSet;
                     hatData.denxAlternateVisualSets = altSets;
 
                     break;
                 case EquipmentType.Weapon:
-                    WeaponInfo weaponData = new(equipResourcePath, GameID, weaponType)
+                    WeaponInfo weaponData = new(EquipResourcePath, GameID, WeaponType)
                     {
-                        enWeaponCategory = weaponType,
+                        enWeaponCategory = WeaponType,
                         enAutoAttackSpell = WeaponInfo.AutoAttackSpell.None
                     };
                     equipData = weaponData;
 
-                    if (weaponType == WeaponInfo.WeaponCategory.OneHanded)
+                    if (WeaponType == WeaponInfo.WeaponCategory.OneHanded)
                     {
                         weaponData.iDamageMultiplier = 90;
-                        if (magicWeapon)
+                        if (MagicWeapon)
                             weaponData.enAutoAttackSpell = WeaponInfo.AutoAttackSpell.Generic1H;
                     }
-                    else if (weaponType == WeaponInfo.WeaponCategory.TwoHanded)
+                    else if (WeaponType == WeaponInfo.WeaponCategory.TwoHanded)
                     {
                         weaponData.iDamageMultiplier = 125;
-                        if (magicWeapon)
+                        if (MagicWeapon)
                             weaponData.enAutoAttackSpell = WeaponInfo.AutoAttackSpell.Generic2H;
                     }
                     break;
                 default:
-                    equipData = new EquipmentInfo(equipResourcePath, GameID);
+                    equipData = new EquipmentInfo(EquipResourcePath, GameID);
                     break;
             }
 
-            if (equipType != EquipmentType.None)
+            if (EquipType != EquipmentType.None)
             {
                 equipData.deniStatChanges = new Dictionary<Stat, int>(stats);
                 equipData.lenSpecialEffects.AddRange(effects);
@@ -842,7 +495,7 @@ namespace Grindless
 
             if (equipData != null)
             {
-                ItemCodex.ItemCategories type = (ItemCodex.ItemCategories)equipType;
+                ItemCodex.ItemCategories type = (ItemCodex.ItemCategories)EquipType;
                 vanillaItem.lenCategory.Add(type);
 
                 if (type == ItemCodex.ItemCategories.Weapon)
@@ -875,7 +528,7 @@ namespace Grindless
 
             ContentManager manager = Globals.Game.Content;
 
-            manager.UnloadIfModded(iconPath);
+            manager.UnloadIfModded(IconPath);
 
             string[] directions = new string[]
             {
@@ -884,7 +537,7 @@ namespace Grindless
 
             if (vanillaEquip is HatInfo hatData)
             {
-                string basePath = equipResourcePath;
+                string basePath = EquipResourcePath;
 
                 if (basePath != null)
                 {
@@ -903,7 +556,7 @@ namespace Grindless
             }
             else if (vanillaEquip is FacegearInfo)
             {
-                string path = equipResourcePath;
+                string path = EquipResourcePath;
 
                 if (path != null)
                 {

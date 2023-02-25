@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using SoG;
 using Microsoft.Extensions.Logging;
+using static SoG.HitEffectMap;
+using System;
+using System.Linq;
 
 namespace Grindless
 {
@@ -47,28 +50,57 @@ namespace Grindless
     /// </remarks>
     public class AudioEntry : Entry<GrindlessID.AudioID>
     {
+        public readonly struct GSAudioID
+        {
+            public GSAudioID(int modIndex, int cueID, bool isMusic)
+            {
+                ModIndex = modIndex;
+                AudioIndex = cueID;
+                IsMusic = isMusic;
+            }
+
+            public readonly int ModIndex;
+            public readonly int AudioIndex;
+            public readonly bool IsMusic;
+
+            public static bool TryParse(string str, out GSAudioID audioID)
+            {
+                audioID = default;
+
+                if (!str.StartsWith("GS_"))
+                    return false;
+
+                string[] words = str.Remove(0, 3).Split('_');
+
+                if (words.Length != 2 || !(words[1][0] == 'M' || words[1][0] == 'S'))
+                    return false;
+
+                if (!int.TryParse(words[0], out int modIndex))
+                    return false;
+
+                if (!int.TryParse(words[1].Substring(1), out int cueID))
+                    return false;
+
+                audioID = new GSAudioID(modIndex, cueID, words[1][0] == 'M');
+                return true;
+            }
+
+            public override string ToString() => $"GS_{ModIndex}_{(IsMusic ? 'M' : 'S')}{AudioIndex}";
+        }
+
         internal static EntryManager<GrindlessID.AudioID, AudioEntry> Entries { get; }
             = new EntryManager<GrindlessID.AudioID, AudioEntry>(0);
 
         internal static Dictionary<string, string> VanillaMusicRedirects { get; } = new Dictionary<string, string>();
 
-        internal HashSet<string> effectCueNames = new();
+        internal SoundBank EffectsSoundBank; // "<Mod>Effects.xsb"
+        internal WaveBank EffectsWaveBank; // "<Mod>Music.xwb"
+        internal SoundBank MusicSoundBank; //"<Mod>Music.xsb"
+        internal WaveBank MusicWaveBank; // "<Mod>.xwb", never unloaded
 
-        internal Dictionary<string, HashSet<string>> musicCueNames = new();
-
-        internal SoundBank effectsSB; // "<Mod>Effects.xsb"
-
-        internal WaveBank effectsWB; // "<Mod>Music.xwb"
-
-        internal SoundBank musicSB; //"<Mod>Music.xsb"
-
-        internal WaveBank universalWB; // "<Mod>.xwb", never unloaded
-
-        internal List<string> indexedEffectCues = new();
-
-        internal List<string> indexedMusicCues = new();
-
-        internal List<string> indexedMusicBanks = new();
+        internal Dictionary<GSAudioID, string> IDToCue { get; } = new();
+        internal Dictionary<string, string> CueToWaveBank { get; } = new();
+        internal int NextID = 0;
 
         /// <summary>
         /// Adds effect cues for this mod. <para/>
@@ -79,7 +111,7 @@ namespace Grindless
             ErrorHelper.ThrowIfNotLoading(Mod);
 
             foreach (var audio in effects)
-                effectCueNames.Add(audio);
+                IDToCue[new GSAudioID((int)GameID, NextID++, false)] = audio;
         }
 
         /// <summary>
@@ -95,69 +127,28 @@ namespace Grindless
         {
             ErrorHelper.ThrowIfNotLoading(Mod);
 
-            var setToUpdate = musicCueNames.TryGetValue(bankName, out var set) ? set : musicCueNames[bankName] = new HashSet<string>();
-
             foreach (var audio in music)
-                setToUpdate.Add(audio);
-        }
-
-        /// <summary>
-        /// Removes effect cues from this mod.
-        /// </summary>
-        /// <remarks>
-        /// This method can only be used inside <see cref="Mod.Load"/>.
-        /// </remarks>
-        /// <param name="effects"> A list of effect names to remove. </param>
-        public void RemoveEffects(params string[] effects)
-        {
-            ErrorHelper.ThrowIfNotLoading(Mod);
-
-            foreach (var audio in effects)
-                effectCueNames.Remove(audio);
-        }
-
-        /// <summary>
-        /// Removes music cues from this mod.
-        /// </summary>
-        /// <remarks>
-        /// This method can only be used inside <see cref="Mod.Load"/>.
-        /// </remarks>
-        /// <param name="bankName"> The wave bank name containing the music (without the ".xnb" extension). </param>
-        /// <param name="music"> A list of music names to remove. </param>
-        public void RemoveMusic(string bankName, params string[] music)
-        {
-            ErrorHelper.ThrowIfNotLoading(Mod);
-
-            if (!musicCueNames.TryGetValue(bankName, out var set))
             {
-                return;
+                IDToCue[new GSAudioID((int)GameID, NextID++, false)] = audio;
+                CueToWaveBank[audio] = bankName;
             }
-
-            foreach (var audio in music)
-                set.Remove(audio);
-
-            musicCueNames.Remove(bankName);
         }
-
 
         /// <summary>
         /// Gets the ID of the effect that has the given name. <para/>
         /// This ID can be used to play effects with methods such as <see cref="SoundSystem.PlayCue"/>.
         /// </summary>
         /// <returns> An identifier that can be used to play the effect using vanilla methods. </returns>
-        public string GetEffectID(string effectName)
+        public GSAudioID? GetEffectID(string effectName)
         {
-            ErrorHelper.ThrowIfLoading(Mod);
-
-            for (int i = 0; i < indexedEffectCues.Count; i++)
+            try
             {
-                if (indexedEffectCues[i] == effectName)
-                {
-                    return $"GS_{(int)GameID}_S{i}";
-                }
+                return IDToCue.First(x => x.Value == effectName && !x.Key.IsMusic).Key;
             }
-
-            return "";
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -165,17 +156,16 @@ namespace Grindless
         /// This ID can be used to play music with <see cref="SoundSystem.PlaySong"/>.
         /// </summary>
         /// <returns> An identifier that can be used to play music using vanilla methods. </returns>
-        public string GetMusicID(string musicName)
+        public GSAudioID? GetMusicID(string musicName)
         {
-            ErrorHelper.ThrowIfLoading(Mod);
-
-            for (int i = 0; i < indexedMusicCues.Count; i++)
+            try
             {
-                if (indexedMusicCues[i] == musicName)
-                    return $"GS_{(int)GameID}_M{i}";
+                return IDToCue.First(x => x.Value == musicName && x.Key.IsMusic).Key;
             }
-
-            return "";
+            catch
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -195,39 +185,35 @@ namespace Grindless
             var songRegionMap = AccessTools.Field(typeof(SoundSystem), "dssSongRegionMap")
                 .GetValue(Globals.Game.xSoundSystem) as Dictionary<string, string>;
 
+            if (musicName == "")
+            {
+                Program.Logger.LogWarning("Removed music redirect for {vanillaName}.", vanillaName);
+                VanillaMusicRedirects.Remove(vanillaName);
+                return;
+            }
+
             if (!songRegionMap.ContainsKey(vanillaName))
             {
                 Program.Logger.LogWarning("Invalid music redirect {vanillaName} -> {modID}.", vanillaName, musicName);
                 return;
             }
 
-            bool isModded = ModUtils.SplitAudioID(musicName, out int entryID, out bool isMusic, out int cueID);
-
-            var entry = Entries.Get((GrindlessID.AudioID)entryID);
-
-            string cueName = null;
-
-            if (entry != null && cueID >= 0 && cueID < entry.indexedMusicCues.Count)
-            {
-                cueName = entry.indexedMusicCues[cueID];
-            }
-
-            if (!(musicName == "" || isModded && isMusic && cueName != null))
+            if (!GSAudioID.TryParse(musicName, out GSAudioID id) || !id.IsMusic)
             {
                 Program.Logger.LogWarning("Invalid music redirect {vanillaName} -> {modID}.", vanillaName, musicName);
                 return;
             }
 
-            if (musicName == "")
+            var entry = Entries.Get((GrindlessID.AudioID)id.ModIndex);
+
+            if (entry == null || !entry.IDToCue.TryGetValue(id, out string cueName))
             {
-                Program.Logger.LogWarning("Removed music redirect for {vanillaName}.", vanillaName);
-                VanillaMusicRedirects.Remove(vanillaName);
+                Program.Logger.LogWarning("Invalid music redirect {vanillaName} -> {modID}.", vanillaName, musicName);
+                return;
             }
-            else
-            {
-                Program.Logger.LogWarning("Set music redirect {vanillaName} -> {modID} ({cueName})", vanillaName, musicName, cueName);
-                VanillaMusicRedirects[vanillaName] = musicName;
-            }
+
+            Program.Logger.LogWarning("Set music redirect {vanillaName} -> {modID} ({effectName})", vanillaName, musicName, cueName);
+            VanillaMusicRedirects[vanillaName] = musicName;
         }
 
         internal AudioEntry() { }
@@ -236,36 +222,23 @@ namespace Grindless
         {
             AudioEngine audioEngine = AccessTools.Field(typeof(SoundSystem), "audioEngine").GetValue(Globals.Game.xSoundSystem) as AudioEngine;
 
-            indexedEffectCues.AddRange(effectCueNames);
-
-            foreach (var kvp in musicCueNames)
-            {
-                string bankName = kvp.Key;
-
-                foreach (var music in kvp.Value)
-                {
-                    indexedMusicBanks.Add(bankName);
-                    indexedMusicCues.Add(music);
-                }
-            }
-
             string root = Path.Combine(Globals.Game.Content.RootDirectory, Mod.AssetPath, "Sound");
             string name = Mod.Name;
 
             // Non-unique sound / wave banks will cause audio conflicts
             // This is why the file paths are set in stone
-            effectsWB = audioEngine.TryLoadWaveBank(Path.Combine(root, $"{name}Effects.xwb"));
-            effectsSB = audioEngine.TryLoadSoundBank(Path.Combine(root, $"{name}Effects.xsb"));
-            musicSB = audioEngine.TryLoadSoundBank(Path.Combine(root, $"{name}Music.xsb"));
-            universalWB = audioEngine.TryLoadWaveBank(Path.Combine(root, $"{name}.xwb"));
+            EffectsWaveBank = audioEngine.TryLoadWaveBank(Path.Combine(root, $"{name}Effects.xwb"));
+            EffectsSoundBank = audioEngine.TryLoadSoundBank(Path.Combine(root, $"{name}Effects.xsb"));
+            MusicSoundBank = audioEngine.TryLoadSoundBank(Path.Combine(root, $"{name}Music.xsb"));
+            MusicWaveBank = audioEngine.TryLoadWaveBank(Path.Combine(root, $"{name}.xwb"));
         }
 
         protected override void Cleanup()
         {
-            effectsSB?.Dispose();
-            effectsWB?.Dispose();
-            musicSB?.Dispose();
-            universalWB?.Dispose();
+            EffectsSoundBank?.Dispose();
+            EffectsWaveBank?.Dispose();
+            MusicSoundBank?.Dispose();
+            MusicWaveBank?.Dispose();
         }
     }
 }

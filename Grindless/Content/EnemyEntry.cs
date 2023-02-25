@@ -200,11 +200,7 @@ namespace Grindless
         public EnemyDescription.Category Category
         {
             get => Vanilla.enCategory;
-            set
-            {
-                ErrorHelper.ThrowIfNotLoading(Mod);
-                Vanilla.enCategory = value;
-            }
+            set => Vanilla.enCategory = value;
         }
 
         internal EnemyEntry() { }

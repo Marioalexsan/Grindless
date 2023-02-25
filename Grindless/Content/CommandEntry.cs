@@ -1,5 +1,4 @@
-﻿using Grindless.Core;
-using HarmonyLib;
+﻿using HarmonyLib;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;

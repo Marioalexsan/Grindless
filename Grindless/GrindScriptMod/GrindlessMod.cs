@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using Watchers;
 using SoG;
-using Grindless.Core;
 
 namespace Grindless
 {

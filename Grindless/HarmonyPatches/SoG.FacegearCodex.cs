@@ -18,9 +18,9 @@ namespace Grindless.HarmonyPatches
 
             if (__result != null)
             {
-                string path = entry.equipResourcePath;
+                string path = entry.EquipResourcePath;
 
-                if (entry.useVanillaResourceFormat)
+                if (entry.UseVanillaResourceFormat)
                 {
                     path = Path.Combine("Sprites/Equipment/Facegear/", path);
                 }

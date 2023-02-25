@@ -14,40 +14,32 @@ namespace Grindless.HarmonyPatches
     {
         internal static SoundBank GetEffectSoundBank(string audioID)
         {
-            bool success = ModUtils.SplitAudioID(audioID, out int entryID, out bool isMusic, out _);
-            if (!(success && !isMusic))
+            if (!AudioEntry.GSAudioID.TryParse(audioID, out var id) || id.IsMusic)
                 return null;
 
-            var entry = AudioEntry.Entries.Get((GrindlessID.AudioID)entryID);
+            var entry = AudioEntry.Entries.Get((GrindlessID.AudioID)id.ModIndex);
 
-            return entry?.effectsSB;
+            return entry?.EffectsSoundBank;
         }
 
         internal static string GetCueName(string GSID)
         {
-            if (!ModUtils.SplitAudioID(GSID, out int entryID, out bool isMusic, out int cueID))
+            if (!AudioEntry.GSAudioID.TryParse(GSID, out var audioID))
                 return "";
 
-            var entry = AudioEntry.Entries.Get((GrindlessID.AudioID)entryID);
+            var entry = AudioEntry.Entries.Get((GrindlessID.AudioID)audioID.ModIndex);
 
-            if (entry == null)
-            {
-                return "";
-            }
-
-            return isMusic ? entry.indexedMusicCues[cueID] : entry.indexedEffectCues[cueID];
+            return entry?.IDToCue[audioID];
         }
 
         internal static SoundBank GetMusicSoundBank(string audioID)
         {
-            bool success = ModUtils.SplitAudioID(audioID, out int entryID, out bool isMusic, out _);
-
-            if (!(success && isMusic))
+            if (!AudioEntry.GSAudioID.TryParse(audioID, out var id) || !id.IsMusic)
                 return null;
 
-            var entry = AudioEntry.Entries.Get((GrindlessID.AudioID)entryID);
+            var entry = AudioEntry.Entries.Get((GrindlessID.AudioID)id.ModIndex);
 
-            return entry?.musicSB;
+            return entry?.MusicSoundBank;
         }
 
         internal static bool IsUniversalMusicBank(string bank)
@@ -77,11 +69,11 @@ namespace Grindless.HarmonyPatches
             {
                 var entry = AudioEntry.Entries.Get(mod, "");
 
-                if (entry != null && entry.universalWB == bank)
+                if (entry != null && entry.MusicWaveBank == bank)
                     return true;
             }
 
-            FieldInfo universalWaveBankField = typeof(SoundSystem).GetTypeInfo().GetField("universalMusicWaveBank", BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo universalWaveBankField = typeof(SoundSystem).GetField("universalMusicWaveBank", BindingFlags.NonPublic | BindingFlags.Instance);
             if (bank == universalWaveBankField.GetValue(Globals.Game.xSoundSystem))
                 return true;
 

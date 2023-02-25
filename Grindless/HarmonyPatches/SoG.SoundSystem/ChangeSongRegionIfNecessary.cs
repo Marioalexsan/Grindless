@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using static SoG.HitEffectMap;
 
 namespace Grindless.HarmonyPatches
 {
@@ -79,27 +80,35 @@ namespace Grindless.HarmonyPatches
         {
             SoundSystemWrapper wSystem = new(__instance);
 
-            bool currentIsModded = ModUtils.SplitAudioID(sSongName, out int entryID, out bool isMusic, out int cueID);
+            AudioEntry.GSAudioID audioID = default;
+            bool currentIsModded = AudioEntry.GSAudioID.TryParse(sSongName, out audioID);
 
-            if (currentIsModded && !isMusic)
-                Program.Logger.LogWarning("Trying to play modded audio as music, but the audio isn't music! ID: {sSongName}", sSongName);
-
-            Mod mod = null;
             AudioEntry entry = null;
 
             if (currentIsModded)
             {
-                entry = AudioEntry.Entries.Get((GrindlessID.AudioID)entryID);
-                mod = entry.Mod;
+                if (!audioID.IsMusic)
+                {
+                    Program.Logger.LogWarning("Trying to play modded audio as music, but the audio isn't music! ID: {sSongName}", sSongName);
+                    return false;
+                }
+
+                entry = AudioEntry.Entries.Get((GrindlessID.AudioID)audioID.ModIndex);
+
+                if (!entry.IDToCue.ContainsKey(audioID))
+                {
+                    Program.Logger.LogWarning("Trying to play unknown mod music! ID: {sSongName}", sSongName);
+                    return false;
+                }
             }
 
-            string nextBankName = currentIsModded ? entry.indexedMusicBanks[cueID] : wSystem.SongRegionMap[sSongName];
+            string nextBankName = currentIsModded ? entry.CueToWaveBank[entry.IDToCue[audioID]] : wSystem.SongRegionMap[sSongName];
 
             WaveBank currentMusicBank = wSystem.MusicWaveBank;
 
             if (_Helper.IsUniversalMusicBank(nextBankName))
             {
-                if (currentIsModded && entry.universalWB == null)
+                if (currentIsModded && entry.MusicWaveBank == null)
                 {
                     Program.Logger.LogError("{sSongName} requested modded UniversalMusic bank, but the bank does not exist!", sSongName);
                     return false;
@@ -108,7 +117,7 @@ namespace Grindless.HarmonyPatches
                 if (currentMusicBank != null && !_Helper.IsUniversalMusicBank(currentMusicBank))
                     wSystem.System.SetStandbyBank(wSystem.System.sCurrentMusicWaveBank, currentMusicBank);
 
-                wSystem.MusicWaveBank = currentIsModded ? entry.universalWB : wSystem.UniversalMusic;
+                wSystem.MusicWaveBank = currentIsModded ? entry.MusicWaveBank : wSystem.UniversalMusic;
             }
             else if (wSystem.System.sCurrentMusicWaveBank != nextBankName)
             {
@@ -124,7 +133,7 @@ namespace Grindless.HarmonyPatches
                 }
                 else
                 {
-                    string root = Path.Combine(Globals.Game.Content.RootDirectory, currentIsModded ? mod.AssetPath : "");
+                    string root = Path.Combine(Globals.Game.Content.RootDirectory, currentIsModded ? entry.Mod.AssetPath : "");
 
                     wSystem.LoadedMusicWaveBank = new WaveBank(wSystem.AudioEngine, Path.Combine(root, "Sound", $"{nextBankName}.xwb"));
                     wSystem.MusicWaveBank = null;
@@ -143,7 +152,7 @@ namespace Grindless.HarmonyPatches
                     return false;
                 }
 
-                string root = Path.Combine(Globals.Game.Content.RootDirectory, currentIsModded ? mod.AssetPath : "");
+                string root = Path.Combine(Globals.Game.Content.RootDirectory, currentIsModded ? entry.Mod.AssetPath : "");
                 string bankToUse = currentIsModded ? nextBankName : wSystem.System.sCurrentMusicWaveBank;
 
                 wSystem.LoadedMusicWaveBank = new WaveBank(wSystem.AudioEngine, Path.Combine(root, "Sound", bankToUse + ".xwb"));

@@ -23,13 +23,13 @@ namespace Grindless.HarmonyPatches
 
             bool oneHanded = (entry.vanillaEquip as WeaponInfo).enWeaponCategory == WeaponInfo.WeaponCategory.OneHanded;
 
-            string resourcePath = entry.equipResourcePath;
+            string resourcePath = entry.EquipResourcePath;
 
             foreach (KeyValuePair<ushort, string> kvp in dis)
             {
                 string texPath = kvp.Value;
 
-                if (!entry.useVanillaResourceFormat)
+                if (!entry.UseVanillaResourceFormat)
                 {
                     texPath = texPath.Replace($"Weapons/{resourcePath}/", "");
 

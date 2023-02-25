@@ -143,26 +143,26 @@ namespace Grindless
             {
                 var weapon = OriginalMethods.GetWeaponInfo(gameID);
                 equip = weapon;
-                entry.equipType = EquipmentType.Weapon;
+                entry.EquipType = EquipmentType.Weapon;
 
-                entry.weaponType = weapon.enWeaponCategory;
-                entry.magicWeapon = weapon.enAutoAttackSpell != WeaponInfo.AutoAttackSpell.None;
+                entry.WeaponType = weapon.enWeaponCategory;
+                entry.MagicWeapon = weapon.enAutoAttackSpell != WeaponInfo.AutoAttackSpell.None;
             }
             else if (entry.vanillaItem.lenCategory.Contains(ItemCodex.ItemCategories.Shield))
             {
                 equip = OriginalMethods.GetShieldInfo(gameID);
-                entry.equipType = EquipmentType.Shield;
+                entry.EquipType = EquipmentType.Shield;
             }
             else if (entry.vanillaItem.lenCategory.Contains(ItemCodex.ItemCategories.Armor))
             {
                 equip = OriginalMethods.GetArmorInfo(gameID);
-                entry.equipType = EquipmentType.Armor;
+                entry.EquipType = EquipmentType.Armor;
             }
             else if (entry.vanillaItem.lenCategory.Contains(ItemCodex.ItemCategories.Hat))
             {
                 var hat = OriginalMethods.GetHatInfo(gameID);
                 equip = hat;
-                entry.equipType = EquipmentType.Hat;
+                entry.EquipType = EquipmentType.Hat;
 
                 entry.defaultSet = hat.xDefaultSet;
 
@@ -172,42 +172,42 @@ namespace Grindless
                     entry.hatAltSetResourcePaths[pair.Key] = null;
                 }
 
-                entry.hatDoubleSlot = hat.bDoubleSlot;
+                entry.HatDoubleSlot = hat.bDoubleSlot;
             }
             else if (entry.vanillaItem.lenCategory.Contains(ItemCodex.ItemCategories.Facegear))
             {
                 var facegear = OriginalMethods.GetFacegearInfo(gameID);
                 equip = facegear;
-                entry.equipType = EquipmentType.Facegear;
+                entry.EquipType = EquipmentType.Facegear;
 
-                entry.facegearOverHair = facegear.abOverHat;
-                entry.facegearOverHat = facegear.abOverHat;
-                entry.facegearOffsets = facegear.av2RenderOffsets;
+                Array.Copy(facegear.abOverHat, entry.FacegearOverHair, 4);
+                Array.Copy(facegear.abOverHat, entry.FacegearOverHat, 4);
+                Array.Copy(facegear.abOverHat, entry.FacegearOffsets, 4);
             }
             else if (entry.vanillaItem.lenCategory.Contains(ItemCodex.ItemCategories.Shoes))
             {
                 equip = OriginalMethods.GetShoesInfo(gameID);
-                entry.equipType = EquipmentType.Shoes;
+                entry.EquipType = EquipmentType.Shoes;
             }
             else if (entry.vanillaItem.lenCategory.Contains(ItemCodex.ItemCategories.Accessory))
             {
                 equip = OriginalMethods.GetAccessoryInfo(gameID);
-                entry.equipType = EquipmentType.Accessory;
+                entry.EquipType = EquipmentType.Accessory;
             }
 
-            entry.iconPath = null;
-            entry.shadowPath = null;
-            entry.equipResourcePath = null;
+            entry.IconPath = null;
+            entry.ShadowPath = null;
+            entry.EquipResourcePath = null;
 
             if (equip != null)
             {
                 entry.stats = new Dictionary<EquipmentInfo.StatEnum, int>(equip.deniStatChanges);
                 entry.effects = new HashSet<EquipmentInfo.SpecialEffect>(equip.lenSpecialEffects);
-                entry.equipResourcePath = equip.sResourceName;
+                entry.EquipResourcePath = equip.sResourceName;
             }
 
             // Obviously we're not gonna use the modded format to load vanilla assets
-            entry.useVanillaResourceFormat = true;
+            entry.UseVanillaResourceFormat = true;
 
             return entry;
         }
@@ -341,62 +341,12 @@ namespace Grindless
             entry.IsBroken = info.bBroken;
             entry.Description = info.sDescription;
 
-            entry.ConditionToDrop = null;
-
-            // We have to manually set this, unfortunately.
-            switch (gameID)
+            // Hey, do you like ultra hacky code?
+            entry.ConditionToDrop = () =>
             {
-                case PinCodex.PinType.VoodooDoll:
-                    entry.ConditionToDrop = () => CAS.NumberOfPlayers == 1;
-                    break;
-                case PinCodex.PinType.ThreeRedSmashBallsAutoSpawn:
-                    entry.ConditionToDrop = () =>
-                    {
-                        return
-                            CAS.NumberOfPlayers == 1 &&
-                            CAS.LocalPlayer.xEquipment.xWeapon != null &&
-                            CAS.LocalPlayer.xEquipment.xWeapon.enWeaponCategory == WeaponInfo.WeaponCategory.TwoHanded;
-                    };
-                    break;
-                case PinCodex.PinType.PotionDrinkFreezesClosestEnemy:
-                case PinCodex.PinType.RefillAPotionAtStartEveryRoom:
-                case PinCodex.PinType.DrinkingPotionSpawnsArrows:
-                case PinCodex.PinType.DrinkingPotionGuaranteesCritNextSpell:
-                case PinCodex.PinType.DrinkingAPotionGrantsLightningConduits:
-                case PinCodex.PinType.PotionEffectsHaveDoubledDuration:
-                    entry.ConditionToDrop = () => CAS.WorldRogueLikeData.henActiveFlags.Contains(FlagCodex.FlagID._Roguelike_Improvement_Alchemist);
-                    break;
-                case PinCodex.PinType.DoubleLoods_LoodsHaveMoreHealth:
-                    entry.ConditionToDrop = () => CAS.WorldRogueLikeData.henActiveFlags.Contains(FlagCodex.FlagID._Roguelike_HasSeenLood) && CAS.NumberOfPlayers == 1;
-                    break;
-                case PinCodex.PinType.GainPowerIn_EvergrindFields:
-                    entry.ConditionToDrop = () => CAS.CurrentRegion == Level.WorldRegion.PillarMountains;
-                    break;
-                case PinCodex.PinType.GainPowerIn_PumpkinWoods:
-                    entry.ConditionToDrop = () => CAS.CurrentRegion == Level.WorldRegion.EvergrindEast;
-                    break;
-                case PinCodex.PinType.GainPowerIn_FlyingFortress:
-                    entry.ConditionToDrop = () => CAS.CurrentRegion == Level.WorldRegion.HalloweenForest;
-                    break;
-                case PinCodex.PinType.GainPowerIn_Seasonne:
-                    entry.ConditionToDrop = () => CAS.CurrentRegion == Level.WorldRegion.FlyingFortress;
-                    break;
-                case PinCodex.PinType.GainPowerIn_SeasonTemple:
-                    entry.ConditionToDrop = () => CAS.CurrentRegion == Level.WorldRegion.Winterland;
-                    break;
-                case PinCodex.PinType.GainPowerIn_MtBloom:
-                    entry.ConditionToDrop = () => CAS.CurrentRegion == Level.WorldRegion.SeasonTemple;
-                    break;
-                case PinCodex.PinType.GainPowerIn_TaiMing:
-                    entry.ConditionToDrop = () => CAS.CurrentRegion == Level.WorldRegion.MtBloom;
-                    break;
-                case PinCodex.PinType.GainPowerIn_Desert:
-                    entry.ConditionToDrop = () => CAS.CurrentRegion == Level.WorldRegion.TimeTemple;
-                    break;
-                case PinCodex.PinType.GainPowerIn_LostShip:
-                    entry.ConditionToDrop = () => CAS.CurrentRegion == Level.WorldRegion.Desert;
-                    break;
-            }
+                _ = OriginalMethods.FillRandomPinList(Globals.Game);
+                return OriginalMethods.LastRandomPinList.Contains(gameID);
+            };
 
             entry.CreateCollectionEntry = GameObjectStuff.GetOriginalPinCollection().Contains(gameID);
 
