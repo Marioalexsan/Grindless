@@ -12,37 +12,22 @@ namespace Grindless
     {
         public static CurseEntry ParseCurse(this VanillaMod vanillaMod, RogueLikeMode.TreatsCurses gameID)
         {
-            CurseEntry entry = new()
+            OriginalMethods._RogueLike_GetTreatCurseInfo(Globals.Game, gameID, out var nameHandle, out var descHandle, out var scoreModifier);
+
+            return new()
             {
                 Mod = vanillaMod,
                 GameID = gameID,
-                ModID = gameID.ToString()
+                ModID = gameID.ToString(),
+                nameHandle = nameHandle,
+                descriptionHandle = descHandle,
+                ScoreModifier = scoreModifier,
+                TexturePath = null,
+                Name = Globals.Game.EXT_GetMiscText("Menus", nameHandle).sUnparsedFullLine,
+                Description = Globals.Game.EXT_GetMiscText("Menus", descHandle).sUnparsedFullLine,
+                // Hacky way to detemine if it's a curse or treat in vanilla
+                IsTreat = Globals.Game.xShopMenu.xTreatCurseMenu.lenTreatCursesAvailable.Contains(gameID) || gameID == RogueLikeMode.TreatsCurses.Treat_MoreLoods
             };
-
-            OriginalMethods._RogueLike_GetTreatCurseInfo(Globals.Game, gameID, out entry.nameHandle, out entry.descriptionHandle, out var scoreModifier);
-
-            entry.ScoreModifier = scoreModifier;
-
-            entry.TexturePath = null;
-
-            entry.Name = Globals.Game.EXT_GetMiscText("Menus", entry.nameHandle).sUnparsedFullLine;
-            entry.Description = Globals.Game.EXT_GetMiscText("Menus", entry.descriptionHandle).sUnparsedFullLine;
-
-
-            // Hacky way to detemine if it's a curse or treat in vanilla
-
-            var treatCurseMenu = Globals.Game.xShopMenu.xTreatCurseMenu;
-            entry.IsTreat = treatCurseMenu.lenTreatCursesAvailable.Contains(gameID);
-
-            if (gameID == RogueLikeMode.TreatsCurses.Treat_MoreLoods)
-            {
-                // Special case
-                entry.IsTreat = true;
-            }
-
-            // End of hacky method
-
-            return entry;
         }
 
         public static EnemyEntry ParseEnemy(this VanillaMod vanillaMod, EnemyCodex.EnemyTypes gameID)
@@ -114,16 +99,12 @@ namespace Grindless
 
         public static EquipmentEffectEntry ParseEquipmentEffect(this VanillaMod vanillaMod, EquipmentInfo.SpecialEffect gameID)
         {
-            EquipmentEffectEntry entry = new()
+            return new()
             {
                 Mod = vanillaMod,
                 GameID = gameID,
                 ModID = gameID.ToString()
             };
-
-            // Nothing to do for now!
-
-            return entry;
         }
 
         public static ItemEntry ParseItem(this VanillaMod vanillaMod, ItemCodex.ItemTypes gameID)
@@ -132,10 +113,9 @@ namespace Grindless
             {
                 Mod = vanillaMod,
                 GameID = gameID,
-                ModID = gameID.ToString()
+                ModID = gameID.ToString(),
+                vanillaItem = OriginalMethods.GetItemDescription(gameID)
             };
-
-            entry.vanillaItem = OriginalMethods.GetItemDescription(gameID);
 
             EquipmentInfo equip = null;
 
@@ -180,9 +160,12 @@ namespace Grindless
                 equip = facegear;
                 entry.EquipType = EquipmentType.Facegear;
 
-                Array.Copy(facegear.abOverHat, entry.FacegearOverHair, 4);
+                Array.Copy(facegear.abOverHair, entry.FacegearOverHair, 4);
                 Array.Copy(facegear.abOverHat, entry.FacegearOverHat, 4);
-                Array.Copy(facegear.abOverHat, entry.FacegearOffsets, 4);
+                Array.Copy(facegear.av2RenderOffsets, entry.FacegearOffsets, 4);
+
+                for (int i = 0; i < 4; i++)
+                    entry.FacegearSides[i] = facegear.atxTextures[i] != RenderMaster.txNullTex;
             }
             else if (entry.vanillaItem.lenCategory.Contains(ItemCodex.ItemCategories.Shoes))
             {
@@ -209,214 +192,153 @@ namespace Grindless
             // Obviously we're not gonna use the modded format to load vanilla assets
             entry.UseVanillaResourceFormat = true;
 
+            if (entry.vanillaItem.txDisplayImage == null)
+                Program.Logger.LogWarning("ALERT! {GameID} display image is null!!111", gameID);
+
             return entry;
         }
 
         public static LevelEntry ParseLevel(this VanillaMod vanillaMod, Level.ZoneEnum gameID)
         {
-            LevelEntry entry = new()
-            {
-                Mod = vanillaMod,
-                GameID = gameID,
-                ModID = gameID.ToString()
-            };
+            Level.WorldRegion worldRegion = Level.WorldRegion.PillarMountains;
 
             try
             {
-                LevelBlueprint vanilla = OriginalMethods.GetBlueprint(gameID);
-
-                entry.WorldRegion = vanilla.enRegion;
+                worldRegion = OriginalMethods.GetBlueprint(gameID).enRegion;
             }
-            catch
+            catch { }
+
+            return new()
             {
-                Program.Logger.LogTrace("Auto-guessing region for {gameID} as {region}.", gameID, Level.WorldRegion.PillarMountains);
-
-                entry.WorldRegion = Level.WorldRegion.PillarMountains;
-            }
-
-            return entry;
+                Mod = vanillaMod,
+                GameID = gameID,
+                ModID = gameID.ToString(),
+                WorldRegion = worldRegion
+            };
         }
 
         public static PerkEntry ParsePerk(this VanillaMod vanillaMod, RogueLikeMode.Perks gameID)
         {
-            PerkEntry entry = new()
+            var perkInfo = RogueLikeMode.PerkInfo.lxAllPerks.FirstOrDefault(x => x.enPerk == gameID) ?? gameID switch
+            {
+                RogueLikeMode.Perks.PetWhisperer => new RogueLikeMode.PerkInfo(RogueLikeMode.Perks.PetWhisperer, 20, "PetWhisperer"),
+                RogueLikeMode.Perks.MoreFishingRooms => new RogueLikeMode.PerkInfo(RogueLikeMode.Perks.MoreFishingRooms, 25, "MoreFishingRooms"),
+                RogueLikeMode.Perks.OnlyPinsAfterChallenges => new RogueLikeMode.PerkInfo(RogueLikeMode.Perks.OnlyPinsAfterChallenges, 30, "OnlyPinsAfterChallenges"),
+                RogueLikeMode.Perks.ChanceAtPinAfterBattleRoom => new RogueLikeMode.PerkInfo(RogueLikeMode.Perks.ChanceAtPinAfterBattleRoom, 30, "ChanceAtPinAfterBattleRoom"),
+                RogueLikeMode.Perks.MoreLoods => new RogueLikeMode.PerkInfo(RogueLikeMode.Perks.MoreLoods, 25, "MoreLoods"),
+                _ => throw new Exception("Perk description unavailable.")
+            };
+
+            return new()
             {
                 Mod = vanillaMod,
                 GameID = gameID,
-                ModID = gameID.ToString()
-            };
-
-            entry.UnlockCondition = null;
-
-            var perkInfo = RogueLikeMode.PerkInfo.lxAllPerks.FirstOrDefault(x => x.enPerk == gameID);
-
-            var fallbackInfos = new Dictionary<RogueLikeMode.Perks, RogueLikeMode.PerkInfo>()
-            {
-                [RogueLikeMode.Perks.PetWhisperer] = new RogueLikeMode.PerkInfo(RogueLikeMode.Perks.PetWhisperer, 20, "PetWhisperer"),
-                [RogueLikeMode.Perks.MoreFishingRooms] = new RogueLikeMode.PerkInfo(RogueLikeMode.Perks.MoreFishingRooms, 25, "MoreFishingRooms"),
-                [RogueLikeMode.Perks.OnlyPinsAfterChallenges] = new RogueLikeMode.PerkInfo(RogueLikeMode.Perks.OnlyPinsAfterChallenges, 30, "OnlyPinsAfterChallenges"),
-                [RogueLikeMode.Perks.ChanceAtPinAfterBattleRoom] = new RogueLikeMode.PerkInfo(RogueLikeMode.Perks.ChanceAtPinAfterBattleRoom, 30, "ChanceAtPinAfterBattleRoom"),
-                [RogueLikeMode.Perks.MoreLoods] = new RogueLikeMode.PerkInfo(RogueLikeMode.Perks.MoreLoods, 25, "MoreLoods")
-
-            };
-
-            var fallbackUnlocks = new Dictionary<RogueLikeMode.Perks, Func<bool>>()
-            {
-                [RogueLikeMode.Perks.PetWhisperer] = () => CAS.WorldRogueLikeData.henActiveFlags.Contains(FlagCodex.FlagID._Roguelike_TalkedToWeivForTheFirstTime),
-                [RogueLikeMode.Perks.MoreFishingRooms] = () => CAS.WorldRogueLikeData.henActiveFlags.Contains(FlagCodex.FlagID._Roguelike_Improvement_Aquarium),
-                [RogueLikeMode.Perks.OnlyPinsAfterChallenges] = () => CAS.WorldRogueLikeData.henActiveFlags.Contains(FlagCodex.FlagID._Roguelike_PinsUnlocked),
-                [RogueLikeMode.Perks.ChanceAtPinAfterBattleRoom] = () => CAS.WorldRogueLikeData.henActiveFlags.Contains(FlagCodex.FlagID._Roguelike_PinsUnlocked),
-                [RogueLikeMode.Perks.MoreLoods] = () => CAS.WorldRogueLikeData.henActiveFlags.Contains(FlagCodex.FlagID._Roguelike_HasSeenLood)
-
-            };
-
-            if (perkInfo == null)
-            {
-                if (fallbackInfos.ContainsKey(gameID))
+                ModID = gameID.ToString(),
+                UnlockCondition = gameID switch
                 {
-                    perkInfo = fallbackInfos[gameID];
-                }
-                else
-                {
-                    throw new Exception("Perk description unavailable.");
-                }
-            }
-            
-            if (entry.UnlockCondition == null && fallbackUnlocks.ContainsKey(gameID))
-            {
-                entry.UnlockCondition = fallbackUnlocks[gameID];
-            }
-
-            entry.EssenceCost = perkInfo.iEssenceCost;
-
-            entry.TextEntry = perkInfo.sNameHandle;
-            entry.Name = Globals.Game.EXT_GetMiscText("Menus", "Perks_Name_" + perkInfo.sNameHandle)?.sUnparsedFullLine;
-            entry.Description = Globals.Game.EXT_GetMiscText("Menus", "Perks_Description_" + perkInfo.sNameHandle)?.sUnparsedFullLine;
-
-            entry.TexturePath = null;
-
-            return entry;
+                    RogueLikeMode.Perks.PetWhisperer => () => CAS.WorldRogueLikeData.henActiveFlags.Contains(FlagCodex.FlagID._Roguelike_TalkedToWeivForTheFirstTime),
+                    RogueLikeMode.Perks.MoreFishingRooms => () => CAS.WorldRogueLikeData.henActiveFlags.Contains(FlagCodex.FlagID._Roguelike_Improvement_Aquarium),
+                    RogueLikeMode.Perks.OnlyPinsAfterChallenges => () => CAS.WorldRogueLikeData.henActiveFlags.Contains(FlagCodex.FlagID._Roguelike_PinsUnlocked),
+                    RogueLikeMode.Perks.ChanceAtPinAfterBattleRoom => () => CAS.WorldRogueLikeData.henActiveFlags.Contains(FlagCodex.FlagID._Roguelike_PinsUnlocked),
+                    RogueLikeMode.Perks.MoreLoods => () => CAS.WorldRogueLikeData.henActiveFlags.Contains(FlagCodex.FlagID._Roguelike_HasSeenLood),
+                    _ => null
+                },
+                EssenceCost = perkInfo.iEssenceCost,
+                TextEntry = perkInfo.sNameHandle,
+                Name = Globals.Game.EXT_GetMiscText("Menus", "Perks_Name_" + perkInfo.sNameHandle)?.sUnparsedFullLine,
+                Description = Globals.Game.EXT_GetMiscText("Menus", "Perks_Description_" + perkInfo.sNameHandle)?.sUnparsedFullLine,
+                TexturePath = null
+            };
         }
 
         public static PinEntry ParsePin(this VanillaMod vanillaMod, PinCodex.PinType gameID)
         {
-            PinEntry entry = new()
-            {
-                Mod = vanillaMod,
-                GameID = gameID,
-                ModID = gameID.ToString()
-            };
-
             PinInfo info = PinCodex.GetInfo(gameID);
 
             Enum.TryParse(info.sSymbol, out PinEntry.Symbol pinSymbol);
             Enum.TryParse(info.sShape, out PinEntry.Shape pinShape);
 
-            entry.PinSymbol = pinSymbol;
-            entry.PinShape = pinShape;
-
-            switch (info.sPalette)
+            return new()
             {
-                case "Test1":
-                    entry.PinColor = PinEntry.Color.YellowOrange;
-                    break;
-                case "Test2":
-                    entry.PinColor = PinEntry.Color.Seagull;
-                    break;
-                case "Test3":
-                    entry.PinColor = PinEntry.Color.Coral;
-                    break;
-                case "Test4":
-                    entry.PinColor = PinEntry.Color.Conifer;
-                    break;
-                case "Test5":
-                    entry.PinColor = PinEntry.Color.BilobaFlower;
-                    break;
-                case "TestLight":
-                    entry.PinColor = PinEntry.Color.White;
-                    break;
-            }
-
-            entry.IsSticky = info.bSticky;
-            entry.IsBroken = info.bBroken;
-            entry.Description = info.sDescription;
-
-            // Hey, do you like ultra hacky code?
-            entry.ConditionToDrop = () =>
-            {
-                _ = OriginalMethods.FillRandomPinList(Globals.Game);
-                return OriginalMethods.LastRandomPinList.Contains(gameID);
+                Mod = vanillaMod,
+                GameID = gameID,
+                ModID = gameID.ToString(),
+                PinSymbol = pinSymbol,
+                PinShape = pinShape,
+                PinColor = info.sPalette switch
+                {
+                    "Test1" => PinEntry.Color.YellowOrange,
+                    "Test2" => PinEntry.Color.Seagull,
+                    "Test3" => PinEntry.Color.Coral,
+                    "Test4" => PinEntry.Color.Conifer,
+                    "Test5" => PinEntry.Color.BilobaFlower,
+                    "TestLight" => PinEntry.Color.White,
+                    _ => PinEntry.Color.White
+                },
+                IsSticky = info.bSticky,
+                IsBroken = info.bBroken,
+                Description = info.sDescription,
+                // Hey, do you like ultra hacky code?
+                ConditionToDrop = () =>
+                {
+                    _ = OriginalMethods.FillRandomPinList(Globals.Game);
+                    return OriginalMethods.LastRandomPinList.Contains(gameID);
+                },
+                CreateCollectionEntry = GameObjectStuff.GetOriginalPinCollection().Contains(gameID)
             };
-
-            entry.CreateCollectionEntry = GameObjectStuff.GetOriginalPinCollection().Contains(gameID);
-
-            return entry;
         }
 
         public static QuestEntry ParseQuest(this VanillaMod vanillaMod, QuestCodex.QuestID gameID)
         {
-            QuestEntry entry = new()
+            var desc = OriginalMethods.GetQuestDescription(gameID);
+
+            return new()
             {
                 Mod = vanillaMod,
                 GameID = gameID,
-                ModID = gameID.ToString()
+                ModID = gameID.ToString(),
+                Vanilla = desc,
+                Name = Globals.Game.EXT_GetMiscText("Quests", desc.sQuestNameReference)?.sUnparsedFullLine,
+                Description = Globals.Game.EXT_GetMiscText("Quests", desc.sDescriptionReference)?.sUnparsedFullLine,
+                Summary = Globals.Game.EXT_GetMiscText("Quests", desc.sSummaryReference)?.sUnparsedFullLine,
+                Constructor = null
             };
-
-            entry.Vanilla = OriginalMethods.GetQuestDescription(gameID);
-
-            entry.Name = Globals.Game.EXT_GetMiscText("Quests", entry.Vanilla.sQuestNameReference)?.sUnparsedFullLine;
-            entry.Description = Globals.Game.EXT_GetMiscText("Quests", entry.Vanilla.sDescriptionReference)?.sUnparsedFullLine;
-            entry.Summary = Globals.Game.EXT_GetMiscText("Quests", entry.Vanilla.sSummaryReference)?.sUnparsedFullLine;
-
-            entry.Constructor = null;  // As usual, for vanilla entries, will construct from vanilla methods if no replacement is set
-
-            return entry;
         }
 
         public static SpellEntry ParseSpell(this VanillaMod vanillaMod, SpellCodex.SpellTypes gameID)
         {
-            SpellEntry entry = new()
+            return new()
             {
                 Mod = vanillaMod,
                 GameID = gameID,
-                ModID = gameID.ToString()
+                ModID = gameID.ToString(),
+                IsMagicSkill = OriginalMethods.SpellIsMagicSkill(gameID),
+                IsMeleeSkill = OriginalMethods.SpellIsMeleeSkill(gameID),
+                IsUtilitySkill = OriginalMethods.SpellIsUtilitySkill(gameID),
+
+                Builder = null
             };
-
-            entry.IsMagicSkill = OriginalMethods.SpellIsMagicSkill(gameID);
-            entry.IsMeleeSkill = OriginalMethods.SpellIsMeleeSkill(gameID);
-            entry.IsUtilitySkill = OriginalMethods.SpellIsUtilitySkill(gameID);
-
-            entry.Builder = null;
-
-            return entry;
         }
 
         public static StatusEffectEntry ParseStatusEffect(this VanillaMod vanillaMod, BaseStats.StatusEffectSource gameID)
         {
-            StatusEffectEntry entry = new()
+            return new()
             {
                 Mod = vanillaMod,
                 GameID = gameID,
-                ModID = gameID.ToString()
+                ModID = gameID.ToString(),
+                TexturePath = null
             };
-
-            entry.TexturePath = null;
-
-            return entry;
         }
 
         public static WorldRegionEntry ParseWorldRegion(this VanillaMod vanillaMod, Level.WorldRegion gameID)
         {
-            WorldRegionEntry entry = new()
+            return new()
             {
                 Mod = vanillaMod,
                 GameID = gameID,
                 ModID = gameID.ToString()
             };
-
-            // Currently has no significant code.
-
-            return entry;
         }
     }
 }

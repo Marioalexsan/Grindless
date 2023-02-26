@@ -59,7 +59,7 @@ namespace Grindless
 
         public override void Unload()
         {
-            Logger.LogInformation("Unloaded VanillaMod!");
+            return;
         }
 
         private void ParseEntries<IDType, EntryType>(Func<IDType, EntryType> parser)

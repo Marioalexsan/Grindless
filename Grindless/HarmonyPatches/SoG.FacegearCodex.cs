@@ -30,13 +30,20 @@ namespace Grindless.HarmonyPatches
                 int index = -1;
                 while (++index < 4)
                 {
-                    if (path != null)
+                    if (__result.atxTextures[index] == null)
                     {
-                        __result.atxTextures[index] = Globals.Game.Content.TryLoad<Texture2D>(Path.Combine(path, directions[index]));
-                    }
-                    else if (__result.atxTextures[index] == null)
-                    {
-                        __result.atxTextures[index] = GrindlessResources.NullTexture;
+                        if (!entry.FacegearSides[index])
+                        {
+                            __result.atxTextures[index] = RenderMaster.txNullTex;
+                        }
+                        else if (path != null)
+                        {
+                            __result.atxTextures[index] = Globals.Game.Content.TryLoad<Texture2D>(Path.Combine(path, directions[index]));
+                        }
+                        else if (__result.atxTextures[index] == null)
+                        {
+                            __result.atxTextures[index] = GrindlessResources.NullTexture;
+                        }
                     }
                 }
             }

@@ -10,7 +10,12 @@
 		<Platforms>x86</Platforms>
 		<OutputType>Exe</OutputType>
 		<StartupObject>Grindless.Program</StartupObject>
+		<AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+		<ApplicationIcon>Resources\WoodenSword.ico</ApplicationIcon>
 	</PropertyGroup>
+	<ItemGroup>
+	  <Content Include="Resources\WoodenSword.ico" />
+	</ItemGroup>
 
 	<!-- Nuget -->
 	<ItemGroup>

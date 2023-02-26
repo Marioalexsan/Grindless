@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using Microsoft.Extensions.Logging;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -56,7 +57,7 @@ namespace Grindless
 
         public static bool UnloadIfModded(this ContentManager manager, string path)
         {
-            if (ModUtils.IsModContentPath(path))
+            if (manager.IsModContentPath(path))
                 return manager.Unload(path);
 
             return false;
@@ -65,7 +66,7 @@ namespace Grindless
         public static T TryLoad<T>(this ContentManager manager, string path)
         where T : class
         {
-            manager.TryLoad<T>(path, out T asset);
+            manager.TryLoad(path, out T asset);
             return asset;
         }
 
@@ -77,13 +78,15 @@ namespace Grindless
                 asset = manager.Load<T>(path);
                 return true;
             }
-            catch
+            catch (Exception e)
             {
                 if (typeof(T) == typeof(Texture2D))
                     asset = GrindlessResources.NullTexture as T;
 
                 else asset = null;
-                
+
+                Program.Logger.LogWarning("Failed to load a {ResourceType}! Path: {Path}, Reason: {e}", typeof(T).Name, path, e.Message);
+
                 return false;
             }
         }
@@ -128,6 +131,13 @@ namespace Grindless
             }
         }
 
+        /// <summary>
+        /// Returns true if the mod path starts with "ModContent\", false otherwise.
+        /// </summary>
+        public static bool IsModContentPath(this ContentManager manager, string assetPath)
+        {
+            return assetPath != null && assetPath.Trim().Replace('/', '\\').StartsWith("ModContent\\");
+        }
 
         /// <summary>
         /// Experimental internal method that unloads all modded assets from a manager.
@@ -137,7 +147,7 @@ namespace Grindless
         {
             GetContentManagerFields(manager, out List<IDisposable> disposableAssets, out Dictionary<string, object> loadedAssets);
 
-            foreach (var kvp in loadedAssets.Where(x => ModUtils.IsModContentPath(x.Key)).ToList())
+            foreach (var kvp in loadedAssets.Where(x => manager.IsModContentPath(x.Key)).ToList())
             {
                 loadedAssets.Remove(kvp.Key);
 

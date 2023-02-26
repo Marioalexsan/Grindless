@@ -312,6 +312,12 @@ namespace Grindless
         public Vector2[] FacegearOffsets { get; } = new Vector2[] { Vector2.Zero, Vector2.Zero, Vector2.Zero, Vector2.Zero };
 
         /// <summary>
+        /// A bool for each direction, defines whenever to load a texture for the facegear in that direction.
+        /// All are set to true by default.
+        /// </summary>
+        public bool[] FacegearSides { get; } = new bool[] { true, true, true, true };
+
+        /// <summary>
         /// Gets the default visual set of a hat. This set is used for most hair types.
         /// </summary>
         public VisualSetConfig DefaultSet => _defaultSetConfig ??= new VisualSetConfig()

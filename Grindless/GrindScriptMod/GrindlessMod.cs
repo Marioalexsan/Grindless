@@ -22,11 +22,6 @@ namespace Grindless
         public override string Name => ModName;
         public override Version Version => Globals.GrindlessVersion;
 
-        public Texture2D ErrorTexture { get; private set; }
-        public Texture2D ModMenuText { get; private set; }
-        public Texture2D ModListText { get; private set; }
-        public Texture2D ReloadModsText { get; private set; }
-
         public override void PostLevelLoad(Level.ZoneEnum level, Level.WorldRegion region, bool staticOnly)
         {
             if (_colliderRCActive)
@@ -41,32 +36,12 @@ namespace Grindless
         public override void Load()
         {
             _colliderRC = new ColliderRC();
-
-            var manager = Globals.Game.Content;
-
-            ErrorTexture = manager.TryLoad<Texture2D>(Path.Combine(AssetPath, "NullTexGS"));
-            ModMenuText = manager.TryLoad<Texture2D>(Path.Combine(AssetPath, "ModMenu"));
-            ModListText = manager.TryLoad<Texture2D>(Path.Combine(AssetPath, "ModList"));
-            ReloadModsText = manager.TryLoad<Texture2D>(Path.Combine(AssetPath, "ReloadMods"));
-
             CreateCommands().AutoAddModCommands();
         }
 
         public override void Unload()
         {
             _colliderRC = null;
-
-            Globals.Game.Content.Unload(Path.Combine(AssetPath, "NullTexGS"));
-            ErrorTexture = null;
-
-            Globals.Game.Content.Unload(Path.Combine(AssetPath, "ModMenu"));
-            ModMenuText = null;
-
-            Globals.Game.Content.Unload(Path.Combine(AssetPath, "ModList"));
-            ModListText = null;
-
-            Globals.Game.Content.Unload(Path.Combine(AssetPath, "ReloadMods"));
-            ReloadModsText = null;
         }
 
         private ColliderRC _colliderRC;

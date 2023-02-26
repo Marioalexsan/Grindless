@@ -73,6 +73,8 @@ namespace Grindless
                 Logger.LogCritical("Grindless crashed!");
                 Logger.LogCritical("{Exception}", e);
 
+                Thread.Sleep(1000);
+
                 Console.WriteLine("Press Enter to exit.");
                 Console.ReadLine();
             }

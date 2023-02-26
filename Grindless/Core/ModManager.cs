@@ -134,7 +134,14 @@ namespace Grindless
 
                 Program.Logger.LogInformation("Loading {mod}..", mod.Name);
 
-                mod.Load();
+                try
+                {
+                    mod.Load();
+                }
+                catch (Exception e)
+                {
+                    Program.Logger.LogInformation("{mod} threw an error during loading! {}", mod.Name, e.ToString());
+                }
 
                 CurrentlyLoadingMod = null;
 

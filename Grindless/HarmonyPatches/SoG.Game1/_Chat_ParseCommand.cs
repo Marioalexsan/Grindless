@@ -79,7 +79,7 @@ namespace Grindless.HarmonyPatches
                 return true;
             }
 
-            string[] args = ModUtils.GetArgs(message);
+            string[] args = message.Split(new char[] { ' ' }, options: StringSplitOptions.RemoveEmptyEntries);
 
             Program.Logger.LogDebug("Parsed command {target} : {trueCommand}, arguments: {args.Length}", target, trueCommand, args.Length);
             parser(args, connection);

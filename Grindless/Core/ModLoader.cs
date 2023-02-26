@@ -147,9 +147,22 @@ namespace Grindless
             return mods;
         }
 
+        /// <summary>
+        /// Finds and replaces commonly occuring game paths with shortened forms.
+        /// </summary>
+        private static string ShortenModPaths(string path)
+        {
+            return path
+                .Replace('/', '\\')
+                .Replace(Directory.GetCurrentDirectory() + @"\Content\ModContent", "(ModContent)")
+                .Replace(Directory.GetCurrentDirectory() + @"\Content\Mods", "(Mods)")
+                .Replace(Directory.GetCurrentDirectory() + @"\Content", "(Content)")
+                .Replace(Directory.GetCurrentDirectory(), "(SoG)");
+        }
+
         private static Mod LoadModFromAssembly(string path)
         {
-            string shortPath = ModUtils.ShortenModPaths(path);
+            string shortPath = ShortenModPaths(path);
 
             Program.Logger.LogInformation("Loading assembly {path}", shortPath);
 
@@ -177,7 +190,7 @@ namespace Grindless
             catch (BadImageFormatException) { /* Ignore non-managed DLLs */ }
             catch (Exception e)
             {
-                Program.Logger.LogError("Failed to load mod {modPath}. An unknown exception occurred: {e}", shortPath, ModUtils.ShortenModPaths(e.Message));
+                Program.Logger.LogError("Failed to load mod {modPath}. An unknown exception occurred: {e}", shortPath, ShortenModPaths(e.ToString()));
             }
 
             return null;

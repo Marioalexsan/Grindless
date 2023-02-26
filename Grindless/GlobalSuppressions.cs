@@ -5,16 +5,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE1006:Naming Styles", 
-    Justification = "Patch name is derived from the method it patches, which may be non-conforming because of Teddycode(tm)", 
-    Scope = "namespaceanddescendants", 
-    Target = "~N:Grindless.Patches")]
-
-[assembly: SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", 
-    Justification = "Patches are hidden via internal + private, and accessed by HarmonyLib via reflection.", 
-    Scope = "namespaceanddescendants",
-    Target = "~N:Grindless.Patches")]
-
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles",
     Justification = "Patch name is derived from the method it patches, which may be non-conforming because of Teddycode(tm)",
     Scope = "type", 
