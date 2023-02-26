@@ -217,7 +217,7 @@ namespace Grindless
                             return;
                         }
 
-                        var entry = ResolveEntry(args[0], PinEntry.Entries);
+                        var entry = ResolveEntry(args[1], PinEntry.Entries);
 
                         if (entry == null)
                         {
