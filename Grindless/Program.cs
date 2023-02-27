@@ -9,6 +9,7 @@ using System.Reflection;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Threading;
+using Microsoft.Xna.Framework;
 
 namespace Grindless
 {
@@ -64,6 +65,7 @@ namespace Grindless
 
             try
             {
+                CheckFirstTimeBoot();
                 HarmonyMetaPatch();
                 SetupGrindless();
                 InvokeSoGMain(args);
@@ -77,6 +79,96 @@ namespace Grindless
 
                 Console.WriteLine("Press Enter to exit.");
                 Console.ReadLine();
+            }
+        }
+
+        private static void CheckFirstTimeBoot()
+        {
+            static void SetColors(ConsoleColor fore, ConsoleColor back)
+            {
+                Console.ForegroundColor = fore;
+                Console.BackgroundColor = back;
+            }
+
+            if (!Directory.Exists(Globals.AppDataPath))
+            {
+                var lastFore = Console.ForegroundColor;
+                var lastBack = Console.BackgroundColor;
+
+                SetColors(ConsoleColor.Yellow, ConsoleColor.DarkBlue);
+                Console.WriteLine("""
+
+                ┌────────────────────────────────────────────────────────────────────────┐
+                │  ________      ___           _______       ________      _________     │
+                │ |\   __  \    |\  \         |\  ___ \     |\   __  \    |\___   ___\   │
+                │ \ \  \|\  \   \ \  \        \ \   __/|    \ \  \|\  \   \|___ \  \_|   │
+                │  \ \   __  \   \ \  \        \ \  \_|/__   \ \   _  _\       \ \  \    │
+                │   \ \  \ \  \   \ \  \____    \ \  \_|\ \   \ \  \\  \|       \ \  \   │
+                │    \ \__\ \__\   \ \_______\   \ \_______\   \ \__\\ _\        \ \__\  │
+                │     \|__|\|__|    \|_______|    \|_______|    \|__|\|__|        \|__|  │
+                │                                                                        │
+                └────────────────────────────────────────────────────────────────────────┘
+
+                """);
+
+                SetColors(ConsoleColor.DarkGreen, ConsoleColor.White);
+                Console.WriteLine("""
+
+                ┌──────────────────────────────────────────────────────────────┐
+                │                                                              │
+                │ Seems like this is the first time you're using Grindless!    │
+                │ The mod tool uses a separate save location from vanilla SoG. │
+                │ Would you like to copy over your saves from the base game?   │
+                │                                                              │
+                │ SoG savepath:       %appdata%\Secrets of Grindea\            │
+                │ Grindless savepath: %appdata%\Grindless\                     │
+                │                                                              │
+                │                                                              │
+                │             [Y] Hell yeah!    [N] Nah, don't.                │
+                └──────────────────────────────────────────────────────────────┘
+
+                """);
+
+                ConsoleKeyInfo c;
+                do
+                {
+                    c = Console.ReadKey(true);
+                }
+                while (c.KeyChar != 'Y' && c.KeyChar != 'y' && c.KeyChar != 'N' && c.KeyChar != 'n');
+
+                Directory.CreateDirectory(Globals.AppDataPath);
+                Directory.CreateDirectory(Path.Combine(Globals.AppDataPath, "Characters"));
+                Directory.CreateDirectory(Path.Combine(Globals.AppDataPath, "Worlds"));
+
+                if (c.KeyChar == 'Y' || c.KeyChar == 'y')
+                {
+                    var vanilla = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Secrets of Grindea");
+
+                    for (int i = 0; i < 9; i++)
+                    {
+                        if (File.Exists(Path.Combine(vanilla, "Characters", i + ".cha")))
+                            File.Copy(Path.Combine(vanilla, "Characters", i + ".cha"), Path.Combine(Globals.AppDataPath, "Characters", i + ".cha"), true);
+
+                        if (File.Exists(Path.Combine(vanilla, "Worlds", i + ".wld")))
+                            File.Copy(Path.Combine(vanilla, "Worlds", i + ".wld"), Path.Combine(Globals.AppDataPath, "Worlds", i + ".wld"), true);
+                    }
+
+                    if (File.Exists(Path.Combine(vanilla, "arcademode.sav")))
+                        File.Copy(Path.Combine(vanilla, "arcademode.sav"), Path.Combine(Globals.AppDataPath, "arcademode.sav"), true);
+
+                    SetColors(ConsoleColor.DarkGreen, ConsoleColor.White);
+                    Console.WriteLine("""
+
+                    ┌───────────────┐
+                    │               │
+                    │ Saves copied! │
+                    │               │
+                    └───────────────┘
+
+                    """);
+                }
+
+                SetColors(lastFore, lastBack);
             }
         }
 

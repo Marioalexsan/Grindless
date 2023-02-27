@@ -212,7 +212,7 @@ namespace Grindless
                 return;
             }
 
-            Program.Logger.LogWarning("Set music redirect {vanillaName} -> {modID} ({effectName})", vanillaName, musicName, cueName);
+            Program.Logger.LogWarning("SetColors music redirect {vanillaName} -> {modID} ({effectName})", vanillaName, musicName, cueName);
             VanillaMusicRedirects[vanillaName] = musicName;
         }
 
