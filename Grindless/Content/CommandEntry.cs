@@ -18,9 +18,18 @@ namespace Grindless
 
         public Dictionary<string, CommandParser> Commands = new();
 
+        /// <summary>
+        /// Name alias to use for this mod.
+        /// If set to a value other than null or underfined, the mod commands will 
+        /// also be callable using the "/(Alias):(Command) (args)" format.
+        /// If multiple mods set the same alias, only one of them will be able to use the alias.
+        /// Ideally, you want this to be a short and easy to use name.
+        /// </summary>
+        public string Alias { get; set; }
+
         internal CommandEntry() { }
 
-        public void AutoAddModCommands()
+        public void AutoAddModCommands(string alias = null)
         {
             var methods = AccessTools.GetDeclaredMethods(Mod.GetType())
                 .Select(x => (method: x, attrib: x.GetCustomAttribute<ModCommandAttribute>()))
@@ -39,6 +48,18 @@ namespace Grindless
                     Program.Logger.LogWarning($"Couldn't add command {attrib.Command}: {e.Message}");
                 }
             }
+
+            Alias = alias;
+        }
+
+        internal static Mod MatchModByTarget(string target)
+        {
+            static bool FuzzyMatch(string name, string target) => string.Equals(name, target, StringComparison.InvariantCultureIgnoreCase);
+
+            return ModManager.Mods.FirstOrDefault(x => x.Name == target)
+                ?? ModManager.Mods.FirstOrDefault(x => FuzzyMatch(x.Name, target))
+                ?? Entries.FirstOrDefault(x => x.Alias == target)?.Mod
+                ?? Entries.FirstOrDefault(x => FuzzyMatch(x.Alias, target))?.Mod;
         }
 
         protected override void Initialize()

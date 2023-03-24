@@ -47,7 +47,7 @@ namespace Grindless
         [ModCommand("Help")]
         private void Help(string[] args, int connection)
         {
-            Mod mod = args.Length == 0 ? this : ModManager.Mods.FirstOrDefault(x => x.Name == args[0]);
+            Mod mod = args.Length == 0 ? this : CommandEntry.MatchModByTarget(args[0]);
 
             if (mod == null)
             {
@@ -63,7 +63,12 @@ namespace Grindless
                 return;
             }
 
-            CAS.AddChatMessage($"[{Name}] Command list{(args.Length == 0 ? "" : $" for {args[0]}")}:");
+            string target = args.Length == 0 ? "" : $" for {mod.Name}";
+
+            if (!string.IsNullOrEmpty(mod.GetCommands().Alias))
+                target += $" (alias: {mod.GetCommands().Alias})";
+
+            CAS.AddChatMessage($"[{Name}] Command list{target}:");
 
             var messages = new List<string>();
             var concated = "";
@@ -184,7 +189,7 @@ namespace Grindless
                             return;
                         }
 
-                        var entry = ResolveEntry(args[1], ItemEntry.Entries);
+                        var entry = ResolveEntry(args[1], ItemEntry.Entries, fuzzy: true);
 
                         if (entry == null)
                         {
@@ -211,7 +216,7 @@ namespace Grindless
                             return;
                         }
 
-                        var entry = ResolveEntry(args[1], PinEntry.Entries);
+                        var entry = ResolveEntry(args[1], PinEntry.Entries, fuzzy: true);
 
                         if (entry == null)
                         {
@@ -247,7 +252,7 @@ namespace Grindless
 
         #endregion
 
-        private Entry<IDType> ResolveEntry<IDType, EntryType>(string entryId, EntryManager<IDType, EntryType> manager)
+        private Entry<IDType> ResolveEntry<IDType, EntryType>(string entryId, EntryManager<IDType, EntryType> manager, bool fuzzy = false)
             where IDType : struct, Enum
             where EntryType : Entry<IDType>
         {
@@ -256,7 +261,7 @@ namespace Grindless
             if (parts.Length != 2)
                 return null;
 
-            Mod target = ModManager.Mods.FirstOrDefault(x => x.Name == parts[0]);
+            Mod target = fuzzy ? CommandEntry.MatchModByTarget(parts[0]) : ModManager.Mods.FirstOrDefault(x => x.Name == parts[0]);
 
             if (target == null)
                 return null;

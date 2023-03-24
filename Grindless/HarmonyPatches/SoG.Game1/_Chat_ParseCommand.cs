@@ -39,10 +39,13 @@ namespace Grindless.HarmonyPatches
             string target = words[0];
             string trueCommand = words[1];
 
-            Mod mod = ModManager.Mods.FirstOrDefault(x => x.Name == target);
-
-            // Also try case insensitive close matches
-            mod ??= ModManager.Mods.FirstOrDefault(x => x.Name.Equals(target, StringComparison.InvariantCultureIgnoreCase));
+            /* Try in order:
+             * 1. Direct matches by name
+             * 2. Fuzzy matches by name
+             * 3. Direct matches by alias
+             * 4. Fuzzy matches by alias
+             */
+            Mod mod = CommandEntry.MatchModByTarget(target);     
 
             if (mod == null)
             {
