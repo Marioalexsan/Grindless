@@ -1,8 +1,5 @@
 ﻿using LevelLoading;
 using Microsoft.Xna.Framework;
-using SoG;
-using System.Collections.Generic;
-using System.IO;
 
 namespace Grindless
 {

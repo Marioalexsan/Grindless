@@ -1,15 +1,7 @@
-﻿using System;
-using System.IO;
-using Microsoft.Extensions.Logging;
-using SoG;
-using System.Linq;
-using HarmonyLib;
+﻿using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 using System.Reflection;
 using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
-using System.Threading;
-using Microsoft.Xna.Framework;
 
 namespace Grindless
 {

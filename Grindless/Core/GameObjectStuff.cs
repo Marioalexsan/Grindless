@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ItemID = SoG.ItemCodex.ItemTypes;
+﻿using ItemID = SoG.ItemCodex.ItemTypes;
 using ItemEffectID = SoG.EquipmentInfo.SpecialEffect;
 using LevelID = SoG.Level.ZoneEnum;
 using WorldID = SoG.Level.WorldRegion;
@@ -12,14 +10,13 @@ using SpecialObjectiveID = Quests.Objective_SpecialObjective.UniqueID;
 using SpellID = SoG.SpellCodex.SpellTypes;
 using StatusEffectID = SoG.BaseStats.StatusEffectSource;
 using PinID = SoG.PinCodex.PinType;
-using SoG;
 
 namespace Grindless
 {
-    /// <summary>
-    /// Defines IDs for game object entries that come from Grindless.
-    /// </summary>
-    public static class GrindlessID
+	/// <summary>
+	/// Defines IDs for game object entries that come from Grindless.
+	/// </summary>
+	public static class GrindlessID
 	{
 		public enum AudioID { }
 		public enum CommandID { }

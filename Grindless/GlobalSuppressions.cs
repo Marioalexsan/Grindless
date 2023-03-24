@@ -7,5 +7,5 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Style", "IDE1006:Naming Styles",
     Justification = "Patch name is derived from the method it patches, which may be non-conforming because of Teddycode(tm)",
-    Scope = "type", 
+    Scope = "namespaceanddescendants", 
     Target = "~N:Grindless.HarmonyPatches")]

@@ -1,7 +1,4 @@
-﻿using System.IO;
-using SoG;
-
-namespace Grindless
+﻿namespace Grindless
 {
     /// <summary> 
     /// Delegate that parses a chat command. 

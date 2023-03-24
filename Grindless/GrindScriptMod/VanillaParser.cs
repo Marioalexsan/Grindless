@@ -1,8 +1,4 @@
 ﻿using Quests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using SoG;
 using Microsoft.Extensions.Logging;
 using Grindless.HarmonyPatches;
 

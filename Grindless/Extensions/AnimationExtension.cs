@@ -1,6 +1,4 @@
 ﻿using Microsoft.Xna.Framework.Content;
-using System;
-using SoG;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Grindless

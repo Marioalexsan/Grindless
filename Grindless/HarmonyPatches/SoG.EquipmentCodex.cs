@@ -1,7 +1,4 @@
-﻿using HarmonyLib;
-using SoG;
-
-namespace Grindless.HarmonyPatches
+﻿namespace Grindless.HarmonyPatches
 {
     [HarmonyPatch(typeof(EquipmentCodex))]
     static class SoG_EquipmentCodex

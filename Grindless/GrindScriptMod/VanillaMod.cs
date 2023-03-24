@@ -1,6 +1,4 @@
-﻿using System;
-using Quests;
-using SoG;
+﻿using Quests;
 using Microsoft.Extensions.Logging;
 using Grindless.HarmonyPatches;
 

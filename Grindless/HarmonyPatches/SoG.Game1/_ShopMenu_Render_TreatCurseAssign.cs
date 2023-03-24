@@ -1,12 +1,5 @@
-﻿using HarmonyLib;
-using SoG;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Grindless.HarmonyPatches
 {

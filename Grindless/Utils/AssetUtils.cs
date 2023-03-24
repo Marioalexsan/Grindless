@@ -1,15 +1,8 @@
-﻿using HarmonyLib;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using SoG;
-using Steamworks;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using static SoG.LordOfTextures;
 
 namespace Grindless
 {

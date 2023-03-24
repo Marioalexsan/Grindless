@@ -1,13 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Content;
-using System.Collections.Generic;
-using System.IO;
 using Microsoft.Xna.Framework;
 using Stat = SoG.EquipmentInfo.StatEnum;
-using System;
-using SoG;
-using System.Reflection;
-using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace Grindless
 {

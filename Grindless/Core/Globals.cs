@@ -1,10 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.Xna.Framework.Graphics;
-using HarmonyLib;
-using System;
-using SoG;
 using Microsoft.Extensions.Logging;
-using System.IO;
 
 namespace Grindless
 {

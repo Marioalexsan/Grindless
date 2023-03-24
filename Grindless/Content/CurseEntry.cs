@@ -1,6 +1,4 @@
-﻿using SoG;
-
-namespace Grindless
+﻿namespace Grindless
 {
     /// <summary>
     /// Represents a modded treat or curse from Arcade Mode.

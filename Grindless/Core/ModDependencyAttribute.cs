@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Grindless
+﻿namespace Grindless
 {
     /// <summary>
     /// Defines a dependency on another mod.

@@ -1,6 +1,4 @@
 ﻿using Quests;
-using SoG;
-using System;
 
 namespace Grindless
 {

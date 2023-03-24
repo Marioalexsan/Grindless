@@ -1,6 +1,4 @@
-﻿using SoG;
-
-namespace Grindless
+﻿namespace Grindless
 {
     /// <summary>
     /// Defines all of the available equipment types.

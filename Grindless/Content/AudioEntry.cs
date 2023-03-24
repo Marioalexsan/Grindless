@@ -1,12 +1,5 @@
-﻿using HarmonyLib;
-using Microsoft.Xna.Framework.Audio;
-using System.Collections.Generic;
-using System.IO;
-using SoG;
+﻿using Microsoft.Xna.Framework.Audio;
 using Microsoft.Extensions.Logging;
-using static SoG.HitEffectMap;
-using System;
-using System.Linq;
 
 namespace Grindless
 {

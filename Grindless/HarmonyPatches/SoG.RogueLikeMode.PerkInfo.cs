@@ -1,7 +1,4 @@
-﻿using HarmonyLib;
-using System.Linq;
-using static SoG.HitEffectMap;
-using PerkInfo = SoG.RogueLikeMode.PerkInfo;
+﻿using PerkInfo = SoG.RogueLikeMode.PerkInfo;
 
 namespace Grindless.HarmonyPatches
 {

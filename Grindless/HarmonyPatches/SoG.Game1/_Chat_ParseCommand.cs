@@ -1,12 +1,5 @@
-﻿using HarmonyLib;
-using SoG;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Emit;
+﻿using System.Reflection.Emit;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 namespace Grindless.HarmonyPatches
@@ -64,7 +57,7 @@ namespace Grindless.HarmonyPatches
             if (entry != null && !entry.Commands.TryGetValue(trueCommand, out parser))
             {
                 // Try case insensitive close matches
-                parser = entry.Commands.First(x => x.Key.Equals(trueCommand, StringComparison.InvariantCultureIgnoreCase)).Value;
+                parser = entry.Commands.FirstOrDefault(x => x.Key.Equals(trueCommand, StringComparison.InvariantCultureIgnoreCase)).Value;
             }
 
             if (entry == null || parser == null)

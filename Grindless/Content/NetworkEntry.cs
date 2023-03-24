@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Grindless
+﻿namespace Grindless
 {
     /// <summary>
     /// Contains data for sending custom packets between clients and servers.

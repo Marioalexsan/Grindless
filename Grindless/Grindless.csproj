@@ -5,6 +5,7 @@
 		<TargetFramework>net472</TargetFramework>
 
 		<LangVersion>11.0</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
 
 		<PlatformTarget>x86</PlatformTarget>
 		<Platforms>x86</Platforms>
@@ -68,6 +69,10 @@
 	    <Generator>ResXFileCodeGenerator</Generator>
 	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
 	  </EmbeddedResource>
+	</ItemGroup>
+	<ItemGroup>
+	  <Using Include="HarmonyLib" />
+	  <Using Include="SoG" />
 	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

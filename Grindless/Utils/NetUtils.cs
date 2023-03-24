@@ -1,8 +1,4 @@
-﻿using System;
-using System.IO;
-using SoG;
-
-namespace Grindless
+﻿namespace Grindless
 {
     /// <summary>
     /// Provides helper methods for networking.

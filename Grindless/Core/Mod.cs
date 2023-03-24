@@ -1,10 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.IO;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using Microsoft.Xna.Framework;
-using SoG;
 using Microsoft.Extensions.Logging;
 
 namespace Grindless

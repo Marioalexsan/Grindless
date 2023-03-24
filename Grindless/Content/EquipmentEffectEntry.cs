@@ -1,7 +1,4 @@
-﻿using SoG;
-using System;
-
-namespace Grindless
+﻿namespace Grindless
 {
     /// <summary>
     /// Represents a modded equipment special effect.

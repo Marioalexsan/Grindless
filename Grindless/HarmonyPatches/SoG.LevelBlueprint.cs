@@ -1,7 +1,4 @@
-﻿using HarmonyLib;
-using LevelLoading;
-using System;
-using SoG;
+﻿using LevelLoading;
 using Microsoft.Extensions.Logging;
 
 namespace Grindless.HarmonyPatches

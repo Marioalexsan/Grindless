@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Grindless
+﻿namespace Grindless
 {
     /// <summary>
     /// Helper class for error handling.

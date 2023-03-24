@@ -1,5 +1,4 @@
-﻿using HarmonyLib;
-using Quests;
+﻿using Quests;
 
 namespace Grindless.HarmonyPatches
 {

@@ -1,14 +1,6 @@
-﻿using HarmonyLib;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework;
-using SoG;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.Xna.Framework.Audio;
 using System.Reflection.Emit;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Grindless.HarmonyPatches
 {

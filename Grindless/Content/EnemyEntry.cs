@@ -1,9 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using SoG;
 
 namespace Grindless
 {

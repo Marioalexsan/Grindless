@@ -1,6 +1,4 @@
-﻿using SoG;
-
-namespace Grindless
+﻿namespace Grindless
 {
     /// <summary>
     /// Represents a modded level, and defines ways to create it.

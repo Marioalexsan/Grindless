@@ -1,7 +1,4 @@
-﻿using HarmonyLib;
-using SoG;
-
-namespace Grindless.HarmonyPatches
+﻿namespace Grindless.HarmonyPatches
 {
     [HarmonyPatch(typeof(GlobalData.MainMenu))]
     static class SoG_GlobalData_MainMenu

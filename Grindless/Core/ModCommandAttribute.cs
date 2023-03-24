@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Grindless
+﻿namespace Grindless
 {
     /// <summary>
     /// Registers a <see cref="CommandParser"/> instance or static method for automatic adding.

@@ -1,5 +1,4 @@
-﻿using SoG;
-using static SoG.InGameMenu;
+﻿using static SoG.InGameMenu;
 
 namespace Grindless
 {

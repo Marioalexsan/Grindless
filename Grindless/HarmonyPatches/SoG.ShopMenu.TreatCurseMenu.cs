@@ -1,6 +1,4 @@
-﻿using HarmonyLib;
-using System.Linq;
-using TreatCurseMenu = SoG.ShopMenu.TreatCurseMenu;
+﻿using TreatCurseMenu = SoG.ShopMenu.TreatCurseMenu;
 
 namespace Grindless.HarmonyPatches
 {

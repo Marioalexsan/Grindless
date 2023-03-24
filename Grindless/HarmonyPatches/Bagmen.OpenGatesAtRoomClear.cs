@@ -1,5 +1,4 @@
 ﻿using Bagmen;
-using HarmonyLib;
 
 namespace Grindless.HarmonyPatches
 {

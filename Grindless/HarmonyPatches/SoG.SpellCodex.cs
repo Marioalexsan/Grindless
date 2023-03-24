@@ -1,6 +1,4 @@
-﻿using HarmonyLib;
-using Microsoft.Xna.Framework;
-using SoG;
+﻿using Microsoft.Xna.Framework;
 
 namespace Grindless.HarmonyPatches
 {
