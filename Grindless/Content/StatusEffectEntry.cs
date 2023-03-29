@@ -13,6 +13,7 @@
 
         /// <summary>
         /// Gets or sets the icon's texture path. The texture path is relative to "Config/".
+        /// A null or empty string will load NullTex instead.
         /// </summary>
         public string TexturePath { get; set; }
 

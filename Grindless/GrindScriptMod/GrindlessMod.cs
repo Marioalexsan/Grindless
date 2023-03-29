@@ -30,7 +30,7 @@ namespace Grindless
         public override void Load()
         {
             _colliderRC = new ColliderRC();
-            CreateCommands().AutoAddModCommands();
+            CreateCommands().AutoAddModCommands("gl");
         }
 
         public override void Unload()

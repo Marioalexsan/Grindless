@@ -14,7 +14,7 @@ namespace Grindless.HarmonyPatches
             if (entry.TexturePath == null && entry.IsVanilla)
                 return true;
 
-            __result = Globals.Game.Content.TryLoad<Texture2D>(entry.TexturePath);
+            __result = string.IsNullOrEmpty(entry.TexturePath) ? RenderMaster.txNullTex : Globals.Game.Content.TryLoad<Texture2D>(entry.TexturePath);
             return false;
         }
     }
