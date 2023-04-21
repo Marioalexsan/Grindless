@@ -51,6 +51,8 @@ namespace Grindless
 
         public static ILogger Logger { get; } = LogFactory.CreateLogger("Grindless");
 
+        internal static bool HasCrashed { get; set; } = false;
+
         public static void Main(string[] args)
         {
             LaunchTime = DateTime.Now;
@@ -64,9 +66,11 @@ namespace Grindless
             }
             catch (Exception e)
             {
-                Logger.LogCritical("Grindless crashed!");
-                Logger.LogCritical("{Exception}", e);
+                ErrorHelper.ForceExit(e, skipLogging: true);
+            }
 
+            if (HasCrashed)
+            {
                 Thread.Sleep(1000);
 
                 Console.WriteLine("Press Enter to exit.");
