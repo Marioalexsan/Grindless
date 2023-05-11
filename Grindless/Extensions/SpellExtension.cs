@@ -1,27 +1,26 @@
 ﻿using static SoG.InGameMenu;
 
-namespace Grindless
+namespace Grindless;
+
+public static class SpellExtension
 {
-    public static class SpellExtension
+    public static bool IsGeneralTalent(this SpellCodex.SpellTypes skill)
     {
-        public static bool IsGeneralTalent(this SpellCodex.SpellTypes skill)
-        {
-            return new SkillView().lenGeneralTalentDisplayOrder.Contains(skill);
-        }
+        return new SkillView().lenGeneralTalentDisplayOrder.Contains(skill);
+    }
 
-        public static bool IsMeleeTalent(this SpellCodex.SpellTypes skill)
-        {
-            return new SkillView().lenMeleeTalentDisplayOrder.Contains(skill);
-        }
+    public static bool IsMeleeTalent(this SpellCodex.SpellTypes skill)
+    {
+        return new SkillView().lenMeleeTalentDisplayOrder.Contains(skill);
+    }
 
-        public static bool IsMagicTalent(this SpellCodex.SpellTypes skill)
-        {
-            return new SkillView().lenMagicTalentDisplayOrder.Contains(skill);
-        }
+    public static bool IsMagicTalent(this SpellCodex.SpellTypes skill)
+    {
+        return new SkillView().lenMagicTalentDisplayOrder.Contains(skill);
+    }
 
-        public static bool IsTalent(this SpellCodex.SpellTypes skill)
-        {
-            return SpellCodex.IsTalent(skill);
-        }
+    public static bool IsTalent(this SpellCodex.SpellTypes skill)
+    {
+        return SpellCodex.IsTalent(skill);
     }
 }

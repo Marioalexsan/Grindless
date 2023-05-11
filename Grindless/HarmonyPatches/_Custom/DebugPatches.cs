@@ -1,7 +1,6 @@
-﻿namespace Grindless.HarmonyPatches
+﻿namespace Grindless.HarmonyPatches;
+
+[HarmonyPatch]
+class DebugPatches
 {
-    [HarmonyPatch]
-    class DebugPatches
-    {
-    }
 }

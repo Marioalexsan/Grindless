@@ -1,53 +1,52 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using WeaponAssets;
 
-namespace Grindless.HarmonyPatches
+namespace Grindless.HarmonyPatches;
+
+[HarmonyPatch(typeof(WeaponContentManager))]
+static class WeaponAssets_WeaponContentManager
 {
-    [HarmonyPatch(typeof(WeaponContentManager))]
-    static class WeaponAssets_WeaponContentManager
+    /// <summary>
+    /// Loads weapon assets for a mod entry.
+    /// For entries that do not use the vanilal resource format, a shortened folder structure is used.
+    /// </summary>
+    [HarmonyPrefix]
+    [HarmonyPatch("LoadBatch", typeof(Dictionary<ushort, string>))] // Protected Method
+    static bool LoadBatch_Prefix(ref Dictionary<ushort, string> dis, WeaponContentManager __instance)
     {
-        /// <summary>
-        /// Loads weapon assets for a mod entry.
-        /// For entries that do not use the vanilal resource format, a shortened folder structure is used.
-        /// </summary>
-        [HarmonyPrefix]
-        [HarmonyPatch("LoadBatch", typeof(Dictionary<ushort, string>))] // Protected Method
-        static bool LoadBatch_Prefix(ref Dictionary<ushort, string> dis, WeaponContentManager __instance)
+        var entry = ItemEntry.Entries.Get(__instance.enType);
+
+        ErrorHelper.Assert(entry != null, ErrorHelper.UnknownEntry);
+
+        bool oneHanded = (entry.vanillaEquip as WeaponInfo).enWeaponCategory == WeaponInfo.WeaponCategory.OneHanded;
+
+        string resourcePath = entry.EquipResourcePath;
+
+        foreach (KeyValuePair<ushort, string> kvp in dis)
         {
-            var entry = ItemEntry.Entries.Get(__instance.enType);
+            string texPath = kvp.Value;
 
-            ErrorHelper.Assert(entry != null, ErrorHelper.UnknownEntry);
-
-            bool oneHanded = (entry.vanillaEquip as WeaponInfo).enWeaponCategory == WeaponInfo.WeaponCategory.OneHanded;
-
-            string resourcePath = entry.EquipResourcePath;
-
-            foreach (KeyValuePair<ushort, string> kvp in dis)
+            if (!entry.UseVanillaResourceFormat)
             {
-                string texPath = kvp.Value;
+                texPath = texPath.Replace($"Weapons/{resourcePath}/", "");
 
-                if (!entry.UseVanillaResourceFormat)
+                if (oneHanded)
                 {
-                    texPath = texPath.Replace($"Weapons/{resourcePath}/", "");
-
-                    if (oneHanded)
-                    {
-                        texPath = texPath
-                            .Replace("Sprites/Heroes/OneHanded/", resourcePath + "/")
-                            .Replace("Sprites/Heroes/Charge/OneHand/", resourcePath + "/1HCharge/");
-                    }
-                    else
-                    {
-                        texPath = texPath
-                            .Replace("Sprites/Heroes/TwoHanded/", resourcePath + "/")
-                            .Replace("Sprites/Heroes/Charge/TwoHand/", resourcePath + "/2HCharge/");
-                    }
+                    texPath = texPath
+                        .Replace("Sprites/Heroes/OneHanded/", resourcePath + "/")
+                        .Replace("Sprites/Heroes/Charge/OneHand/", resourcePath + "/1HCharge/");
                 }
-
-                __instance.ditxWeaponTextures.Add(kvp.Key, __instance.contWeaponContent.TryLoad<Texture2D>(texPath));
+                else
+                {
+                    texPath = texPath
+                        .Replace("Sprites/Heroes/TwoHanded/", resourcePath + "/")
+                        .Replace("Sprites/Heroes/Charge/TwoHand/", resourcePath + "/2HCharge/");
+                }
             }
 
-            return false;
+            __instance.ditxWeaponTextures.Add(kvp.Key, __instance.contWeaponContent.TryLoad<Texture2D>(texPath));
         }
+
+        return false;
     }
 }

@@ -11,8 +11,8 @@ using SpellID = SoG.SpellCodex.SpellTypes;
 using StatusEffectID = SoG.BaseStats.StatusEffectSource;
 using PinID = SoG.PinCodex.PinType;
 
-namespace Grindless
-{
+namespace Grindless;
+
 	/// <summary>
 	/// Defines IDs for game object entries that come from Grindless.
 	/// </summary>
@@ -31,7 +31,7 @@ namespace Grindless
 		private static Dictionary<Type, object> s_vanillaIDs = new();
 
 		static IDExtension()
-        {
+    {
 			AddVanillaIDs<ItemID>();
 			AddVanillaIDs<ItemEffectID>();
 			AddVanillaIDs<LevelID>();
@@ -107,15 +107,15 @@ namespace Grindless
 			where T : struct, Enum
 		{
 			s_vanillaIDs[typeof(T)] = new HashSet<T>((T[])Enum.GetValues(typeof(T)));
-        }
+    }
 
 		private static void RemoveVanillaIDs<T>(params T[] ids)
 			where T : struct, Enum
 		{
 			if (!s_vanillaIDs.TryGetValue(typeof(T), out _))
-            {
+        {
 				s_vanillaIDs[typeof(T)] = new HashSet<T>();
-            }
+        }
 
 			((HashSet<T>)s_vanillaIDs[typeof(T)]).ExceptWith(ids);
 		}
@@ -124,15 +124,15 @@ namespace Grindless
 			where T : struct, Enum
 		{
 			if (s_vanillaIDs.ContainsKey(typeof(T)))
-            {
+        {
 				return ((HashSet<T>)s_vanillaIDs[typeof(T)]).Contains(id);
-            }
+        }
 
 			return false;
 		}
 
 		public static IEnumerable<T> GetAllSoGIDs<T>()
-        {
+    {
 			if (s_vanillaIDs.ContainsKey(typeof(T)))
 			{
 				return (IEnumerable<T>)s_vanillaIDs[typeof(T)];
@@ -152,12 +152,11 @@ namespace Grindless
 	/// Provides utility methods for working with game objects.
 	/// </summary>
 	internal static class GameObjectStuff
-    {
+{
 		public static void Load()
 		{
-            OriginalPinCollection = new List<PinID>(PinCodex.SortedPinEntries);
-        }
+        OriginalPinCollection = new List<PinID>(PinCodex.SortedPinEntries);
+    }
 
 		public static List<PinID> OriginalPinCollection { get; private set; }
-    }
 }

@@ -1,12 +1,11 @@
-﻿namespace Grindless.HarmonyPatches
+﻿namespace Grindless.HarmonyPatches;
+
+[HarmonyPatch(typeof(Game1), nameof(Game1._Menu_Render_TopMenu))]
+static class _Menu_Render_TopMenu
 {
-    [HarmonyPatch(typeof(Game1), nameof(Game1._Menu_Render_TopMenu))]
-    static class _Menu_Render_TopMenu
+    static void Postfix()
     {
-        static void Postfix()
-        {
-            MainMenuWorker.CheckArcadeSaveCompatiblity();
-            MainMenuWorker.RenderModMenuButton();
-        }
+        MainMenuWorker.CheckArcadeSaveCompatiblity();
+        MainMenuWorker.RenderModMenuButton();
     }
 }

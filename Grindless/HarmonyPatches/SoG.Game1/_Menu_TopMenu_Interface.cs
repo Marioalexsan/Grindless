@@ -1,11 +1,10 @@
-﻿namespace Grindless.HarmonyPatches
+﻿namespace Grindless.HarmonyPatches;
+
+[HarmonyPatch(typeof(Game1), nameof(Game1._Menu_TopMenu_Interface))]
+static class _Menu_TopMenu_Interface
 {
-    [HarmonyPatch(typeof(Game1), nameof(Game1._Menu_TopMenu_Interface))]
-    static class _Menu_TopMenu_Interface
+    static void Postfix()
     {
-        static void Postfix()
-        {
-            MainMenuWorker.PostTopMenuInterface();
-        }
+        MainMenuWorker.PostTopMenuInterface();
     }
 }

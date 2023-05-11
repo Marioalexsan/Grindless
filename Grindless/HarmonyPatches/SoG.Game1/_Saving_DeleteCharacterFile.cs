@@ -1,11 +1,10 @@
-﻿namespace Grindless.HarmonyPatches
+﻿namespace Grindless.HarmonyPatches;
+
+[HarmonyPatch(typeof(Game1), nameof(Game1._Saving_DeleteCharacterFile))]
+static class _Saving_DeleteCharacterFile
 {
-    [HarmonyPatch(typeof(Game1), nameof(Game1._Saving_DeleteCharacterFile))]
-    static class _Saving_DeleteCharacterFile
+    static void Prefix(int iFileSlot)
     {
-        static void Prefix(int iFileSlot)
-        {
-            File.Delete($"{Globals.AppDataPath}Characters/{iFileSlot}.cha.gs");
-        }
+        File.Delete($"{Globals.AppDataPath}Characters/{iFileSlot}.cha.gs");
     }
 }

@@ -1,11 +1,10 @@
-﻿namespace Grindless.HarmonyPatches
+﻿namespace Grindless.HarmonyPatches;
+
+[HarmonyPatch(typeof(Game1), "Initialize")]
+static class Initialize
 {
-    [HarmonyPatch(typeof(Game1), "Initialize")]
-    static class Initialize
+    static void Prefix()
     {
-        static void Prefix()
-        {
-            Globals.InitializeGlobals();
-        }
+        Globals.InitializeGlobals();
     }
 }
