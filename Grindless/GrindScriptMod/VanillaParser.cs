@@ -280,7 +280,7 @@ namespace Grindless
                     _ = OriginalMethods.FillRandomPinList(Globals.Game);
                     return OriginalMethods.LastRandomPinList.Contains(gameID);
                 },
-                CreateCollectionEntry = GameObjectStuff.GetOriginalPinCollection().Contains(gameID)
+                CreateCollectionEntry = GameObjectStuff.OriginalPinCollection.Contains(gameID)
             };
         }
 

@@ -30,7 +30,8 @@ namespace Grindless
                 {
                     "IgnoredMods": [
                         
-                    ]
+                    ],
+                    "HarmonyDebug": false
                 }
                 """;
 
@@ -179,10 +180,18 @@ namespace Grindless
 
             Logger.LogInformation("Applying Patches...");
 
+            var lastDebugMode = Harmony.DEBUG;
+            Harmony.DEBUG = ReadConfig().GetValue("HarmonyDebug", false);
+
+            if (Harmony.DEBUG)
+                Logger.LogInformation("Using Harmony Debug mode.");
+
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             HarmonyInstance.PatchAll(typeof(ModManager).Assembly);
             stopwatch.Stop();
+
+            Harmony.DEBUG = lastDebugMode;
 
             Logger.LogInformation("Patched {Count} methods in {Time:F2} seconds!", HarmonyInstance.GetPatchedMethods().Count(), stopwatch.Elapsed.TotalSeconds);
         }

@@ -31,6 +31,7 @@ namespace Grindless.HarmonyPatches
 
         static void PrepareModLoader()
         {
+            GameObjectStuff.Load();
             GrindlessResources.ReloadResources();
             ModManager.Reload();
 

@@ -153,16 +153,11 @@ namespace Grindless
 	/// </summary>
 	internal static class GameObjectStuff
     {
-		static GameObjectStuff()
-        {
-			_originalPinCollection = new List<PinID>(PinCodex.SortedPinEntries);
+		public static void Load()
+		{
+            OriginalPinCollection = new List<PinID>(PinCodex.SortedPinEntries);
         }
 
-		private static List<PinID> _originalPinCollection;
-
-		public static List<PinID> GetOriginalPinCollection()
-        {
-			return _originalPinCollection;
-		}
+		public static List<PinID> OriginalPinCollection { get; private set; }
     }
 }

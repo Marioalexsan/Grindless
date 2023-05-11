@@ -108,7 +108,7 @@
         /// Gets or sets whenever to create a pin display in Traveller's pin collection.
         /// This is set to true by default.
         /// </summary>
-        public bool CreateCollectionEntry { get; set; }
+        public bool CreateCollectionEntry { get; set; } = true;
 
         internal PinEntry() { }
 
