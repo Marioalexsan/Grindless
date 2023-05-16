@@ -1,0 +1,14 @@
+{
+	"ManifestVersion": "0.1",
+	"Entries": {
+		"Marioalexsan.GrindeaQoL": {
+			"DisplayName": "GrindeaQoL",
+			"Description": "Quality of Life mod for Secrets of Grindea.",
+			"Version": "0.1",
+			"AssemblyLink": {
+				"Url": "",
+				"Sha1": ""
+			}
+		}
+	}
+}

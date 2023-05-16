@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Grindless.Core;
+using Microsoft.Extensions.Logging;
 using Quests;
+using System.Text.Json;
 
 namespace Grindless;
 
@@ -14,6 +16,8 @@ internal static class ModManager
 
     private static Harmony _modPatcher = new("Grindless.ModPatches");
 
+    internal static ModDatabaseManifest ModDatabase { get; private set; }
+
     public static void Reload()
     {
         if (Globals.Game.xStateMaster.enGameState != StateMaster.GameStates.MainMenu)
@@ -25,6 +29,7 @@ internal static class ModManager
         ReloadSoGState();
         LoadMods(ModLoader.ObtainMods());
         PrepareSoGStatePostLoad();
+        FetchModDatabase();
     }
 
     private static void UnloadMods()
@@ -164,6 +169,13 @@ internal static class ModManager
         {
             mod.PostLoad();
         }
+    }
+
+    private static void FetchModDatabase()
+    {
+        ModDatabase = ModDatabaseManifest.FetchManifest();
+
+        Program.Logger.LogInformation("Mod database: {}", JsonSerializer.Serialize(ModDatabase));
     }
 
     internal static EntryManager<IDType, EntryType> GetEntryManager<IDType, EntryType>()
