@@ -6,7 +6,7 @@ namespace Grindless.Core;
 
 internal static class ModDatabaseConfig
 {
-    public const string ManifestLocation = "https://github.com/Marioalexsan/Grindless/contents/ModDatabaseManifest.json";
+    public const string ManifestLocation = "https://raw.githubusercontent.com/Marioalexsan/Grindless/main/ModDatabaseManifest.json";
 }
 
 internal class DownloadLink
@@ -36,7 +36,10 @@ internal class ModDatabaseManifest
         var response = client.Get(new(ModDatabaseConfig.ManifestLocation));
 
         if (!response.IsSuccessful)
+        {
             Program.Logger.LogWarning("Failed to fetch mod database manifest!");
+            return new();
+        }
 
         return JsonSerializer.Deserialize<ModDatabaseManifest>(response.Content);
     }
