@@ -9,7 +9,7 @@ static class SoG_HatCodex
     [HarmonyPatch(nameof(HatCodex.GetHatInfo))]
     static bool GetHatInfo_Prefix(ref HatInfo __result, ItemCodex.ItemTypes enType)
     {
-        var entry = ItemEntry.Entries.Get(enType); ;
+        var entry = Entries.Items.Get(enType);
 
         __result = null;
 

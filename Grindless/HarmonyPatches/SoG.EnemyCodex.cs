@@ -11,7 +11,7 @@ internal static class SoG_EnemyCodex
     [HarmonyPatch(nameof(EnemyCodex.GetEnemyDescription))]
     internal static bool GetEnemyDescription_Prefix(ref EnemyDescription __result, EnemyCodex.EnemyTypes enType)
     {
-        __result = EnemyEntry.Entries.GetRequired(enType).Vanilla;
+        __result = Entries.Enemies.GetRequired(enType).Vanilla;
         return false;
     }
 
@@ -19,7 +19,7 @@ internal static class SoG_EnemyCodex
     [HarmonyPatch(nameof(EnemyCodex.GetEnemyInstance))]
     internal static bool GetEnemyInstance_Prefix(EnemyCodex.EnemyTypes enType, Level.WorldRegion enOverrideContent, ref Enemy __result)
     {
-        var entry = EnemyEntry.Entries.GetRequired(enType);
+        var entry = Entries.Enemies.GetRequired(enType);
 
         if (entry.Constructor == null && entry.IsVanilla)
             return true;
@@ -32,7 +32,7 @@ internal static class SoG_EnemyCodex
     [HarmonyPatch(nameof(EnemyCodex.GetEnemyDefaultAnimation))]
     public static bool GetEnemyDefaultAnimation_Prefix(ref Animation __result, EnemyCodex.EnemyTypes enType, ContentManager Content)
     {
-        var entry = EnemyEntry.Entries.GetRequired(enType);
+        var entry = Entries.Enemies.GetRequired(enType);
 
         if (entry.DefaultAnimation == null && entry.IsVanilla)
             return true;
@@ -46,7 +46,7 @@ internal static class SoG_EnemyCodex
     [HarmonyPatch(nameof(EnemyCodex.GetEnemyDisplayIcon))]
     public static bool GetEnemyDisplayIcon_Prefix(ref Texture2D __result, EnemyCodex.EnemyTypes enType, ContentManager Content)
     {
-        var entry = EnemyEntry.Entries.GetRequired(enType);
+        var entry = Entries.Enemies.GetRequired(enType);
 
         if (entry.DisplayIconPath == null && entry.IsVanilla)
             return true;
@@ -59,7 +59,7 @@ internal static class SoG_EnemyCodex
     [HarmonyPatch(nameof(EnemyCodex.GetEnemyLocationPicture))]
     public static bool GetEnemyLocationPicture_Prefix(ref Texture2D __result, EnemyCodex.EnemyTypes enType, ContentManager Content)
     {
-        var entry = EnemyEntry.Entries.GetRequired(enType);
+        var entry = Entries.Enemies.GetRequired(enType);
 
         if (entry.DisplayBackgroundPath == null && entry.IsVanilla)
             return true;

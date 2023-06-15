@@ -6,11 +6,9 @@
 /// <remarks> 
 /// Most of the methods in this class can only be used while a mod is loading, that is, inside <see cref="Mod.Load"/>.
 /// </remarks>
+[ModEntry(700)]
 public class EquipmentEffectEntry : Entry<EquipmentInfo.SpecialEffect>
 {
-    internal static EntryManager<EquipmentInfo.SpecialEffect, EquipmentEffectEntry> Entries { get; }
-        = new EntryManager<EquipmentInfo.SpecialEffect, EquipmentEffectEntry>(700);
-
     /// <summary>
     /// Gets or sets the callback that will be called when an equipment with this effect is worn.
     /// You can use this callback to do non-stat things such as creating persistent spells.

@@ -78,6 +78,14 @@ internal static class ErrorHelper
 
     internal static void LogException(Exception exception)
     {
+        static void PrintStackTrace(StringBuilder msg, Exception exception)
+        {
+            if (exception.InnerException != null)
+                PrintStackTrace(msg, exception.InnerException);
+
+            msg.AppendLine(exception.ToString());
+        }
+
         string e = exception.Message;
 
         if (e.Contains("OutOfMemoryException") && e.Contains("VertexBuffer"))
@@ -92,10 +100,10 @@ internal static class ErrorHelper
         StringBuilder msg = new(2048);
 
         msg.AppendLine("An error happened while running a modded game instance!");
-        msg.AppendLine("=== Exception message ===");
+        msg.AppendLine("=== Exception ===");
         msg.AppendLine(e);
         msg.AppendLine("=== Stack Trace ===");
-        msg.AppendLine(exception.StackTrace);
+        PrintStackTrace(msg, exception);
         msg.AppendLine("=== Game Settings ===");
         msg.AppendLine("Game Version = " + Globals.Game.sVersionNumberOnly);
         msg.AppendLine("Fullscreen = " + Globals.Game.xOptions.enFullScreen);

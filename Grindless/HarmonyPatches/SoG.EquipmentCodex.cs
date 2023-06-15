@@ -7,7 +7,7 @@ static class SoG_EquipmentCodex
     [HarmonyPatch(nameof(EquipmentCodex.GetArmorInfo))]
     static bool GetArmorInfo_Prefix(ref EquipmentInfo __result, ItemCodex.ItemTypes enType)
     {
-        __result = ItemEntry.Entries.Get(enType)?.vanillaEquip;
+        __result = Entries.Items.Get(enType)?.vanillaEquip;
         return false;
     }
 

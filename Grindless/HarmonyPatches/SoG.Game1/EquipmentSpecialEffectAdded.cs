@@ -5,7 +5,7 @@ internal class EquipmentSpecialEffectAdded
 {
     static bool Prefix(EquipmentInfo.SpecialEffect enEffect, PlayerView xView)
     {
-        var entry = EquipmentEffectEntry.Entries.GetRequired(enEffect);
+        var entry = Entries.EquipmentEffects.GetRequired(enEffect);
 
         if (entry.OnEquip == null && entry.IsVanilla)
             return true;  // Use vanilla equip add

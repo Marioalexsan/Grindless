@@ -66,7 +66,7 @@ public class VanillaMod : Mod
     {
         Logger.LogInformation("Parsing " + typeof(IDType) + " entries...");
 
-        var entries = ModManager.GetEntryManager<IDType, EntryType>();
+        var entries = Entries.Manager<IDType, EntryType>();
         foreach (var gameID in IDExtension.GetAllSoGIDs<IDType>())
         {
             try

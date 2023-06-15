@@ -8,10 +8,16 @@ namespace Grindless;
 /// <remarks> 
 /// Most of the methods in this class can only be used while a mod is loading, that is, inside <see cref="Mod.Load"/>.
 /// </remarks>
+[ModEntry(45000)]
 public class QuestEntry : Entry<QuestCodex.QuestID>
 {
-    internal static EntryManager<QuestCodex.QuestID, QuestEntry> Entries { get; }
-        = new EntryManager<QuestCodex.QuestID, QuestEntry>(45000);
+    internal QuestEntry()
+    {
+        SymbolicItemFlagReward noReward = new();
+        noReward.AddItem(ItemCodex.ItemTypes._Misc_BagLol, 1);
+
+        Vanilla.xReward = noReward;
+    }
 
     internal QuestDescription Vanilla { get; set; } = new QuestDescription();
 
@@ -54,22 +60,6 @@ public class QuestEntry : Entry<QuestCodex.QuestID>
     /// You can use it to setup objectives and other things.
     /// </summary>
     public Action<Quest> Constructor { get; set; }
-
-    internal QuestEntry() {
-        SymbolicItemFlagReward noReward = new();
-        noReward.AddItem(ItemCodex.ItemTypes._Misc_BagLol, 1);
-
-        Vanilla.xReward = noReward;
-    }
-
-    internal QuestEntry(Mod mod, string modID, QuestCodex.QuestID gameID)
-        : base(mod, modID, gameID)
-    {
-        SymbolicItemFlagReward noReward = new();
-        noReward.AddItem(ItemCodex.ItemTypes._Misc_BagLol, 1);
-
-        Vanilla.xReward = noReward;
-    }
 
     protected override void Initialize()
     {

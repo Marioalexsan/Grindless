@@ -9,7 +9,7 @@ static class Quests_QuestCodex
     [HarmonyPatch(nameof(QuestCodex.GetQuestDescription))]
     static bool GetQuestDescription_Prefix(ref QuestDescription __result, QuestCodex.QuestID p_enID)
     {
-        __result = QuestEntry.Entries.GetRequired(p_enID).Vanilla;
+        __result = Entries.Quests.GetRequired(p_enID).Vanilla;
         return false;
     }
 
@@ -17,7 +17,7 @@ static class Quests_QuestCodex
     [HarmonyPatch(nameof(QuestCodex.GetQuestInstance))]
     static bool GetQuestInstance_Prefix(ref Quest __result, QuestCodex.QuestID p_enID)
     {
-        var entry = QuestEntry.Entries.GetRequired(p_enID);
+        var entry = Entries.Quests.GetRequired(p_enID);
 
         if (entry.Constructor == null && entry.IsVanilla)
             return true;

@@ -11,10 +11,10 @@ namespace Grindless;
 /// <remarks> 
 /// Most of the methods in this class can only be used while a mod is loading, that is, inside <see cref="Mod.Load"/>.
 /// </remarks>
+[ModEntry(0)]
 public class CommandEntry : Entry<GrindlessID.CommandID>
 {
-    internal static EntryManager<GrindlessID.CommandID, CommandEntry> Entries { get; }
-        = new EntryManager<GrindlessID.CommandID, CommandEntry>(0);
+    internal CommandEntry() { }
 
     public Dictionary<string, CommandParser> Commands = new();
 
@@ -26,8 +26,6 @@ public class CommandEntry : Entry<GrindlessID.CommandID>
     /// Ideally, you want this to be a short and easy to use name.
     /// </summary>
     public string Alias { get; set; }
-
-    internal CommandEntry() { }
 
     public void AutoAddModCommands(string alias = null)
     {
@@ -58,8 +56,8 @@ public class CommandEntry : Entry<GrindlessID.CommandID>
 
         return ModManager.Mods.FirstOrDefault(x => x.Name == target)
             ?? ModManager.Mods.FirstOrDefault(x => FuzzyMatch(x.Name, target))
-            ?? Entries.FirstOrDefault(x => x.Alias == target)?.Mod
-            ?? Entries.FirstOrDefault(x => FuzzyMatch(x.Alias, target))?.Mod;
+            ?? Entries.Commands.FirstOrDefault(x => x.Alias == target)?.Mod
+            ?? Entries.Commands.FirstOrDefault(x => FuzzyMatch(x.Alias, target))?.Mod;
     }
 
     protected override void Initialize()

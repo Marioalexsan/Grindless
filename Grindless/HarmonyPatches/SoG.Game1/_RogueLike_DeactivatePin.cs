@@ -5,7 +5,7 @@ internal class _RogueLike_DeactivatePin
 {
     static bool Prefix(PlayerView xView, PinCodex.PinType enEffect, bool bSend)
     {
-        var entry = PinEntry.Entries.GetRequired(enEffect);
+        var entry = Entries.Pins.GetRequired(enEffect);
 
         EditedMethods.SendPinDeactivation(Globals.Game, xView, enEffect, bSend);
 

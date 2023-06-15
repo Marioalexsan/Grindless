@@ -6,10 +6,10 @@
 /// <remarks> 
 /// Most of the methods in this class can only be used while a mod is loading, that is, inside <see cref="Mod.Load"/>.
 /// </remarks>
+[ModEntry(3500)]
 public class CurseEntry : Entry<RogueLikeMode.TreatsCurses>
 {
-    internal static EntryManager<RogueLikeMode.TreatsCurses, CurseEntry> Entries { get; }
-        = new EntryManager<RogueLikeMode.TreatsCurses, CurseEntry>(3500);
+    internal CurseEntry() { }
 
     internal string nameHandle = "";
 
@@ -51,8 +51,6 @@ public class CurseEntry : Entry<RogueLikeMode.TreatsCurses>
     /// A score modifier of 0.2 corresponds to +20%, -0.15 to -15%, etc.
     /// </summary>
     public float ScoreModifier { get; set; }
-
-    internal CurseEntry() { }
 
     protected override void Initialize()
     {

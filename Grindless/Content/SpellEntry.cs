@@ -7,10 +7,10 @@
 /// <remarks> 
 /// Most of the methods in this class can only be used while a mod is loading, that is, inside <see cref="Mod.Load"/>.
 /// </remarks>
+[ModEntry(10000)]
 public class SpellEntry : Entry<SpellCodex.SpellTypes>
 {
-    internal static EntryManager<SpellCodex.SpellTypes, SpellEntry> Entries { get; }
-        = new EntryManager<SpellCodex.SpellTypes, SpellEntry>(10000);
+    internal SpellEntry() { }
 
     /// <summary>
     /// Gets or sets the builder of the spell instance.
@@ -33,11 +33,6 @@ public class SpellEntry : Entry<SpellCodex.SpellTypes>
     /// Gets or sets whenever this spell is a player melee skill.
     /// </summary>
     public bool IsMeleeSkill { get; set; }
-
-    internal SpellEntry() { }
-
-    internal SpellEntry(Mod mod, string modID, SpellCodex.SpellTypes gameID)
-        : base(mod, modID, gameID) { }
 
     protected override void Initialize()
     {

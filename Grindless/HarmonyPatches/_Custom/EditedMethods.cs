@@ -38,7 +38,7 @@ public static class EditedMethods
     /// </summary>
     public static Enemy InGetEnemyInstance(EnemyCodex.EnemyTypes gameID, Level.WorldRegion assetRegion)
     {
-        var entry = EnemyEntry.Entries.GetRequired(gameID);
+        var entry = Entries.Enemies.GetRequired(gameID);
 
         Enemy enemy = new() { enType = gameID };
         enemy.xRenderComponent.xOwnerObject = enemy;
@@ -83,7 +83,7 @@ public static class EditedMethods
     /// </summary>
     public static bool InEnemyMakeElite(Enemy enemy)
     {
-        var entry = EnemyEntry.Entries.GetRequired(enemy.enType);
+        var entry = Entries.Enemies.GetRequired(enemy.enType);
 
         entry.EliteScaler?.Invoke(enemy);
         return entry.EliteScaler != null;
@@ -131,7 +131,7 @@ public static class EditedMethods
     {
         try
         {
-            LevelEntry.Entries.GetRequired(type).Loader?.Invoke(staticOnly);
+            Entries.Levels.GetRequired(type).Loader?.Invoke(staticOnly);
         }
         catch (Exception e)
         {

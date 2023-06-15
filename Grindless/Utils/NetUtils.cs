@@ -63,7 +63,7 @@ public static class NetUtils
         GrindlessID.NetworkID gameID = (GrindlessID.NetworkID) msg.ReadInt32();
         packetID = msg.ReadUInt16();
 
-        var entry = NetworkEntry.Entries.Get(gameID);
+        var entry = Entries.Network.Get(gameID);
 
         mod = entry.Mod;
     }

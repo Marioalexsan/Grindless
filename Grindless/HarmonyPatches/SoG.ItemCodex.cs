@@ -9,7 +9,7 @@ static class SoG_ItemCodex
     [HarmonyPatch(nameof(ItemCodex.GetItemDescription))]
     static bool GetItemDescription_Prefix(ref ItemDescription __result, ItemCodex.ItemTypes enType)
     {
-        var entry = ItemEntry.Entries.Get(enType);
+        var entry = Entries.Items.Get(enType);
 
         if (entry == null)
         {
@@ -31,7 +31,7 @@ static class SoG_ItemCodex
     [HarmonyPatch(nameof(ItemCodex.GetItemInstance))]
     static void GetItemInstance_Postfix(ref Item __result, ItemCodex.ItemTypes enType)
     {
-        var entry = ItemEntry.Entries.Get(enType);
+        var entry = Entries.Items.Get(enType);
 
         if (entry == null)
             return;

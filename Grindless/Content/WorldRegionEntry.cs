@@ -5,15 +5,10 @@ namespace Grindless;
 /// <summary>
 /// Represents a modded world region.
 /// </summary>
+[ModEntry(650)]
 public class WorldRegionEntry : Entry<Level.WorldRegion>
 {
-    internal static EntryManager<Level.WorldRegion, WorldRegionEntry> Entries { get; } 
-        = new EntryManager<Level.WorldRegion, WorldRegionEntry>(650);
-
     internal WorldRegionEntry() { }
-
-    internal WorldRegionEntry(Mod mod, string modID, Level.WorldRegion gameID)
-        : base(mod, modID, gameID) { }
 
     protected override void Initialize()
     {

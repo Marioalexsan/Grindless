@@ -5,7 +5,7 @@ static class _RogueLike_GetTreatCurseInfo
 {
     static bool Prefix(RogueLikeMode.TreatsCurses enTreatCurse, out string sNameHandle, out string sDescriptionHandle, out float fScoreModifier)
     {
-        var entry = CurseEntry.Entries.Get(enTreatCurse);
+        var entry = Entries.Curses.Get(enTreatCurse);
 
         // Null check covers the cases where the treat / curse is None
         sNameHandle = entry?.nameHandle ?? "";

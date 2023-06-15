@@ -6,10 +6,10 @@
 /// <remarks> 
 /// Most of the methods in this class can only be used while a mod is loading, that is, inside <see cref="Mod.Load"/>.
 /// </remarks>
+[ModEntry(5600)]
 public class LevelEntry : Entry<Level.ZoneEnum>
 {
-    internal static EntryManager<Level.ZoneEnum, LevelEntry> Entries { get; }
-        = new EntryManager<Level.ZoneEnum, LevelEntry>(5600);
+    internal LevelEntry() { }
 
     /// <summary>
     /// Gets or sets the builder for this level.
@@ -30,11 +30,6 @@ public class LevelEntry : Entry<Level.ZoneEnum>
     /// The world region is used for some game logic, such as audio loading and unloading.
     /// </summary>
     public Level.WorldRegion WorldRegion { get; set; }
-
-    internal LevelEntry() { }
-
-    internal LevelEntry(Mod owner, string modID, Level.ZoneEnum gameID)
-        : base(owner, modID, gameID) { }
 
     protected override void Initialize()
     {

@@ -7,7 +7,7 @@ static class SoG_PinCodex
     [HarmonyPatch(nameof(PinCodex.GetInfo))]
     static bool GetInfo_Prefix(ref PinInfo __result, PinCodex.PinType enType)
     {
-        var entry = PinEntry.Entries.Get(enType);
+        var entry = Entries.Pins.Get(enType);
 
         if (entry == null)
             return true;

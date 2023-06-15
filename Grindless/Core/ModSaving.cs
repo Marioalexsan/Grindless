@@ -140,9 +140,9 @@ internal static class ModSaving
             {
                 Name = mod.Name,
                 Version = mod.Version,
-                ItemIDMap = ItemEntry.Entries.Where(x => x.Mod == mod).ToDictionary(x => x.ModID, x => x.GameID),
-                EnemyIDMap = EnemyEntry.Entries.Where(x => x.Mod == mod).ToDictionary(x => x.ModID, x => x.GameID),
-                QuestIDMap = QuestEntry.Entries.Where(x => x.Mod == mod).ToDictionary(x => x.ModID, x => x.GameID)
+                ItemIDMap = Entries.Items.Where(x => x.Mod == mod).ToDictionary(x => x.ModID, x => x.GameID),
+                EnemyIDMap = Entries.Enemies.Where(x => x.Mod == mod).ToDictionary(x => x.ModID, x => x.GameID),
+                QuestIDMap = Entries.Quests.Where(x => x.Mod == mod).ToDictionary(x => x.ModID, x => x.GameID)
             }).ToList()
         };
 
@@ -164,7 +164,7 @@ internal static class ModSaving
             {
                 Name = mod.Name,
                 Version = mod.Version,
-                QuestIDMap = QuestEntry.Entries.Where(x => x.Mod == mod).ToDictionary(x => x.ModID, x => x.GameID)
+                QuestIDMap = Entries.Quests.Where(x => x.Mod == mod).ToDictionary(x => x.ModID, x => x.GameID)
             }).ToList()
         };
 
@@ -186,10 +186,10 @@ internal static class ModSaving
             {
                 Name = mod.Name,
                 Version = mod.Version,
-                ItemIDMap = ItemEntry.Entries.Where(x => x.Mod == mod).ToDictionary(x => x.ModID, x => x.GameID),
-                PerkIDMap = PerkEntry.Entries.Where(x => x.Mod == mod).ToDictionary(x => x.ModID, x => x.GameID),
-                CurseIDMap = CurseEntry.Entries.Where(x => x.Mod == mod).ToDictionary(x => x.ModID, x => x.GameID),
-                EnemyIDMap = EnemyEntry.Entries.Where(x => x.Mod == mod).ToDictionary(x => x.ModID, x => x.GameID)
+                ItemIDMap = Entries.Items.Where(x => x.Mod == mod).ToDictionary(x => x.ModID, x => x.GameID),
+                PerkIDMap = Entries.Perks.Where(x => x.Mod == mod).ToDictionary(x => x.ModID, x => x.GameID),
+                CurseIDMap = Entries.Curses.Where(x => x.Mod == mod).ToDictionary(x => x.ModID, x => x.GameID),
+                EnemyIDMap = Entries.Enemies.Where(x => x.Mod == mod).ToDictionary(x => x.ModID, x => x.GameID)
             }).ToList()
         };
 
@@ -203,19 +203,19 @@ internal static class ModSaving
 
     private static void ApplyMetadataFile(MetadataFile file)
     {
-        ItemCodex.ItemTypes itemShuffleID = ItemEntry.Entries.End;
-        EnemyCodex.EnemyTypes enemyShuffleID = EnemyEntry.Entries.End;
-        QuestCodex.QuestID questShuffleID = QuestEntry.Entries.End;
-        RogueLikeMode.Perks perkShuffleID = PerkEntry.Entries.End;
-        RogueLikeMode.TreatsCurses curseShuffleID = CurseEntry.Entries.End;
+        ItemCodex.ItemTypes itemShuffleID = Entries.Items.End;
+        EnemyCodex.EnemyTypes enemyShuffleID = Entries.Enemies.End;
+        QuestCodex.QuestID questShuffleID = Entries.Quests.End;
+        RogueLikeMode.Perks perkShuffleID = Entries.Perks.End;
+        RogueLikeMode.TreatsCurses curseShuffleID = Entries.Curses.End;
 
         foreach (var mod in file.Mods.Where(mod => ModManager.Mods.FirstOrDefault(x => x.Name == mod.Name)?.IsBuiltin ?? true))
         {
-            UpdateIDs(ItemEntry.Entries, mod.ItemIDMap, ref itemShuffleID, UpdateItemIDs);
-            UpdateIDs(EnemyEntry.Entries, mod.EnemyIDMap, ref enemyShuffleID, UpdateEnemyIDs);
-            UpdateIDs(QuestEntry.Entries, mod.QuestIDMap, ref questShuffleID, UpdateQuestIDs);
-            UpdateIDs(PerkEntry.Entries, mod.PerkIDMap, ref perkShuffleID, UpdatePerkIDs);
-            UpdateIDs(CurseEntry.Entries, mod.CurseIDMap, ref curseShuffleID, UpdateCurseIDs);
+            UpdateIDs(Entries.Items, mod.ItemIDMap, ref itemShuffleID, UpdateItemIDs);
+            UpdateIDs(Entries.Enemies, mod.EnemyIDMap, ref enemyShuffleID, UpdateEnemyIDs);
+            UpdateIDs(Entries.Quests, mod.QuestIDMap, ref questShuffleID, UpdateQuestIDs);
+            UpdateIDs(Entries.Perks, mod.PerkIDMap, ref perkShuffleID, UpdatePerkIDs);
+            UpdateIDs(Entries.Curses, mod.CurseIDMap, ref curseShuffleID, UpdateCurseIDs);
         }
     }
 

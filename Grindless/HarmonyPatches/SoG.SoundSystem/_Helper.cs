@@ -10,7 +10,7 @@ static class _Helper
         if (!AudioEntry.GSAudioID.TryParse(audioID, out var id) || id.IsMusic)
             return null;
 
-        var entry = AudioEntry.Entries.Get((GrindlessID.AudioID)id.ModIndex);
+        var entry = Entries.Audio.Get((GrindlessID.AudioID)id.ModIndex);
 
         return entry?.EffectsSoundBank;
     }
@@ -20,7 +20,7 @@ static class _Helper
         if (!AudioEntry.GSAudioID.TryParse(GSID, out var audioID))
             return "";
 
-        var entry = AudioEntry.Entries.Get((GrindlessID.AudioID)audioID.ModIndex);
+        var entry = Entries.Audio.Get((GrindlessID.AudioID)audioID.ModIndex);
 
         return entry?.IDToCue[audioID];
     }
@@ -30,7 +30,7 @@ static class _Helper
         if (!AudioEntry.GSAudioID.TryParse(audioID, out var id) || !id.IsMusic)
             return null;
 
-        var entry = AudioEntry.Entries.Get((GrindlessID.AudioID)id.ModIndex);
+        var entry = Entries.Audio.Get((GrindlessID.AudioID)id.ModIndex);
 
         return entry?.MusicSoundBank;
     }
@@ -60,7 +60,7 @@ static class _Helper
 
         foreach (var mod in ModManager.Mods)
         {
-            var entry = AudioEntry.Entries.Get(mod, "");
+            var entry = Entries.Audio.Get(mod, "");
 
             if (entry != null && entry.MusicWaveBank == bank)
                 return true;

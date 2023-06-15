@@ -7,7 +7,7 @@ static class SoG_CardCodex
     [HarmonyPatch(nameof(CardCodex.GetIllustrationPath))]
     static bool GetIllustrationPath_Prefix(ref string __result, EnemyCodex.EnemyTypes enEnemy)
     {
-        __result = EnemyEntry.Entries.GetRequired(enEnemy).CardIllustrationPath;
+        __result = Entries.Enemies.GetRequired(enEnemy).CardIllustrationPath;
         return false;
     }
 }

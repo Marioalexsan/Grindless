@@ -33,6 +33,6 @@ static class _RogueLike_GetRandomPin
 
     static void InGetRandomPin(List<PinCodex.PinType> list)
     {
-        list.AddRange(PinEntry.Entries.Where(x => x.ConditionToDrop?.Invoke() ?? true).Select(x => x.GameID));
+        list.AddRange(Entries.Pins.Where(x => x.ConditionToDrop?.Invoke() ?? true).Select(x => x.GameID));
     }
 }

@@ -15,6 +15,6 @@ static class Crash
         }
 
         // Straight up rethrow errors to bubble exceptions up
-        throw AccessTools.Field(typeof(Game1), "exceptionFatalError").GetValue(Globals.Game) as Exception;
+        throw new Exception("Game crashed!", AccessTools.Field(typeof(Game1), "exceptionFatalError").GetValue(Globals.Game) as Exception);
     }
 }

@@ -189,7 +189,7 @@ internal class GrindlessMod : Mod
                         return;
                     }
 
-                    var entry = ResolveEntry(args[1], ItemEntry.Entries, fuzzy: true);
+                    var entry = ResolveEntry(args[1], Entries.Items, fuzzy: true);
 
                     if (entry == null)
                     {
@@ -216,7 +216,7 @@ internal class GrindlessMod : Mod
                         return;
                     }
 
-                    var entry = ResolveEntry(args[1], PinEntry.Entries, fuzzy: true);
+                    var entry = ResolveEntry(args[1], Entries.Pins, fuzzy: true);
 
                     if (entry == null)
                     {

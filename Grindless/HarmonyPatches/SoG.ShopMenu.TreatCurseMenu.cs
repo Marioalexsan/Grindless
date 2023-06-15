@@ -11,7 +11,7 @@ static class SoG_ShopMenu_TreatCurseMenu
     {
         __instance.lenTreatCursesAvailable.Clear();
         __instance.lenTreatCursesAvailable.AddRange(
-            CurseEntry.Entries.Where(x => !x.IsTreat).Select(x => x.GameID)
+            Entries.Curses.Where(x => !x.IsTreat).Select(x => x.GameID)
             );
         return false;
     }
@@ -22,7 +22,7 @@ static class SoG_ShopMenu_TreatCurseMenu
     {
         __instance.lenTreatCursesAvailable.Clear();
         __instance.lenTreatCursesAvailable.AddRange(
-            CurseEntry.Entries.Where(x => x.IsTreat).Select(x => x.GameID)
+            Entries.Curses.Where(x => x.IsTreat).Select(x => x.GameID)
             );
         return false;
     }

@@ -23,7 +23,7 @@ static class _Animations_GetAnimationSet
 
             if (shield != null)
             {
-                entry = ItemEntry.Entries.Get(shield.enItemType);
+                entry = Entries.Items.Get(shield.enItemType);
             }
 
             if (entry == null)

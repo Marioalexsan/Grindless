@@ -9,7 +9,7 @@ static class SoG_FacegearCodex
     [HarmonyPatch(nameof(FacegearCodex.GetHatInfo))]
     static bool GetHatInfo_Prefix(ref FacegearInfo __result, ItemCodex.ItemTypes enType)
     {
-        var entry = ItemEntry.Entries.Get(enType);
+        var entry = Entries.Items.Get(enType);
 
         __result = entry?.vanillaEquip as FacegearInfo;
 

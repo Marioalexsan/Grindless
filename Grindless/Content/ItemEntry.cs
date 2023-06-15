@@ -12,10 +12,10 @@ namespace Grindless;
 /// For example, setting weapon data isn't needed for facegear. <para/>
 /// Most of the methods in this class can only be used while a mod is loading, that is, inside <see cref="Mod.Load"/>.
 /// </remarks>
+[ModEntry(700000)]
 public class ItemEntry : Entry<ItemCodex.ItemTypes>
 {
-    internal static EntryManager<ItemCodex.ItemTypes, ItemEntry> Entries { get; }
-        = new EntryManager<ItemCodex.ItemTypes, ItemEntry>(700000);
+    internal ItemEntry() { }
 
     /// <summary>
     /// Provides methods to configure a hat's visual set.
@@ -136,8 +136,6 @@ public class ItemEntry : Entry<ItemCodex.ItemTypes>
     internal ItemDescription vanillaItem = new();
 
     internal EquipmentInfo vanillaEquip;
-
-    #region Public Interface
 
     /// <summary>
     /// Gets or sets the display name of the item.
@@ -394,17 +392,6 @@ public class ItemEntry : Entry<ItemCodex.ItemTypes>
         FacegearOffsets[1] = right;
         FacegearOffsets[2] = down;
         FacegearOffsets[3] = left;
-    }
-
-    #endregion
-
-    internal ItemEntry() { }
-
-    protected ItemEntry(Mod owner, ItemCodex.ItemTypes gameID, string modID)
-    {
-        Mod = owner;
-        GameID = gameID;
-        ModID = modID;
     }
 
     protected override void Initialize()

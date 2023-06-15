@@ -234,33 +234,33 @@ public abstract class Mod
 
     #region Game Object Creation Methods
 
-    public AudioEntry CreateAudio() => AudioEntry.Entries.Create(this, "");
+    public AudioEntry CreateAudio() => Entries.Audio.Create(this, "");
 
-    public CommandEntry CreateCommands() => CommandEntry.Entries.Create(this, "");
+    public CommandEntry CreateCommands() => Entries.Commands.Create(this, "");
 
-    public CurseEntry CreateCurse(string modID) => CurseEntry.Entries.Create(this, modID);
+    public CurseEntry CreateCurse(string modID) => Entries.Curses.Create(this, modID);
 
-    public EnemyEntry CreateEnemy(string modID) => EnemyEntry.Entries.Create(this, modID);
+    public EnemyEntry CreateEnemy(string modID) => Entries.Enemies.Create(this, modID);
 
-    public EquipmentEffectEntry CreateEquipmentEffect(string modID) => EquipmentEffectEntry.Entries.Create(this, modID);
+    public EquipmentEffectEntry CreateEquipmentEffect(string modID) => Entries.EquipmentEffects.Create(this, modID);
 
-    public ItemEntry CreateItem(string modID) => ItemEntry.Entries.Create(this, modID);
+    public ItemEntry CreateItem(string modID) => Entries.Items.Create(this, modID);
 
-    public LevelEntry CreateLevel(string modID) => LevelEntry.Entries.Create(this, modID);
+    public LevelEntry CreateLevel(string modID) => Entries.Levels.Create(this, modID);
 
-    public NetworkEntry CreateNetwork() => NetworkEntry.Entries.Create(this, "");
+    public NetworkEntry CreateNetwork() => Entries.Network.Create(this, "");
 
-    public PerkEntry CreatePerk(string modID) => PerkEntry.Entries.Create(this, modID);
+    public PerkEntry CreatePerk(string modID) => Entries.Perks.Create(this, modID);
 
-    public PinEntry CreatePin(string modID) => PinEntry.Entries.Create(this, modID);
+    public PinEntry CreatePin(string modID) => Entries.Pins.Create(this, modID);
 
-    public QuestEntry CreateQuest(string modID) => QuestEntry.Entries.Create(this, modID);
+    public QuestEntry CreateQuest(string modID) => Entries.Quests.Create(this, modID);
 
-    public SpellEntry CreateSpell(string modID) => SpellEntry.Entries.Create(this, modID);
+    public SpellEntry CreateSpell(string modID) => Entries.Spells.Create(this, modID);
 
-    public StatusEffectEntry CreateStatusEffect(string modID) => StatusEffectEntry.Entries.Create(this, modID);
+    public StatusEffectEntry CreateStatusEffect(string modID) => Entries.StatusEffects.Create(this, modID);
 
-    public WorldRegionEntry CreateWorldRegion(string modID) => WorldRegionEntry.Entries.Create(this, modID);
+    public WorldRegionEntry CreateWorldRegion(string modID) => Entries.WorldRegions.Create(this, modID);
 
     #endregion
 
@@ -277,33 +277,33 @@ public abstract class Mod
         return ModManager.Mods.FirstOrDefault(x => x.Name == nameID);
     }
 
-    public AudioEntry GetAudio() => AudioEntry.Entries.Get(this, "");
+    public AudioEntry GetAudio() => Entries.Audio.Get(this, "");
 
-    public CommandEntry GetCommands() => CommandEntry.Entries.Get(this, "");
+    public CommandEntry GetCommands() => Entries.Commands.Get(this, "");
 
-    public CurseEntry GetCurse(string modID) => CurseEntry.Entries.Get(this, modID);
+    public CurseEntry GetCurse(string modID) => Entries.Curses.Get(this, modID);
 
-    public EnemyEntry GetEnemy(string modID) => EnemyEntry.Entries.Get(this, modID);
+    public EnemyEntry GetEnemy(string modID) => Entries.Enemies.Get(this, modID);
 
-    public EquipmentEffectEntry GetEquipmentEffect(string modID) => EquipmentEffectEntry.Entries.Get(this, modID);
+    public EquipmentEffectEntry GetEquipmentEffect(string modID) => Entries.EquipmentEffects.Get(this, modID);
 
-    public ItemEntry GetItem(string modID) => ItemEntry.Entries.Get(this, modID);
+    public ItemEntry GetItem(string modID) => Entries.Items.Get(this, modID);
 
-    public LevelEntry GetLevel(string modID) => LevelEntry.Entries.Get(this, modID);
+    public LevelEntry GetLevel(string modID) => Entries.Levels.Get(this, modID);
 
-    public NetworkEntry GetNetwork() => NetworkEntry.Entries.Get(this, "");
+    public NetworkEntry GetNetwork() => Entries.Network.Get(this, "");
 
-    public PerkEntry GetPerk(string modID) => PerkEntry.Entries.Get(this, modID);
+    public PerkEntry GetPerk(string modID) => Entries.Perks.Get(this, modID);
 
-    public PinEntry GetPin(string modID) => PinEntry.Entries.Get(this, modID);
+    public PinEntry GetPin(string modID) => Entries.Pins.Get(this, modID);
 
-    public QuestEntry GetQuest(string modID) => QuestEntry.Entries.Get(this, modID);
+    public QuestEntry GetQuest(string modID) => Entries.Quests.Get(this, modID);
 
-    public SpellEntry GetSpell(string modID) => SpellEntry.Entries.Get(this, modID);
+    public SpellEntry GetSpell(string modID) => Entries.Spells.Get(this, modID);
 
-    public StatusEffectEntry GetStatusEffect(string modID) => StatusEffectEntry.Entries.Get(this, modID);
+    public StatusEffectEntry GetStatusEffect(string modID) => Entries.StatusEffects.Get(this, modID);
 
-    public WorldRegionEntry GetWorldRegion(string modID) => WorldRegionEntry.Entries.Get(this, modID);
+    public WorldRegionEntry GetWorldRegion(string modID) => Entries.WorldRegions.Get(this, modID);
 
     public void AddCraftingRecipe(ItemCodex.ItemTypes result, Dictionary<ItemCodex.ItemTypes, ushort> ingredients)
     {

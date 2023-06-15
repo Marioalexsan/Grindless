@@ -5,7 +5,7 @@ static class _LevelLoading_DoStuff
 {
     static bool Prefix(Game1 __instance, Level.ZoneEnum enLevel, bool bStaticOnly)
     {
-        var entry = LevelEntry.Entries.Get(enLevel);
+        var entry = Entries.Levels.Get(enLevel);
 
         if (entry.Loader == null && entry.IsVanilla)
             OriginalMethods._LevelLoading_DoStuff(__instance, enLevel, bStaticOnly);

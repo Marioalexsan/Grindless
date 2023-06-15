@@ -10,7 +10,7 @@ static class SoG_LevelBlueprint
     [HarmonyPatch(nameof(LevelBlueprint.GetBlueprint))]
     static bool GetBlueprint_Prefix(ref LevelBlueprint __result, Level.ZoneEnum enZoneToGet)
     {
-        var entry = LevelEntry.Entries.GetRequired(enZoneToGet);
+        var entry = Entries.Levels.GetRequired(enZoneToGet);
 
         if (entry.IsVanilla && entry.Builder == null)
             return true;  // Go with vanilla method

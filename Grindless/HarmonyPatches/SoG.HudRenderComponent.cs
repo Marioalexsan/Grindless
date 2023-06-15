@@ -9,7 +9,7 @@ static class SoG_HudRenderComponent
     [HarmonyPatch(nameof(HudRenderComponent.GetBuffTexture))]
     static bool GetBuffTexture_Prefix(ref Texture2D __result, BaseStats.StatusEffectSource en)
     {
-        var entry = StatusEffectEntry.Entries.GetRequired(en);
+        var entry = Entries.StatusEffects.GetRequired(en);
 
         if (entry.TexturePath == null && entry.IsVanilla)
             return true;

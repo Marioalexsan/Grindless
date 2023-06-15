@@ -14,7 +14,7 @@ static class WeaponAssets_WeaponContentManager
     [HarmonyPatch("LoadBatch", typeof(Dictionary<ushort, string>))] // Protected Method
     static bool LoadBatch_Prefix(ref Dictionary<ushort, string> dis, WeaponContentManager __instance)
     {
-        var entry = ItemEntry.Entries.Get(__instance.enType);
+        var entry = Entries.Items.Get(__instance.enType);
 
         ErrorHelper.Assert(entry != null, ErrorHelper.UnknownEntry);
 

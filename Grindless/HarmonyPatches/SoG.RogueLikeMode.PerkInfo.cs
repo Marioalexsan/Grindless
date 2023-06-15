@@ -11,7 +11,7 @@ static class SoG_RogueLikeMode_PerkInfo
     {
         PerkInfo.lxAllPerks.Clear();
         PerkInfo.lxAllPerks.AddRange(
-            PerkEntry.Entries
+            Entries.Perks
                 .Where(x => x.UnlockCondition?.Invoke() ?? true)
                 .Select(x => new PerkInfo(x.GameID, x.EssenceCost, x.TextEntry))
             );

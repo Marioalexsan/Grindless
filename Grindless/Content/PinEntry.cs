@@ -6,10 +6,10 @@
 /// <remarks> 
 /// Most of the methods in this class can only be used while a mod is loading, that is, inside <see cref="Mod.Load"/>.
 /// </remarks>
+[ModEntry(35000)]
 public class PinEntry : Entry<PinCodex.PinType>
 {
-    internal static EntryManager<PinCodex.PinType, PinEntry> Entries { get; }
-        = new EntryManager<PinCodex.PinType, PinEntry>(35000);
+    internal PinEntry() { }
 
     /// <summary>
     /// Enumerates the available pin symbols.
@@ -109,11 +109,6 @@ public class PinEntry : Entry<PinCodex.PinType>
     /// This is set to true by default.
     /// </summary>
     public bool CreateCollectionEntry { get; set; } = true;
-
-    internal PinEntry() { }
-
-    internal PinEntry(Mod mod, string modID, PinCodex.PinType gameID)
-        : base(mod, modID, gameID) { }
 
     protected override void Initialize()
     {

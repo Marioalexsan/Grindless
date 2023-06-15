@@ -7,7 +7,7 @@ static class _RogueLike_GetPerkTexture
 {
     static bool Prefix(RogueLikeMode.Perks enPerk, ref Texture2D __result)
     {
-        var entry = PerkEntry.Entries.Get(enPerk);
+        var entry = Entries.Perks.Get(enPerk);
 
         if (entry == null)
         {

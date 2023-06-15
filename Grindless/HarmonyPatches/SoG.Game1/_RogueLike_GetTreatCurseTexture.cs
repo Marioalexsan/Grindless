@@ -7,7 +7,7 @@ static class _RogueLike_GetTreatCurseTexture
 {
     static bool Prefix(RogueLikeMode.TreatsCurses enTreat, ref Texture2D __result)
     {
-        var entry = CurseEntry.Entries.Get(enTreat);
+        var entry = Entries.Curses.Get(enTreat);
 
         if (entry == null)
         {

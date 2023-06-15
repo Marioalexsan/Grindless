@@ -44,7 +44,7 @@ static class _RogueLike_ActivatePerks
     // If this method returns true, the vanilla switch case is skipped
     static bool InActivatePerk(PlayerView view, RogueLikeMode.Perks perk)
     {
-        var entry = PerkEntry.Entries.Get(perk);
+        var entry = Entries.Perks.Get(perk);
 
         if (entry == null)
             return false;

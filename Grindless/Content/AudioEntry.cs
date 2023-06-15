@@ -41,8 +41,11 @@ namespace Grindless;
 /// <remarks> 
 /// Most of the methods in this class can only be used while a mod is loading, that is, inside <see cref="Mod.Load"/>.
 /// </remarks>
+[ModEntry(0)]
 public class AudioEntry : Entry<GrindlessID.AudioID>
 {
+    internal AudioEntry() { }
+
     public readonly struct GSAudioID
     {
         public GSAudioID(int modIndex, int cueID, bool isMusic)
@@ -80,9 +83,6 @@ public class AudioEntry : Entry<GrindlessID.AudioID>
 
         public override string ToString() => $"GS_{ModIndex}_{(IsMusic ? 'M' : 'S')}{AudioIndex}";
     }
-
-    internal static EntryManager<GrindlessID.AudioID, AudioEntry> Entries { get; }
-        = new EntryManager<GrindlessID.AudioID, AudioEntry>(0);
 
     internal static Dictionary<string, string> VanillaMusicRedirects { get; } = new Dictionary<string, string>();
 
@@ -197,7 +197,7 @@ public class AudioEntry : Entry<GrindlessID.AudioID>
             return;
         }
 
-        var entry = Entries.Get((GrindlessID.AudioID)id.ModIndex);
+        var entry = Entries.Audio.Get((GrindlessID.AudioID)id.ModIndex);
 
         if (entry == null || !entry.IDToCue.TryGetValue(id, out string cueName))
         {
@@ -208,8 +208,6 @@ public class AudioEntry : Entry<GrindlessID.AudioID>
         Program.Logger.LogWarning("SetColors music redirect {vanillaName} -> {modID} ({effectName})", vanillaName, musicName, cueName);
         VanillaMusicRedirects[vanillaName] = musicName;
     }
-
-    internal AudioEntry() { }
 
     protected override void Initialize()
     {

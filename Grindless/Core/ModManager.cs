@@ -1,6 +1,7 @@
 ﻿using Grindless.Core;
 using Microsoft.Extensions.Logging;
 using Quests;
+using System.Reflection;
 using System.Text.Json;
 
 namespace Grindless;
@@ -14,7 +15,7 @@ internal static class ModManager
 
     internal static List<Mod> Mods { get; } = new List<Mod>();
 
-    private static Harmony _modPatcher = new("Grindless.ModPatches");
+    private static readonly Harmony _modPatcher = new("Grindless.ModPatches");
 
     internal static ModDatabaseManifest ModDatabase { get; private set; }
 
@@ -48,20 +49,10 @@ internal static class ModManager
 
         Program.Logger.LogInformation("Clearing mod entries...");
 
-        AudioEntry.Entries.Reset();
-        CommandEntry.Entries.Reset();
-        CurseEntry.Entries.Reset();
-        EnemyEntry.Entries.Reset();
-        EquipmentEffectEntry.Entries.Reset();
-        ItemEntry.Entries.Reset();
-        LevelEntry.Entries.Reset();
-        NetworkEntry.Entries.Reset();
-        PerkEntry.Entries.Reset();
-        PinEntry.Entries.Reset();
-        QuestEntry.Entries.Reset();
-        SpellEntry.Entries.Reset();
-        StatusEffectEntry.Entries.Reset();
-        WorldRegionEntry.Entries.Reset();
+        foreach (var manager in Entries.Managers())
+        {
+            manager.Reset();
+        }
 
         Mods.Clear();
 
@@ -145,20 +136,10 @@ internal static class ModManager
 
             CurrentlyLoadingMod = null;
 
-            AudioEntry.Entries.InitializeEntries(null);
-            CommandEntry.Entries.InitializeEntries(null);
-            CurseEntry.Entries.InitializeEntries(null);
-            EnemyEntry.Entries.InitializeEntries(null);
-            EquipmentEffectEntry.Entries.InitializeEntries(null);
-            ItemEntry.Entries.InitializeEntries(null);
-            LevelEntry.Entries.InitializeEntries(null);
-            NetworkEntry.Entries.InitializeEntries(null);
-            PerkEntry.Entries.InitializeEntries(null);
-            PinEntry.Entries.InitializeEntries(null);
-            QuestEntry.Entries.InitializeEntries(null);
-            SpellEntry.Entries.InitializeEntries(null);
-            StatusEffectEntry.Entries.InitializeEntries(null);
-            WorldRegionEntry.Entries.InitializeEntries(null);
+            foreach (var manager in Entries.Managers())
+            {
+                manager.InitializeEntries(null);
+            }
 
             Mods.Add(mod);
         }
@@ -176,31 +157,5 @@ internal static class ModManager
         ModDatabase = ModDatabaseManifest.FetchManifest();
 
         Program.Logger.LogInformation("Mod database: {}", JsonSerializer.Serialize(ModDatabase));
-    }
-
-    internal static EntryManager<IDType, EntryType> GetEntryManager<IDType, EntryType>()
-        where IDType : struct, Enum
-        where EntryType : Entry<IDType>
-    {
-        // Mind the extra parentesis for tuple types
-        Dictionary<Type, object> objects = new()
-        {
-            [typeof((GrindlessID.AudioID, AudioEntry))] = AudioEntry.Entries,
-            [typeof((GrindlessID.NetworkID, CommandEntry))] = CommandEntry.Entries,
-            [typeof((RogueLikeMode.TreatsCurses, CurseEntry))] = CurseEntry.Entries,
-            [typeof((EnemyCodex.EnemyTypes, EnemyEntry))] = EnemyEntry.Entries,
-            [typeof((EquipmentInfo.SpecialEffect, EquipmentEffectEntry))] = EquipmentEffectEntry.Entries,
-            [typeof((ItemCodex.ItemTypes, ItemEntry))] = ItemEntry.Entries,
-            [typeof((Level.ZoneEnum, LevelEntry))] = LevelEntry.Entries,
-            [typeof((GrindlessID.NetworkID, NetworkEntry))] = NetworkEntry.Entries,
-            [typeof((RogueLikeMode.Perks, PerkEntry))] = PerkEntry.Entries,
-            [typeof((PinCodex.PinType, PinEntry))] = PinEntry.Entries,
-            [typeof((QuestCodex.QuestID, QuestEntry))] = QuestEntry.Entries,
-            [typeof((SpellCodex.SpellTypes, SpellEntry))] = SpellEntry.Entries,
-            [typeof((BaseStats.StatusEffectSource, StatusEffectEntry))] = StatusEffectEntry.Entries,
-            [typeof((Level.WorldRegion, WorldRegionEntry))] = WorldRegionEntry.Entries
-        };
-
-        return objects[typeof((IDType, EntryType))] as EntryManager<IDType, EntryType>;
     }
 }

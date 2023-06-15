@@ -83,7 +83,7 @@ static class ChangeSongRegionIfNecessary
                 return false;
             }
 
-            entry = AudioEntry.Entries.Get((GrindlessID.AudioID)audioID.ModIndex);
+            entry = Entries.Audio.Get((GrindlessID.AudioID)audioID.ModIndex);
 
             if (!entry.IDToCue.ContainsKey(audioID))
             {

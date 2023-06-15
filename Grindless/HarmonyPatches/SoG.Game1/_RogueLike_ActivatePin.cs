@@ -5,7 +5,7 @@ static class _RogueLike_ActivatePin
 {
     static bool Prefix(PlayerView xView, PinCodex.PinType enEffect, bool bSend)
     {
-        var entry = PinEntry.Entries.GetRequired(enEffect);
+        var entry = Entries.Pins.GetRequired(enEffect);
 
         EditedMethods.SendPinActivation(Globals.Game, xView, enEffect, bSend);
 

@@ -9,10 +9,10 @@ namespace Grindless;
 /// <remarks> 
 /// Most of the methods in this class can only be used while a mod is loading, that is, inside <see cref="Mod.Load"/>.
 /// </remarks>
+[ModEntry(400000)]
 public class EnemyEntry : Entry<EnemyCodex.EnemyTypes>
 {
-    internal static EntryManager<EnemyCodex.EnemyTypes, EnemyEntry> Entries { get; }
-        = new EntryManager<EnemyCodex.EnemyTypes, EnemyEntry>(400000);
+    internal EnemyEntry() { }
 
     /// <summary>
     /// Holds the item and drop chance pair inside enemy loot tables.
@@ -198,8 +198,6 @@ public class EnemyEntry : Entry<EnemyCodex.EnemyTypes>
         get => Vanilla.enCategory;
         set => Vanilla.enCategory = value;
     }
-
-    internal EnemyEntry() { }
 
     protected override void Initialize()
     {

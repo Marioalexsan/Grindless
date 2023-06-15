@@ -7,7 +7,7 @@ static class _Enemy_AdjustForDifficulty
     // Nor does it force boss enemies to ignore pets
     static bool Prefix(Enemy xEn)
     {
-        var entry = EnemyEntry.Entries.GetRequired(xEn.enType);
+        var entry = Entries.Enemies.GetRequired(xEn.enType);
 
         if (entry.DifficultyScaler == null && entry.IsVanilla)
             return true;  // No replacement found, run vanilla code

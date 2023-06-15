@@ -53,7 +53,7 @@ static class _Chat_ParseCommand
             return true;
         }
 
-        var entry = CommandEntry.Entries.Get(mod, "");
+        var entry = Entries.Commands.Get(mod, "");
 
         CommandParser parser = null;
 

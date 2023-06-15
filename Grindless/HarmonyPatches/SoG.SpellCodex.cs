@@ -12,7 +12,7 @@ static class SoG_SpellCodex
     [HarmonyPatch(nameof(SpellCodex.GetSpellInstance), typeof(SpellCodex.SpellTypes), typeof(int), typeof(Level.WorldRegion))]
     static bool GetSpellInstance_Prefix(ref ISpellInstance __result, SpellCodex.SpellTypes enType, int iPowerLevel, Level.WorldRegion enOverrideRegion)
     {
-        var entry = SpellEntry.Entries.GetRequired(enType);
+        var entry = Entries.Spells.GetRequired(enType);
 
         if (entry.Builder == null && entry.IsVanilla)
             return true;  // Get from vanilla
@@ -38,7 +38,7 @@ static class SoG_SpellCodex
     [HarmonyPatch(nameof(SpellCodex.IsMagicSkill))]
     static bool IsMagicSkill_Prefix(SpellCodex.SpellTypes enType, ref bool __result)
     {
-        __result = SpellEntry.Entries.GetRequired(enType).IsMagicSkill;
+        __result = Entries.Spells.GetRequired(enType).IsMagicSkill;
         return false;
     }
 
@@ -46,7 +46,7 @@ static class SoG_SpellCodex
     [HarmonyPatch(nameof(SpellCodex.IsMeleeSkill))]
     static bool IsMeleeSkill_Prefix(SpellCodex.SpellTypes enType, ref bool __result)
     {
-        __result = SpellEntry.Entries.GetRequired(enType).IsMeleeSkill;
+        __result = Entries.Spells.GetRequired(enType).IsMeleeSkill;
         return false;
     }
 
@@ -54,7 +54,7 @@ static class SoG_SpellCodex
     [HarmonyPatch(nameof(SpellCodex.IsUtilitySkill))]
     static bool IsUtilitySkill_Prefix(SpellCodex.SpellTypes enType, ref bool __result)
     {
-        __result = SpellEntry.Entries.GetRequired(enType).IsUtilitySkill;
+        __result = Entries.Spells.GetRequired(enType).IsUtilitySkill;
         return false;
     }
 }

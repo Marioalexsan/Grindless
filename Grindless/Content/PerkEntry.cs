@@ -6,10 +6,10 @@
 /// <remarks> 
 /// Most of the methods in this class can only be used while a mod is loading, that is, inside <see cref="Mod.Load"/>.
 /// </remarks>
+[ModEntry(3500)]
 public class PerkEntry : Entry<RogueLikeMode.Perks>
 {
-    internal static EntryManager<RogueLikeMode.Perks, PerkEntry> Entries { get; }
-        = new EntryManager<RogueLikeMode.Perks, PerkEntry>(3500);
+    internal PerkEntry() { }
 
     internal string TextEntry { get; set; }
 
@@ -43,11 +43,6 @@ public class PerkEntry : Entry<RogueLikeMode.Perks>
     /// If no condition is provided, the perk is available by default.
     /// </summary>
     public Func<bool> UnlockCondition { get; set; }
-
-    internal PerkEntry() { }
-
-    internal PerkEntry(Mod mod, string modID, RogueLikeMode.Perks gameID)
-        : base(mod, modID, gameID) { }
 
     protected override void Initialize()
     {
