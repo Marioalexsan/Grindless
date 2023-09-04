@@ -34,10 +34,16 @@ internal static class JSLibrary
             console.log = (...args) => {
                 let message = '';
                 for (const arg of args) {
-                    if (typeof arg !== 'string')
-                        message += JSON.stringify(arg) + ' ';
-                    else
+                    if (typeof arg === 'string')
                         message += arg + ' ';
+                    else if (typeof arg === 'function')
+                        message += '<function> '
+                    else if (typeof arg === 'symbol')
+                        message += '<symbol> '
+                    else if (typeof arg === 'undefined')
+                        message += '<undefined> '
+                    else 
+                        message += JSON.stringify(arg) + ' ';
                 }
                 __writeLine(message);
             };

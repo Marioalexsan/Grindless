@@ -37,15 +37,9 @@ internal static class ModLoader
                 return true;
             }
 
-            bool validVersion = Version.TryParse(dep.ModVersion, out Version parsed);
-            bool higherVersion = validVersion && mod.Version > parsed;
-            bool equalVersion = validVersion && mod.Version == parsed;
-
-            bool dependencyOK =
-                validVersion &&
-                (equalVersion || dep.AllowHigherVersions && higherVersion);
-
-            return dependencyOK;
+            return 
+                Semver.SemVersionRange.TryParseNpm(dep.ModVersion, out var range) 
+                && range.Contains(Semver.SemVersion.FromVersion(mod.Version));
         }
 
         var dependencyGraph = new Dictionary<Mod, List<Mod>>();
@@ -53,7 +47,9 @@ internal static class ModLoader
 
         foreach (var mod in mods)
         {
-            dependencies[mod] = mod.GetType().GetCustomAttributes<ModDependencyAttribute>().ToList();
+            dependencies[mod] = mod is JavaScriptMod jsMod
+                ? jsMod.ListedDependencies.Select(x => new ModDependencyAttribute(x.Key, x.Value)).ToList()
+                : mod.GetType().GetCustomAttributes<ModDependencyAttribute>().ToList();
             dependencyGraph[mod] = new List<Mod>();
         }
 
@@ -98,7 +94,7 @@ internal static class ModLoader
             foreach (var dep in pair.Value)
             {
                 string id = $"    {dep.NameID}";
-                string version = string.IsNullOrEmpty(dep.ModVersion) ? "" : ($", Version {dep.ModVersion}" + (dep.AllowHigherVersions ? " or higher" : ""));
+                string version = string.IsNullOrEmpty(dep.ModVersion) ? "" : ($", Version {dep.ModVersion}");
 
                 Program.Logger.LogError("{id}{version}", id, version);
             }

@@ -65,7 +65,12 @@ internal class JavaScriptMod : Mod, IDisposable
 
         _jsThis = JsValue.FromObject(_engine, this);
         Logger = Program.LogFactory.CreateLogger(Name);
+
+        ListedDependencies = ((IDictionary<string, object>)GetJSProperty("dependencies").ToObject())
+            .ToDictionary(x => x.Key, x => (string)x.Value);
     }
+
+    internal Dictionary<string, string> ListedDependencies { get; } = new();
 
     private void WrapCall(Action action, [CallerMemberName] string methodName = "")
     {
@@ -91,7 +96,7 @@ internal class JavaScriptMod : Mod, IDisposable
         if (method == null || method.IsUndefined() || method.IsNull())
         {
             _propertyCache[name] = null;
-            Program.Logger.LogInformation($"No method {name} found for mod.");
+            Program.Logger.LogInformation($"No property {name} found for mod.");
             return null;
         }
 
