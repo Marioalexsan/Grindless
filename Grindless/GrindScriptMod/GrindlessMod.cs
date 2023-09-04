@@ -16,7 +16,7 @@ internal class GrindlessMod : Mod
     public override string Name => ModName;
     public override Version Version => Globals.GrindlessVersion;
 
-    public override void PostLevelLoad(Level.ZoneEnum level, Level.WorldRegion region, bool staticOnly)
+    public override void PostLevelLoad(PostLevelLoadData data)
     {
         if (_colliderRCActive)
         {

@@ -5,8 +5,19 @@ static class _NPC_TakeDamage
 {
     static void Prefix(NPC xEnemy, ref int iDamage, ref byte byType)
     {
-        foreach (Mod mod in ModManager.Mods)
-            mod.OnNPCDamaged(xEnemy, ref iDamage, ref byType);
-    }
+        Mod.OnEntityDamageData data = new()
+        {
+            Entity = xEnemy,
+            Damage = iDamage,
+            Type = byType
+        };
 
+        foreach (Mod mod in ModManager.Mods)
+        {
+            mod.OnEntityDamage(data);
+        }
+
+        iDamage = data.Damage;
+        byType = data.Type;
+    }
 }

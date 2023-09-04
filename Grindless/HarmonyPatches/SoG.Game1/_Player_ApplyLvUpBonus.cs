@@ -5,7 +5,7 @@ static class _Player_ApplyLvUpBonus
 {
     static void Postfix(PlayerView xView)
     {
-        foreach (Mod mod in ModManager.Mods)
-            mod.PostPlayerLevelUp(xView);
+        //foreach (Mod mod in ModManager.Mods)
+        //    mod.PostPlayerLevelUp(xView);
     }
 }

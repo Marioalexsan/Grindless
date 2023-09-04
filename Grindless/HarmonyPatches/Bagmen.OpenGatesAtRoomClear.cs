@@ -9,7 +9,7 @@ static class Bagmen_OpenGatesAtRoomClear
     [HarmonyPatch(nameof(OpenGatesAtRoomClear.OpenBlockades))]
     static void OpenBlockades_Postfix()
     {
-        foreach (Mod mod in ModManager.Mods)
-            mod.PostArcadeRoomComplete();
+        //foreach (Mod mod in ModManager.Mods)
+        //    mod.PostArcadeRoomComplete();
     }
 }

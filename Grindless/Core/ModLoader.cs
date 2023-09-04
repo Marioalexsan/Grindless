@@ -3,6 +3,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
 using System.Configuration.Assemblies;
 using System.IO.Compression;
+using static SoG.HitEffectMap;
+using SoG;
 
 namespace Grindless;
 
@@ -116,6 +118,7 @@ internal static class ModLoader
 
         var candidates = Directory.GetFiles(modFolder)
             .Where(x => x.EndsWith(".dll") || x.EndsWith(".zip"))
+            .Concat(Directory.GetDirectories(modFolder).Where(x => x.EndsWith("_dev")))
             .ToList();
 
         var selected = candidates
@@ -148,6 +151,9 @@ internal static class ModLoader
             if (path.EndsWith(".zip"))
                 return LoadJavaScriptArchive(path);
 
+            if (Directory.Exists(path))
+                return LoadJavaScriptFolder(path);
+
             return null;
         }).Where(mod => mod != null));
 
@@ -167,6 +173,64 @@ internal static class ModLoader
             .Replace(Directory.GetCurrentDirectory(), "(SoG)");
     }
 
+    private static Mod LoadJavaScriptFolder(string folderPath)
+    {
+        string shortPath = ShortenModPaths(folderPath);
+
+        Program.Logger.LogInformation("Loading JavaScript mod from {path}.", shortPath);
+
+        try
+        {
+            Queue<(string, string)> paths = new();
+
+            paths.Enqueue((folderPath, ""));
+
+            Dictionary<string, string> sources = new();
+
+            var split = new[]
+            {
+                '/'
+            };
+
+            while (paths.Count > 0)
+            {
+                var (subFolderPath, root) = paths.Dequeue();
+
+                foreach (var path in Directory.GetDirectories(subFolderPath))
+                    paths.Enqueue((Path.Combine(subFolderPath, Path.GetDirectoryName(path)), root == "" ? Path.GetDirectoryName(path) : Path.Combine(root, Path.GetDirectoryName(path))));
+
+                foreach (var file in Directory.GetFiles(subFolderPath))
+                {
+                    using StreamReader reader = new StreamReader(File.OpenRead(file));
+                    sources[Path.Combine(root, Path.GetFileName(file))] = reader.ReadToEnd();
+                }
+            }
+
+            Program.Logger.LogInformation("Loaded modules: ");
+
+            foreach (var item in sources)
+            {
+                Program.Logger.LogInformation(item.Key);
+            }
+
+            if (!sources.Any(x => x.Key == "index.js"))
+            {
+                Program.Logger.LogError("Failed to load development mod. No index.js entry point found.", shortPath);
+                return null;
+            }
+
+            var mod = new JavaScriptMod(sources);
+
+            return mod;
+        }
+        catch (Exception e)
+        {
+            Program.Logger.LogError("Failed to load mod {modPath}. An unknown exception occurred: {e}", shortPath, ShortenModPaths(e.ToString()));
+        }
+
+        return null;
+    }
+
     private static Mod LoadJavaScriptArchive(string zipPath)
     {
         string shortPath = ShortenModPaths(zipPath);
@@ -177,7 +241,15 @@ internal static class ModLoader
         {
             using ZipArchive archive = ZipFile.OpenRead(zipPath);
 
-            if (!archive.Entries.Any(x => x.Name == "index.js"))
+            var split = new[]
+            {
+                '/'
+            };
+
+            var pathParts = archive.Entries.First().FullName.Split(split, 2);
+            var isStacked = pathParts.Length == 2 && pathParts[0] == Path.GetFileNameWithoutExtension(zipPath);
+
+            if (!archive.Entries.Any(x => (isStacked ? x.FullName.Split(split, 2)[1] : x.FullName) == "index.js"))
             {
                 Program.Logger.LogError("Failed to load mod. No index.js entry point found.", shortPath);
                 return null;
@@ -185,15 +257,10 @@ internal static class ModLoader
 
             Dictionary<string, string> sources = new();
 
-            var split = new[]
-            {
-                '/'
-            };
-
             foreach (var entry in archive.Entries.Where(x => x.Name.EndsWith(".js")))
             {
                 using StreamReader reader = new StreamReader(entry.Open());
-                sources[entry.FullName.Split(split, 2)[1]] = reader.ReadToEnd();
+                sources[isStacked ? entry.FullName.Split(split, 2)[1] : entry.FullName] = reader.ReadToEnd();
             }
 
             var mod = new JavaScriptMod(sources);
@@ -227,7 +294,7 @@ internal static class ModLoader
                 Program.Logger.LogError("Mod {shortPath} with NameID {mod.NameID} conflicts with a previously loaded mod.", shortPath, mod.Name);
                 return null;
             }
-            
+
 
             return mod;
         }

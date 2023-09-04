@@ -5,7 +5,19 @@ static class _Enemy_TakeDamage
 {
     static void Prefix(Enemy xEnemy, ref int iDamage, ref byte byType)
     {
+        Mod.OnEntityDamageData data = new()
+        {
+            Entity = xEnemy,
+            Damage = iDamage,
+            Type = byType
+        };
+
         foreach (Mod mod in ModManager.Mods)
-            mod.OnEnemyDamaged(xEnemy, ref iDamage, ref byType);
+        {
+            mod.OnEntityDamage(data);
+        }
+
+        iDamage = data.Damage;
+        byType = data.Type;
     }
 }

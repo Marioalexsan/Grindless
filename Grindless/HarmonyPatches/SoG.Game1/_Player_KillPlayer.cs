@@ -5,7 +5,7 @@ static class _Player_KillPlayer
 {
     static void Prefix(PlayerView xView)
     {
-        foreach (Mod mod in ModManager.Mods)
-            mod.OnPlayerKilled(xView);
+        //foreach (Mod mod in ModManager.Mods)
+        //    mod.OnPlayerKilled(xView);
     }
 }

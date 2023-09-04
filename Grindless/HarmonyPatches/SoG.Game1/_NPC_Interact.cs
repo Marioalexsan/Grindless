@@ -5,7 +5,7 @@ static class _NPC_Interact
 {
     static void _NPC_Interact_Prefix(PlayerView xView, NPC xNPC)
     {
-        foreach (Mod mod in ModManager.Mods)
-            mod.OnNPCInteraction(xNPC);
+        //foreach (Mod mod in ModManager.Mods)
+        //    mod.OnNPCInteraction(xNPC);
     }
 }

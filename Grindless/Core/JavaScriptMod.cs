@@ -26,6 +26,7 @@ internal class JavaScriptMod : Mod, IDisposable
         _engine = new Engine(options =>
         {
             options.Strict = true;
+            options.Interop.AllowGetType = true;
             options.SetTypeResolver(new TypeResolver
             {
                 MemberFilter = member =>
@@ -98,6 +99,11 @@ internal class JavaScriptMod : Mod, IDisposable
         return method;
     }
 
+    private JsValue Wrap(object obj)
+    {
+        return JsValue.FromObject(_engine, obj);
+    }
+
     protected virtual void Dispose(bool disposing)
     {
         if (!disposedValue)
@@ -141,11 +147,19 @@ internal class JavaScriptMod : Mod, IDisposable
         });
     }
 
-    //public override void OnPlayerDamaged(PlayerView player, ref int damage, ref byte type)
-    //{
-    //    WrapCall(() =>
-    //    {
-    //        GetJSProperty()?.Call(_jsThis, JsValue.FromObject(_engine, gameEvent));
-    //    });
-    //}
+    public override void OnEntityDamage(OnEntityDamageData data)
+    {
+        WrapCall(() =>
+        {
+            GetJSProperty()?.Call(_jsThis, Wrap(data));
+        });
+    }
+
+    public override void PostEntityDamage(PostEntityDamageData data)
+    {
+        WrapCall(() =>
+        {
+            GetJSProperty()?.Call(_jsThis, Wrap(data));
+        });
+    }
 }

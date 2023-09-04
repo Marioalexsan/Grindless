@@ -8,7 +8,7 @@ static class _Item_Use
         if (xView.xViewStats.bIsDead)
             return;
 
-        foreach (Mod mod in ModManager.Mods)
-            mod.OnItemUse(enItem, xView, ref bSend);
+        //foreach (Mod mod in ModManager.Mods)
+        //    mod.OnItemUse(enItem, xView, ref bSend);
     }
 }

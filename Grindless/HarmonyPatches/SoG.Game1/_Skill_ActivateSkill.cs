@@ -5,7 +5,7 @@ static class _Skill_ActivateSkill
 {
     static void Postfix(PlayerView xView, ISpellActivation xact, SpellCodex.SpellTypes enType, int iBoostState)
     {
-        foreach (Mod mod in ModManager.Mods)
-            mod.PostSpellActivation(xView, xact, enType, iBoostState);
+        //foreach (Mod mod in ModManager.Mods)
+        //    mod.PostSpellActivation(xView, xact, enType, iBoostState);
     }
 }

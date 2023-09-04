@@ -26,7 +26,7 @@ static class Watchers_ArcadeModeGauntletSpawnWatcher
 
     static void GauntletEnemySpawned(Enemy enemy)
     {
-        foreach (Mod mod in ModManager.Mods)
-            mod.PostArcadeGauntletEnemySpawned(enemy);
+        //foreach (Mod mod in ModManager.Mods)
+        //    mod.PostArcadeGauntletEnemySpawned(enemy);
     }
 }
