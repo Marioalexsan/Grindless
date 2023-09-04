@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Configuration;
+using System.Configuration.Assemblies;
+using System.IO.Compression;
 
 namespace Grindless;
 
@@ -113,7 +115,7 @@ internal static class ModLoader
         List<string> fullPathIgnored = ignoredMods.Select(x => Path.Combine(modFolder, x)).ToList();
 
         var candidates = Directory.GetFiles(modFolder)
-            .Where(x => x.EndsWith(".dll"))
+            .Where(x => x.EndsWith(".dll") || x.EndsWith(".zip"))
             .ToList();
 
         var selected = candidates
@@ -138,7 +140,16 @@ internal static class ModLoader
             new GrindlessMod()
         };
 
-        mods.AddRange(paths.Select(path => LoadModFromAssembly(path)).Where(mod => mod != null));
+        mods.AddRange(paths.Select(path =>
+        {
+            if (path.EndsWith(".dll"))
+                return LoadCSharpMod(path);
+
+            if (path.EndsWith(".zip"))
+                return LoadJavaScriptArchive(path);
+
+            return null;
+        }).Where(mod => mod != null));
 
         return mods;
     }
@@ -156,15 +167,56 @@ internal static class ModLoader
             .Replace(Directory.GetCurrentDirectory(), "(SoG)");
     }
 
-    private static Mod LoadModFromAssembly(string path)
+    private static Mod LoadJavaScriptArchive(string zipPath)
     {
-        string shortPath = ShortenModPaths(path);
+        string shortPath = ShortenModPaths(zipPath);
 
-        Program.Logger.LogInformation("Loading assembly {path}", shortPath);
+        Program.Logger.LogInformation("Loading JavaScript mod from {path}.", shortPath);
 
         try
         {
-            Assembly assembly = Assembly.LoadFrom(path);
+            using ZipArchive archive = ZipFile.OpenRead(zipPath);
+
+            if (!archive.Entries.Any(x => x.Name == "index.js"))
+            {
+                Program.Logger.LogError("Failed to load mod. No index.js entry point found.", shortPath);
+                return null;
+            }
+
+            Dictionary<string, string> sources = new();
+
+            var split = new[]
+            {
+                '/'
+            };
+
+            foreach (var entry in archive.Entries.Where(x => x.Name.EndsWith(".js")))
+            {
+                using StreamReader reader = new StreamReader(entry.Open());
+                sources[entry.FullName.Split(split, 2)[1]] = reader.ReadToEnd();
+            }
+
+            var mod = new JavaScriptMod(sources);
+
+            return mod;
+        }
+        catch (Exception e)
+        {
+            Program.Logger.LogError("Failed to load mod {modPath}. An unknown exception occurred: {e}", shortPath, ShortenModPaths(e.ToString()));
+        }
+
+        return null;
+    }
+
+    private static Mod LoadCSharpMod(string assemblyPath)
+    {
+        string shortPath = ShortenModPaths(assemblyPath);
+
+        Program.Logger.LogInformation("Loading C# mod from {path}.", shortPath);
+
+        try
+        {
+            Assembly assembly = Assembly.LoadFrom(assemblyPath);
             Type type = assembly.DefinedTypes.First(t => t.BaseType == typeof(Mod));
             Mod mod = Activator.CreateInstance(type, true) as Mod;
 
@@ -175,6 +227,7 @@ internal static class ModLoader
                 Program.Logger.LogError("Mod {shortPath} with NameID {mod.NameID} conflicts with a previously loaded mod.", shortPath, mod.Name);
                 return null;
             }
+            
 
             return mod;
         }

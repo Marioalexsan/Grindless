@@ -35,7 +35,7 @@ public abstract class Mod
     /// <summary>
     /// Gets the default logger for this mod.
     /// </summary>
-    public ILogger Logger { get; }
+    public ILogger Logger { get; protected set; } = Program.LogFactory.CreateLogger("UnknownMod");
 
     /// <summary>
     /// Gets the path to the mod's assets, relative to the "ModContent" folder.
@@ -50,8 +50,9 @@ public abstract class Mod
 
     public Mod()
     {
-        Logger = Program.LogFactory.CreateLogger(Name);
-    }
+        if (Name != null)
+            Logger = Program.LogFactory.CreateLogger(Name);
+}
 
     #region Virtual Methods
 

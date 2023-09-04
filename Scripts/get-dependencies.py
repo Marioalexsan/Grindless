@@ -26,7 +26,11 @@ sog_common_paths = [
     'C:/Program Files (x86)/Steam/steamapps/common/SecretsOfGrindea/',
     'D:/Program Files (x86)/Steam/steamapps/common/SecretsOfGrindea/',
     'E:/Program Files (x86)/Steam/steamapps/common/SecretsOfGrindea/',
-    'F:/Program Files (x86)/Steam/steamapps/common/SecretsOfGrindea/'
+    'F:/Program Files (x86)/Steam/steamapps/common/SecretsOfGrindea/',
+    'C:/SteamLibrary/steamapps/common/SecretsOfGrindea/',
+    'D:/SteamLibrary/steamapps/common/SecretsOfGrindea/',
+    'E:/SteamLibrary/steamapps/common/SecretsOfGrindea/',
+    'F:/SteamLibrary/steamapps/common/SecretsOfGrindea/'
 ]
 
 # Search some common paths for XNA install path (usually the GAC)

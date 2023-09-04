@@ -1,4 +1,5 @@
 ﻿using Grindless.Core;
+using Jint;
 using Microsoft.Extensions.Logging;
 using Quests;
 using System.Reflection;
@@ -54,6 +55,14 @@ internal static class ModManager
             manager.Reset();
         }
 
+        Mods.ForEach(x =>
+        {
+            if (x is IDisposable disposable)
+            {
+                disposable.Dispose();
+            }
+        });
+
         Mods.Clear();
 
         Globals.Game.xSoundSystem.PlaySong(currentMusic, true);
@@ -108,7 +117,7 @@ internal static class ModManager
     {
         Program.Logger.LogInformation("Patching mods...");
 
-        foreach (var assembly in mods.Where(x => !x.IsBuiltin).Select(x => x.GetType().Assembly).Distinct())
+        foreach (var assembly in mods.Where(x => !x.IsBuiltin && x is not JavaScriptMod).Select(x => x.GetType().Assembly).Distinct())
         {
             Program.Logger.LogInformation("Patching assembly {}...", assembly.GetName());
 
