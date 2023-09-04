@@ -1,6 +1,7 @@
 ﻿using Jint;
 using Jint.Native;
 using Jint.Native.Object;
+using Jint.Runtime.Interop;
 using Microsoft.Extensions.Logging;
 using Microsoft.Xna.Framework;
 using System.Runtime.CompilerServices;
@@ -25,8 +26,27 @@ internal class JavaScriptMod : Mod, IDisposable
         _engine = new Engine(options =>
         {
             options.Strict = true;
+            options.SetTypeResolver(new TypeResolver
+            {
+                MemberFilter = member =>
+                {
+                    if (typeof(Type).IsAssignableFrom(member.DeclaringType))
+                    {
+                        if (member.Name == nameof(Type.Name))
+                            return true;
+
+                        if (member.Name == nameof(Type.FullName))
+                            return true;
+
+                        return false;
+                    }
+
+                    return true;
+                }
+            });
         });
 
+        JSLibrary.LoadSoGEnums(_engine);
         JSLibrary.LoadConsoleAPI(_engine, () => Logger);
 
         foreach (var pair in sources)
@@ -58,6 +78,26 @@ internal class JavaScriptMod : Mod, IDisposable
         }
     }
 
+    private readonly Dictionary<string, JsValue> _propertyCache = new();
+
+    private JsValue GetJSProperty([CallerMemberName] string name = null)
+    {
+        if (_propertyCache.TryGetValue(name, out var value))
+            return value;
+
+        var method = _mod.GetProperty(name).Value;
+
+        if (method == null || method.IsUndefined() || method.IsNull())
+        {
+            _propertyCache[name] = null;
+            Program.Logger.LogInformation($"No method {name} found for mod.");
+            return null;
+        }
+
+        _propertyCache[name] = method;
+        return method;
+    }
+
     protected virtual void Dispose(bool disposing)
     {
         if (!disposedValue)
@@ -81,7 +121,7 @@ internal class JavaScriptMod : Mod, IDisposable
     {
         WrapCall(() =>
         {
-            _mod.GetProperty("load").Value.Call(_jsThis);
+            GetJSProperty()?.Call(_jsThis);
         });
     }
 
@@ -89,7 +129,7 @@ internal class JavaScriptMod : Mod, IDisposable
     {
         WrapCall(() =>
         {
-            _mod.GetProperty("unload").Value.Call(_jsThis);
+            GetJSProperty()?.Call(_jsThis);
         });
     }
 
@@ -97,146 +137,15 @@ internal class JavaScriptMod : Mod, IDisposable
     {
         WrapCall(() =>
         {
-            _mod.GetProperty("postLoad").Value.Call();
+            GetJSProperty()?.Call(_jsThis);
         });
     }
 
-    public override void SaveCharacterData(BinaryWriter stream)
-    {
-        // TODO
-    }
-
-    public override void LoadCharacterData(BinaryReader stream, Version saveVersion)
-    {
-        // TODO
-    }
-
-    public override void SaveWorldData(BinaryWriter stream)
-    {
-        // TODO
-    }
-
-    public override void LoadWorldData(BinaryReader stream, Version saveVersion)
-    {
-        // TODO
-    }
-
-    public override void SaveArcadeData(BinaryWriter stream)
-    {
-        // TODO
-    }
-
-    public override void LoadArcadeData(BinaryReader stream, Version saveVersion)
-    {
-        // TODO
-    }
-
-    private class PlayerDamagedEvent
-    {
-        public PlayerView player;
-        public int damage;
-        public byte type;
-    }
-
-    public override void OnPlayerDamaged(PlayerView player, ref int damage, ref byte type)
-    {
-        var gameEvent = new PlayerDamagedEvent
-        {
-            player = player,
-            damage = damage,
-            type = type
-        };
-
-        WrapCall(() =>
-        {
-            _mod.GetProperty("onPlayerDamaged").Value.Call(_jsThis, JsValue.FromObject(_engine, gameEvent));
-        });
-
-        damage = gameEvent.damage;
-        type = gameEvent.type;
-    }
-
-    public override void OnPlayerKilled(PlayerView player)
-    {
-    }
-
-    public override void PostPlayerLevelUp(PlayerView player)
-    {
-        base.PostPlayerLevelUp(player);
-    }
-
-    public override void OnEnemyDamaged(Enemy enemy, ref int damage, ref byte type)
-    {
-        base.OnEnemyDamaged(enemy, ref damage, ref type);
-    }
-
-    public override void PostEnemyKilled(Enemy enemy, AttackPhase killer)
-    {
-        base.PostEnemyKilled(enemy, killer);
-    }
-
-    public override void OnNPCDamaged(NPC enemy, ref int damage, ref byte type)
-    {
-        base.OnNPCDamaged(enemy, ref damage, ref type);
-    }
-
-    public override void OnNPCInteraction(NPC npc)
-    {
-        base.OnNPCInteraction(npc);
-    }
-
-    public override void OnArcadiaLoad()
-    {
-        base.OnArcadiaLoad();
-    }
-
-    public override void PostArcadeRoomStart()
-    {
-        base.PostArcadeRoomStart();
-    }
-
-    public override void PostArcadeRoomComplete()
-    {
-        base.PostArcadeRoomComplete();
-    }
-
-    public override void PostArcadeGauntletEnemySpawned(Enemy enemy)
-    {
-        base.PostArcadeGauntletEnemySpawned(enemy);
-    }
-
-    public override void OnItemUse(ItemCodex.ItemTypes enItem, PlayerView xView, ref bool bSend)
-    {
-        base.OnItemUse(enItem, xView, ref bSend);
-    }
-
-    public override void PostSpellActivation(PlayerView xView, ISpellActivation xact, SpellCodex.SpellTypes enType, int iBoostState)
-    {
-        base.PostSpellActivation(xView, xact, enType, iBoostState);
-    }
-
-    public override void PostLevelLoad(Level.ZoneEnum level, Level.WorldRegion region, bool staticOnly)
-    {
-        base.PostLevelLoad(level, region, staticOnly);
-    }
-
-    public override void OnEnemySpawn(ref EnemyCodex.EnemyTypes enemy, ref Vector2 position, ref bool isElite, ref bool dropsLoot, ref int bitLayer, ref float virtualHeight, float[] behaviourVariables)
-    {
-        base.OnEnemySpawn(ref enemy, ref position, ref isElite, ref dropsLoot, ref bitLayer, ref virtualHeight, behaviourVariables);
-    }
-
-    public override void PostEnemySpawn(Enemy entity, EnemyCodex.EnemyTypes enemy, EnemyCodex.EnemyTypes original, Vector2 position, bool isElite, bool dropsLoot, int bitLayer, float virtualHeight, float[] behaviourVariables)
-    {
-        base.PostEnemySpawn(entity, enemy, original, position, isElite, dropsLoot, bitLayer, virtualHeight, behaviourVariables);
-    }
-
-    public override void OnBaseStatsUpdate(BaseStats stats)
-    {
-        base.OnBaseStatsUpdate(stats);
-    }
-
-    public override void PostBaseStatsUpdate(BaseStats stats)
-    {
-        base.PostBaseStatsUpdate(stats);
-    }
+    //public override void OnPlayerDamaged(PlayerView player, ref int damage, ref byte type)
+    //{
+    //    WrapCall(() =>
+    //    {
+    //        GetJSProperty()?.Call(_jsThis, JsValue.FromObject(_engine, gameEvent));
+    //    });
+    //}
 }

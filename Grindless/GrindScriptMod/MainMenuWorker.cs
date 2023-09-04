@@ -270,7 +270,9 @@ internal static class MainMenuWorker
 
         foreach (Mod mod in ModManager.Mods.Where(x => x.Name != VanillaMod.ModName))
         {
-            message += mod.Name + " v." + (mod.Version?.ToString() ?? "Unknown") + "\n";
+            string modType = mod is JavaScriptMod ? "JS" : "C#";
+
+            message += mod.Name + " v." + (mod.Version?.ToString() ?? "Unknown") + $" ({modType})" + "\n";
         }
 
         RenderMessage(message.TrimEnd('\n'), 422, 243);
