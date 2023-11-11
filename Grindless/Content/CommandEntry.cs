@@ -20,7 +20,7 @@ public class CommandEntry : Entry<GrindlessID.CommandID>
 
     /// <summary>
     /// Name alias to use for this mod.
-    /// If set to a value other than null or underfined, the mod commands will 
+    /// If set to a value other than null or undefined, the mod commands will 
     /// also be callable using the "/(Alias):(Command) (args)" format.
     /// If multiple mods set the same alias, only one of them will be able to use the alias.
     /// Ideally, you want this to be a short and easy to use name.
@@ -29,6 +29,9 @@ public class CommandEntry : Entry<GrindlessID.CommandID>
 
     public void AutoAddModCommands(string alias = null)
     {
+        if (Mod is JavaScriptMod)
+            throw new InvalidOperationException("Auto adding mod commands is possible only for C# mods.");
+
         var methods = AccessTools.GetDeclaredMethods(Mod.GetType())
             .Select(x => (method: x, attrib: x.GetCustomAttribute<ModCommandAttribute>()))
             .Where(x => x.attrib != null);

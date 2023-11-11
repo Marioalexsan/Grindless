@@ -20,4 +20,19 @@ static class _NPC_TakeDamage
         iDamage = data.Damage;
         byType = data.Type;
     }
+
+    static void Postfix(NPC xEnemy, int iDamage, byte byType)
+    {
+        Mod.PostEntityDamageData data = new()
+        {
+            Entity = xEnemy,
+            Damage = iDamage,
+            Type = byType
+        };
+
+        foreach (Mod mod in ModManager.Mods)
+        {
+            mod.PostEntityDamage(data);
+        }
+    }
 }

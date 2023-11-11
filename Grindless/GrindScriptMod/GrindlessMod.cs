@@ -51,7 +51,7 @@ internal class GrindlessMod : Mod
 
         if (mod == null)
         {
-            CAS.AddChatMessage($"[{Name}] Unknown mod!");
+            CAS.AddChatMessage($"[{Name}] Unknown mod '{args[0]}'!");
             return;
         }
 

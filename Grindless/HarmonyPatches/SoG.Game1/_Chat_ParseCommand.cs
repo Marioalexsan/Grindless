@@ -49,7 +49,7 @@ static class _Chat_ParseCommand
 
         if (mod == null)
         {
-            CAS.AddChatMessage($"[{GrindlessMod.ModName}] Unknown mod!");
+            CAS.AddChatMessage($"[{GrindlessMod.ModName}] Unknown mod '{target}'!");
             return true;
         }
 

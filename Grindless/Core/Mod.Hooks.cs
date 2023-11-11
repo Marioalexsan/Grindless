@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using static SoG.Level;
+﻿using Microsoft.Xna.Framework.Graphics;
 
 namespace Grindless;
 
@@ -27,6 +26,13 @@ public abstract partial class Mod
     /// </remarks>
     public abstract void Unload();
 
+    public class GameEvent
+    {
+        public bool WillExecute { get; private set; } = true;
+
+        public void Prevent() => WillExecute = false;
+    }
+
     public class OnEntityDamageData
     {
         public IEntity Entity { get; init; }
@@ -39,11 +45,20 @@ public abstract partial class Mod
     public class PostEntityDamageData
     {
         public IEntity Entity { get; init; }
-        public int Damage { get; set; }
-        public byte Type { get; set; }
+        public int Damage { get; init; }
+        public byte Type { get; init; }
     }
 
     public virtual void PostEntityDamage(PostEntityDamageData data) { }
+
+    public class OnEntityDeathData
+    {
+        public IEntity Entity { get; init; }
+        public AttackPhase AttackPhase { get; init; }
+        public bool WithEffect { get; set; }
+    }
+
+    public virtual void OnEntityDeath(OnEntityDeathData data) { }
 
     public class PostLevelLoadData
     {
@@ -53,4 +68,11 @@ public abstract partial class Mod
     }
 
     public virtual void PostLevelLoad(PostLevelLoadData data) { }
+
+    public class PostRenderTopGUIData
+    {
+        public SpriteBatch SpriteBatch { get; init; }
+    }
+
+    public virtual void PostRenderTopGUI(PostRenderTopGUIData data) { }
 }

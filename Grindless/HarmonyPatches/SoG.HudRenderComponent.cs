@@ -5,6 +5,19 @@ namespace Grindless.HarmonyPatches;
 [HarmonyPatch(typeof(HudRenderComponent))]
 static class SoG_HudRenderComponent
 {
+    [HarmonyPostfix]
+    [HarmonyPatch(nameof(HudRenderComponent.RenderTopGUI))]
+    static void RenderTopGUI_Postfix(SpriteBatch spriteBatch)
+    {
+        Mod.PostRenderTopGUIData data = new()
+        {
+            SpriteBatch = spriteBatch
+        };
+
+        foreach (Mod mod in ModManager.Mods)
+            mod.PostRenderTopGUI(data);
+    }
+
     [HarmonyPrefix]
     [HarmonyPatch(nameof(HudRenderComponent.GetBuffTexture))]
     static bool GetBuffTexture_Prefix(ref Texture2D __result, BaseStats.StatusEffectSource en)

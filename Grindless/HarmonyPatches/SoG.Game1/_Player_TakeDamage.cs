@@ -22,4 +22,19 @@ static class _Player_TakeDamage
         iInDamage = data.Damage;
         byType = data.Type;
     }
+
+    static void Postfix(PlayerView xView, int iInDamage, byte byType)
+    {
+        Mod.PostEntityDamageData data = new()
+        {
+            Entity = xView.xEntity,
+            Damage = iInDamage,
+            Type = byType
+        };
+
+        foreach (Mod mod in ModManager.Mods)
+        {
+            mod.PostEntityDamage(data);
+        }
+    }
 }

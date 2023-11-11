@@ -47,7 +47,7 @@ internal class JavaScriptMod : Mod, IDisposable
             });
         });
 
-        JSLibrary.LoadSoGEnums(_engine);
+        JSLibrary.LoadSoGTypes(_engine);
         JSLibrary.LoadConsoleAPI(_engine, () => Logger);
 
         foreach (var pair in sources)
@@ -161,6 +161,30 @@ internal class JavaScriptMod : Mod, IDisposable
     }
 
     public override void PostEntityDamage(PostEntityDamageData data)
+    {
+        WrapCall(() =>
+        {
+            GetJSProperty()?.Call(_jsThis, Wrap(data));
+        });
+    }
+
+    public override void PostLevelLoad(PostLevelLoadData data)
+    {
+        WrapCall(() =>
+        {
+            GetJSProperty()?.Call(_jsThis, Wrap(data));
+        });
+    }
+
+    public override void OnEntityDeath(OnEntityDeathData data)
+    {
+        WrapCall(() =>
+        {
+            GetJSProperty()?.Call(_jsThis, Wrap(data));
+        });
+    }
+
+    public override void PostRenderTopGUI(PostRenderTopGUIData data)
     {
         WrapCall(() =>
         {
